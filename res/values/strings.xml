@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Budget</string>
+    <string name="envelopeDetails_name">Envelope</string>
+    <string name="envelopeDetails_balance">You have</string>
+    <string name="deleteTransaction_menuItem">Forget transaction</string>
+    <string name="newEnvelope_menuItem">New envelope</string>
+    <string name="deleteEnvelope_menuItem">Throw away envelope</string>
+    <string name="confirm_menuItem">This action cannot be undone</string>
+    <string name="envelopeName_hint">Envelope name</string>
+    <string name="paycheck_name">Earn</string>
+    <string name="paycheck_menuItem">Earn</string>
+    <string name="paycheck_spent">You distributed</string>
+    <string name="paycheck_description">Paycheck</string>
+    <string name="paycheck_docs">Put your earnings &#8593; to various uses &#8595;</string>
+    <string name="spend_name">Spend</string>
+    <string name="spend_menuItem">Spend</string>
+    <string name="edit_name">Edit</string>
+    <string name="transfer_name">Transfer</string>
+    <string name="transfer_menuItem">Transfer</string>
+    <string name="transfer_label">to</string>
+    <string name="default_envelope_1">Bills</string>
+    <string name="default_envelope_2">Food</string>
+    <string name="default_envelope_3">Clothes</string>
+    <string name="cancel_menuItem">Cancel</string>
+    <string name="ok_menuItem">OK</string>
+    <string name="description_hint">Description</string>
+    <string name="amount_hint">00.00</string>
+    <string name="gotIt">&#215;</string>
+    <string name="export_name">Exporting&#8230;</string>
+    <string name="export_menuItem">Export</string>
+    <string name="import_name">Importing&#8230;</string>
+    <string name="import_menuItem">Import</string>
+    <plurals name="transactionsChecked_name">
+        <item quantity="one">%d transaction selected</item>
+        <item quantity="other">%d transactions selected</item>
+    </plurals>
+    <plurals name="envelopesChecked_name">
+        <item quantity="one">%d envelope selected</item>
+        <item quantity="other">%d envelopes selected</item>
+    </plurals>
+</resources>

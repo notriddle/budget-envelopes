@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/totalamount"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/fullPadded"
+                android:paddingLeft="@dimen/fullPadding"
+                android:paddingRight="@dimen/fullPadding">
+    <TextView android:id="@+id/name"
+              android:text="@string/envelopeDetails_balance"
+              android:textColor="#000"
+              android:textSize="@dimen/presentText"
+              android:fontFamily="sans-serif-light"
+              android:layout_centerVertical="true"
+              android:layout_alignParentLeft="true"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <TextView android:id="@+id/value"
+              android:textColor="#000"
+              android:textSize="@dimen/presentText"
+              android:layout_centerVertical="true"
+              android:layout_alignParentRight="true"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+</RelativeLayout>

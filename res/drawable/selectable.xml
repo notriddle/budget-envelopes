@@ -1,0 +1,7 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@color/selectedBackground"/>
+    <item android:state_focused="true" android:drawable="@color/focusedBackground"/>
+    <item android:state_checked="true" android:drawable="@color/superSelectedBackground"/>
+    <item android:state_selected="true" android:drawable="@color/selectedBackground"/>
+    <item android:drawable="@android:color/transparent"/>
+</selector>

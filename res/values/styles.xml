@@ -1,0 +1,57 @@
+<resources>
+    <style name="Theme" parent="android:Theme.Holo.Light">
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:actionBarStyle">@style/Style.ActionBar</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:selectableItemBackground">@drawable/selectable</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable</item>
+        <item name="android:colorPressedHighlight">@color/selectedBackground</item>
+        <item name="android:colorLongPressedHighlight">@color/superSelectedBackground</item>
+        <item name="android:colorFocusedHighlight">@color/focusedBackground</item>
+        <item name="android:colorActivatedHighlight">@color/focusedBackground</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/selectable</item>
+        <item name="android:dropDownListViewStyle">@style/Style.DropDown</item>
+        <item name="android:actionDropDownStyle">@style/Style.Spinner</item>
+        <item name="android:dropDownSpinnerStyle">@style/Style.Spinner</item>
+        <item name="android:editTextBackground">@drawable/textfield</item>
+        <item name="android:alertDialogTheme">@style/Theme.Dialog</item>
+        <item name="android:dialogTheme">@style/Theme.Dialog</item>
+    </style>
+    <style name="Theme.Dialog" parent="android:Theme.Holo.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:selectableItemBackground">@drawable/selectable</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable</item>
+        <item name="android:colorPressedHighlight">@color/selectedBackground</item>
+        <item name="android:colorLongPressedHighlight">@color/superSelectedBackground</item>
+        <item name="android:colorFocusedHighlight">@color/focusedBackground</item>
+        <item name="android:colorActivatedHighlight">@color/focusedBackground</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/selectable</item>
+        <item name="android:dropDownListViewStyle">@style/Style.DropDown</item>
+        <item name="android:actionDropDownStyle">@style/Style.Spinner</item>
+        <item name="android:dropDownSpinnerStyle">@style/Style.Spinner</item>
+        <item name="android:editTextBackground">@drawable/textfield</item>
+    </style>
+    <style name="Theme.Details" parent="Theme">
+        <item name="android:windowBackground">@color/cardBackground</item>
+    </style>
+
+    <style name="Style.ActionBar" parent="android:Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/actionBarBackground</item>
+        <item name="android:progressBarStyle">@style/Style.ProgressBar</item>
+    </style>
+    <style name="Style.DropDown" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable</item>
+    </style>
+    <style name="Style.Spinner" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:dropDownSelector">@drawable/selectable</item>
+        <item name="android:background">@drawable/spinner</item>
+    </style>
+    <style name="Style.ProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal</item>
+    </style>
+</resources>
+

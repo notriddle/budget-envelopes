@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+<com.notriddle.budget.EditTextDefaultFocus
+    android:id="@+id/description"
+    android:text="@string/paycheck_description"
+    android:hint="@string/description_hint"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inputType="text|textCapWords|textAutoCorrect"
+/>
+
+<com.notriddle.budget.EditMoney
+    android:id="@+id/amount"
+    android:hint="@string/amount_hint"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textStyle="bold"
+/>
+
+</LinearLayout>
+

@@ -15,6 +15,9 @@ gen/
 # Local configuration file (sdk path, etc)
 local.properties
 
+# I'm not sharing my release key.
+ant.properties
+
 # Eclipse project files
 .classpath
 .project

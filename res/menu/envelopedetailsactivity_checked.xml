@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:icon="@drawable/delete_menuitem"
+          android:title="@string/deleteTransaction_menuItem"
+          android:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/delete_menuItem"
+                  android:title="@string/deleteTransaction_menuItem"/>
+            <item android:title="@string/cancel_menuItem"/>
+        </menu>
+    </item>
+</menu>
