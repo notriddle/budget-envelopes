@@ -6,5 +6,7 @@
     <dimen name="fullPadding">16dp</dimen>
     <dimen name="fullPadded">64dp</dimen>
     <dimen name="presentText">34sp</dimen>
+
+    <dimen name="tabletBool">0dp</dimen>
 </resources>
 

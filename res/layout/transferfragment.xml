@@ -34,6 +34,8 @@
     android:layout_height="wrap_content"
     android:inputType="text|textCapWords|textAutoCorrect"
     android:singleLine="true"
+    android:nextFocusDown="@id/amount"
+    android:nextFocusForward="@id/amount"
 />
 
 <com.notriddle.budget.EditMoney
@@ -42,6 +44,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:imeActionLabel="@android:string/ok"
+    android:imeActionId="42"
     android:textStyle="bold"
 />
 

@@ -5,7 +5,7 @@
 	      android:title="@string/newEnvelope_menuItem"
 	      android:showAsAction="ifRoom"/>
     <item android:id="@+id/paycheck_menuItem"
-          android:icon="@drawable/paycheck_menuitem"
+          android:icon="@drawable/earn_menuitem"
           android:title="@string/paycheck_menuItem"
           android:showAsAction="ifRoom"/>
     <item android:id="@+id/transfer_menuItem"

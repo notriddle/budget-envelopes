@@ -14,6 +14,10 @@
             <item android:title="@string/cancel_menuItem"/>
         </menu>
     </item>
+    <item android:id="@+id/earn_menuItem"
+          android:icon="@drawable/earn_menuitem"
+          android:title="@string/earn_menuItem"
+          android:showAsAction="ifRoom"/>
     <item android:id="@+id/spend_menuItem"
           android:icon="@drawable/spend_menuitem"
           android:title="@string/spend_menuItem"

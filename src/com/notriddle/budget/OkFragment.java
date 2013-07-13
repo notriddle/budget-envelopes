@@ -19,6 +19,7 @@
 package com.notriddle.budget;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.LoaderManager;
@@ -30,6 +31,10 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,15 +52,37 @@ import android.widget.TextView;
 
 public abstract class OkFragment extends DialogFragment
                                  implements TextView.OnEditorActionListener {
+
+    boolean mRanOk;
+
+    public static interface OnDismissListener {
+        public void onDismiss();
+    };
+
+    @Override public void onCreate(Bundle state) {
+        super.onCreate(state);
+        setHasOptionsMenu(true);
+        mRanOk = false;
+    }
+
     @Override public void onResume() {
         super.onResume();
         refreshOkButton();
     }
 
+    @Override public void dismiss() {
+        if (!getShowsDialog()) {
+            OnDismissListener l = (OnDismissListener)getActivity();
+            l.onDismiss();
+        } else {
+            super.dismiss();
+        }
+    }
+
     @Override public View onCreateView(LayoutInflater inflater,
                                        ViewGroup cont, Bundle state) {
         View retVal = null;
-        if (getDialog() == null) {
+        if (!getShowsDialog()) {
             retVal = onCreateInternalView(inflater, null, state);
         }
         return retVal;
@@ -108,7 +135,7 @@ public abstract class OkFragment extends DialogFragment
     @Override public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.ok_menuItem).setEnabled(isOk());
-        menu.findItem(R.id.ok_menuItem).setVisible(getDialog() == null);
+        menu.findItem(R.id.ok_menuItem).setVisible(!getShowsDialog());
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
@@ -122,11 +149,38 @@ public abstract class OkFragment extends DialogFragment
     }
 
     @Override public boolean onEditorAction(TextView v, int a, KeyEvent e) {
-        if (isOk()) {
+        if (!mRanOk && isOk()) {
+            mRanOk = true;
             ok();
             dismiss();
         }
-        return !isOk();
+        return false;
+    }
+
+    protected void changeToActivity() {
+        Intent i = new Intent(getActivity(), FragmentActivity.class);
+        i.setData(Uri.parse("fragment://"+getClass().getName()));
+        Bundle args = (Bundle) getArguments().clone();
+        writeArgs(args);
+        i.putExtras(args);
+        if (Build.VERSION.SDK_INT >= 16) {
+            View src = getDialog().getWindow().getDecorView();
+            Bitmap copyBitmap = Bitmap.createBitmap(
+                src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888
+            );
+            Canvas copyCanvas = new Canvas(copyBitmap);
+            src.draw(copyCanvas);
+            Bundle opts = ActivityOptions.makeThumbnailScaleUpAnimation(
+                src, copyBitmap, 0, 0
+            ).toBundle();
+            startActivity(i, opts);
+        } else {
+            startActivity(i);
+        }
+        dismiss();
+    }
+
+    protected void writeArgs(Bundle args) {
     }
 
     abstract public void ok();

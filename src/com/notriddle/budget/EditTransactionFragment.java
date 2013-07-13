@@ -79,6 +79,8 @@ public class EditTransactionFragment extends OkFragment
         mAmount = (EditMoney) retVal.findViewById(R.id.amount);
         mAmount.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL|InputType.TYPE_NUMBER_FLAG_SIGNED);
         mDescription = (EditText) retVal.findViewById(R.id.description);
+        retVal.findViewById(R.id.delayed).setVisibility(View.GONE);
+        retVal.findViewById(R.id.delay).setVisibility(View.GONE);
         return retVal;
     }
 

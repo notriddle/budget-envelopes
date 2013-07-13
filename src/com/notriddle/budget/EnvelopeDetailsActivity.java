@@ -130,6 +130,15 @@ public class EnvelopeDetailsActivity extends ListActivity
         }
     }
 
+    @Override public void onDestroy() {
+        super.onDestroy();
+        if (mName.getText().length() == 0 && mAdapter.getCount() == 0) {
+            deleteThis();
+            mDatabase.close();
+            mDatabase = null;
+        }
+    }
+
     @Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         mode.getMenuInflater()
              .inflate(R.menu.envelopedetailsactivity_checked, menu);
@@ -209,6 +218,9 @@ public class EnvelopeDetailsActivity extends ListActivity
         String where     = id == 0
                            ? "_id = ?"
                            : "envelope = ?";
+        String sort      = id == 0
+                           ? null
+                           : "time * -1";
         SQLiteLoader retVal = new SQLiteLoader(
             this,
             new EnvelopesOpenHelper(this),
@@ -218,7 +230,7 @@ public class EnvelopeDetailsActivity extends ListActivity
             new String[] {Integer.toString(mId)},
             null,
             null,
-            "_id * -1"
+            sort
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -310,19 +322,27 @@ public class EnvelopeDetailsActivity extends ListActivity
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 return true;
+            case R.id.earn_menuItem:
+                SpendFragment sF = SpendFragment.newInstance(mId, SpendFragment.EARN);
+                sF.show(getFragmentManager(), "dialog");
+                return true;
             case R.id.spend_menuItem:
-                SpendFragment sF = SpendFragment.newInstance(mId);
+                sF = SpendFragment.newInstance(mId, SpendFragment.SPEND);
                 sF.show(getFragmentManager(), "dialog");
                 return true;
             case R.id.delete_menuItem:
-                needDatabase().delete("envelopes", "_id = ?",
-                                      new String[] {Integer.toString(mId)});
-                needDatabase().delete("log", "envelope = ?",
-                                      new String[] {Integer.toString(mId)});
-                getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+                deleteThis();
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteThis() {
+        needDatabase().delete("envelopes", "_id = ?",
+                              new String[] {Integer.toString(mId)});
+        needDatabase().delete("log", "envelope = ?",
+                              new String[] {Integer.toString(mId)});
+        getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
     }
 }

@@ -12,15 +12,28 @@
     android:layout_height="wrap_content"
     android:inputType="text|textCapWords|textAutoCorrect"
     android:singleLine="true"
+    android:nextFocusDown="@id/amount"
+    android:nextFocusForward="@id/amount"
 />
 
 <com.notriddle.budget.EditMoney
     android:id="@+id/amount"
     android:hint="@string/amount_hint"
     android:imeActionLabel="@android:string/ok"
+    android:imeActionId="69"
     android:textStyle="bold"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
 />
+
+<CheckBox android:id="@+id/delayed"
+          android:text="@string/delayed_checkBox"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"/>
+
+<DatePicker android:id="@+id/delay"
+            android:calendarViewShown="false"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
 
 </LinearLayout>

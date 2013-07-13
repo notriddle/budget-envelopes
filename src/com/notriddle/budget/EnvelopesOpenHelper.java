@@ -27,7 +27,7 @@ import android.util.SparseArray;
 
 public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     static final String DB_NAME = "envelopes.db";
-    static final int DB_VERSION = 1;
+    static final int DB_VERSION = 2;
     public static final Uri URI = Uri.parse("sqlite://com.notriddle.budget/envelopes");
 
     Context mCntx;
@@ -47,7 +47,7 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         values.put("name", mCntx.getString(R.string.default_envelope_3));
         values.put("cents", 0);
         db.insert("envelopes", null, values);
-        db.execSQL("CREATE TABLE 'log' ( '_id' INTEGER PRIMARY KEY AUTOINCREMENT, 'envelope' INTEGER, 'time' TIMESTAMP, 'description' TEXT, 'cents' INTEGER )");
+        db.execSQL("CREATE TABLE 'log' ( '_id' INTEGER PRIMARY KEY, 'envelope' INTEGER, 'time' TIMESTAMP, 'description' TEXT, 'cents' INTEGER )");
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
@@ -73,17 +73,35 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             db.insert("log", null, values);
         }
     }
+    public static void deposite(Context cntx, int envelope, long cents,
+                                String description) {
+        SQLiteDatabase db = (new EnvelopesOpenHelper(cntx))
+                            .getWritableDatabase();
+        db.beginTransaction();
+        try {
+            deposite(db, envelope, cents, description);
+            db.setTransactionSuccessful();
+            cntx.getContentResolver().notifyChange(URI, null);
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
     public static void playLog(SQLiteDatabase db) {
         SparseArray centsMap = new SparseArray();
         db.execSQL("UPDATE envelopes SET cents = 0");
-        Cursor csr = db.rawQuery("SELECT cents, envelope FROM log", null);
+        Cursor csr = db.rawQuery("SELECT cents, envelope, time FROM log", null);
         csr.moveToFirst();
         int l = csr.getCount();
+        long currentTime = System.currentTimeMillis();
         for (int i = 0; i != l; ++i) {
-            int envelope = csr.getInt(1);
-            Long centsObject = (Long)(centsMap.get(envelope));
-            long cents = centsObject == null ? 0 : centsObject;
-            centsMap.put(envelope, cents+csr.getLong(0));
+            long time = csr.getLong(2);
+            if (time <= currentTime) {
+                int envelope = csr.getInt(1);
+                Long centsObject = (Long)(centsMap.get(envelope));
+                long cents = centsObject == null ? 0 : centsObject;
+                centsMap.put(envelope, cents+csr.getLong(0));
+            }
             csr.moveToNext();
         }
         l = centsMap.size();
@@ -95,13 +113,38 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
                                      Integer.toString(envelope)});
         }
     }
-    public static void deposite(Context cntx, int envelope, long cents,
-                                String description) {
+    public static void playLog(Context cntx) {
         SQLiteDatabase db = (new EnvelopesOpenHelper(cntx))
                             .getWritableDatabase();
         db.beginTransaction();
         try {
-            deposite(db, envelope, cents, description);
+            playLog(db);
+            db.setTransactionSuccessful();
+            cntx.getContentResolver().notifyChange(URI, null);
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+    public static void depositeDelayed(SQLiteDatabase db, int envelope,
+                                       long cents, String description,
+                                       long delayUntil) {
+        if (cents != 0) {
+            ContentValues values = new ContentValues();
+            values.put("envelope", envelope);
+            values.put("time", delayUntil);
+            values.put("description", description);
+            values.put("cents", cents);
+            db.insert("log", null, values);
+        }
+    }
+    public static void depositeDelayed(Context cntx, int envelope, long cents,
+                                       String description, long delayUntil) {
+        SQLiteDatabase db = (new EnvelopesOpenHelper(cntx))
+                            .getWritableDatabase();
+        db.beginTransaction();
+        try {
+            depositeDelayed(db, envelope, cents, description, delayUntil);
             db.setTransactionSuccessful();
             cntx.getContentResolver().notifyChange(URI, null);
         } finally {

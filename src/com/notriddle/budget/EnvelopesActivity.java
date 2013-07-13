@@ -25,9 +25,11 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,10 +50,13 @@ public class EnvelopesActivity extends Activity
     TextView mTotal;
     View mTotalContainer;
     MonitorScrollView mScroll;
+    SharedPreferences mPrefs;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.envelopesactivity);
+        mPrefs = PreferenceManager
+                 .getDefaultSharedPreferences(getBaseContext());
         mGrid = (GridView) findViewById(R.id.grid);
         getLoaderManager().initLoader(0, null, this);
         mEnvelopes = new EnvelopesAdapter(this, null);
@@ -63,6 +68,17 @@ public class EnvelopesActivity extends Activity
         mScroll.setOnScrollListener(this);
         mGrid.setChoiceMode(mGrid.CHOICE_MODE_MULTIPLE_MODAL);
         mGrid.setMultiChoiceModeListener(this);
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        long now = System.currentTimeMillis();
+        if (now > mPrefs.getLong("com.notriddle.budget.lastCheck", now)
+                  +(1000*60*60*24)) {
+            EnvelopesOpenHelper.playLog(this);
+            mPrefs.edit().putLong("com.notriddle.budget.lastCheck", now)
+                         .commit();
+        }
     }
 
     @Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {

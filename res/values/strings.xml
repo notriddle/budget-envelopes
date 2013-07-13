@@ -13,6 +13,8 @@
     <string name="paycheck_spent">You distributed</string>
     <string name="paycheck_description">Paycheck</string>
     <string name="paycheck_docs">Put your earnings &#8593; to various uses &#8595;</string>
+    <string name="earn_name">Earn</string>
+    <string name="earn_menuItem">Earn</string>
     <string name="spend_name">Spend</string>
     <string name="spend_menuItem">Spend</string>
     <string name="edit_name">Edit</string>
@@ -31,6 +33,7 @@
     <string name="export_menuItem">Export</string>
     <string name="import_name">Importing&#8230;</string>
     <string name="import_menuItem">Import</string>
+    <string name="delayed_checkBox">Delayed</string>
     <plurals name="transactionsChecked_name">
         <item quantity="one">%d transaction selected</item>
         <item quantity="other">%d transactions selected</item>
