@@ -23,11 +23,15 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 public class FragmentActivity extends Activity
                               implements OkFragment.OnDismissListener {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         final Intent i = getIntent();
         final Bundle args = i.getExtras();
         final Fragment frag = Fragment.instantiate(this, i.getData().getHost(),
@@ -54,4 +58,14 @@ public class FragmentActivity extends Activity
     @Override public void onDismiss() {
         finish();
     }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
