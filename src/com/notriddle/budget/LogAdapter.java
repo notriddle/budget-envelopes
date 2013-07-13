@@ -19,6 +19,7 @@
 package com.notriddle.budget;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,31 +69,41 @@ public class LogAdapter extends CursorAdapter {
 
     @Override public void bindView(View v, Context cntx, Cursor csr) {
         CardContents contents = (CardContents) v.getTag();
-        fillCardContents(contents, csr);
+        fillCardContents(cntx, contents, csr);
     }
 
     @Override public View newView(Context cntx, Cursor csr, ViewGroup par) {
         View retVal = mInflater.inflate(R.layout.logentry, par, false);
         CardContents contents = new CardContents(retVal);
         retVal.setTag(contents);
-        fillCardContents(contents, csr);
+        fillCardContents(cntx, contents, csr);
         return retVal;
     }
 
-    private void fillCardContents(CardContents contents, Cursor csr) {
+    private void fillCardContents(Context cntx, CardContents contents, Cursor csr) {
+        long time = csr.getLong(csr.getColumnIndexOrThrow("time"));
+        int color = cntx.getResources().getColor(
+            time > System.currentTimeMillis()
+            ? android.R.color.darker_gray
+            : android.R.color.black
+        );
         contents.name.setText(csr.getString(
             csr.getColumnIndexOrThrow("description")
         ));
+        contents.name.setTextColor(color);
         long cents = csr.getLong(csr.getColumnIndexOrThrow("cents"));
         StringBuilder money = contents.money;
         money.delete(0, money.length());
         if (cents > 0) {
             money.append("+");
         }
-        contents.value.setText(EditMoney.toMoneyBuilder(cents, money).toString());
-        long time = csr.getLong(csr.getColumnIndexOrThrow("time"));
+        contents.value.setText(
+            EditMoney.toMoneyBuilder(cents, money).toString()
+        );
+        contents.value.setTextColor(color);
         Date timeD = new Date(time);
         String formattedDate = mDate.format(timeD);
         contents.time.setText(formattedDate);
+        contents.time.setTextColor(color);
     }
 }
