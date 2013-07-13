@@ -84,7 +84,7 @@ public class LogAdapter extends CursorAdapter {
         long time = csr.getLong(csr.getColumnIndexOrThrow("time"));
         int color = cntx.getResources().getColor(
             time > System.currentTimeMillis()
-            ? android.R.color.darker_gray
+            ? android.R.color.holo_blue_dark
             : android.R.color.black
         );
         contents.name.setText(csr.getString(
