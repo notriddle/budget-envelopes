@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Budget</string>
     <string name="envelopeDetails_name">Envelope</string>
-    <string name="envelopeDetails_balance">You have</string>
+    <string name="envelopeDetails_balance">Balance</string>
     <string name="deleteTransaction_menuItem">Forget transaction</string>
     <string name="newEnvelope_menuItem">New envelope</string>
     <string name="deleteEnvelope_menuItem">Throw away envelope</string>
@@ -10,7 +10,7 @@
     <string name="envelopeName_hint">Envelope name</string>
     <string name="paycheck_name">Earn</string>
     <string name="paycheck_menuItem">Earn</string>
-    <string name="paycheck_spent">You distributed</string>
+    <string name="paycheck_spent">Distributed</string>
     <string name="paycheck_description">Paycheck</string>
     <string name="paycheck_docs">Put your earnings &#8593; to various uses &#8595;</string>
     <string name="earn_name">Earn</string>
