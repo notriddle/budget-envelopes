@@ -14,6 +14,7 @@
         <item name="android:dropDownListViewStyle">@style/Style.DropDown</item>
         <item name="android:actionDropDownStyle">@style/Style.Spinner</item>
         <item name="android:dropDownSpinnerStyle">@style/Style.Spinner</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/btn_check_holo_light</item>
         <item name="android:editTextBackground">@drawable/textfield</item>
         <item name="android:alertDialogTheme">@style/Theme.Dialog</item>
         <item name="android:dialogTheme">@style/Theme.Dialog</item>
@@ -34,6 +35,7 @@
         <item name="android:actionDropDownStyle">@style/Style.Spinner</item>
         <item name="android:dropDownSpinnerStyle">@style/Style.Spinner</item>
         <item name="android:editTextBackground">@drawable/textfield</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/btn_check_holo_light</item>
     </style>
     <style name="Theme.Details" parent="Theme">
         <item name="android:windowBackground">@color/cardBackground</item>
