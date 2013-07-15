@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="promo.svg"
-   inkscape:export-filename="/home/michael/Development/budget/promo.png"
+   inkscape:export-filename="/home/michael/Development/budget-envelopes/pictures/promo.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -566,7 +566,7 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="2.9993112"
-     inkscape:cx="91.473472"
+     inkscape:cx="92.140292"
      inkscape:cy="47.542797"
      inkscape:document-units="px"
      inkscape:current-layer="g4191-0"
@@ -604,7 +604,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
