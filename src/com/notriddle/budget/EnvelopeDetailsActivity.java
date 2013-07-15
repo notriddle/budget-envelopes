@@ -57,6 +57,7 @@ public class EnvelopeDetailsActivity extends ListActivity
     LogAdapter mAdapter;
     TextView mAmount;
     TextView mAmountName;
+    TextView mProjected;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -88,6 +89,7 @@ public class EnvelopeDetailsActivity extends ListActivity
         final int basePadding = head.getPaddingTop();
         mAmount = (TextView) head.findViewById(R.id.value);
         mAmountName = (TextView) head.findViewById(R.id.name);
+        mProjected = (TextView) head.findViewById(R.id.projectedValue);
         lV.addHeaderView(head);
         setListAdapter(mAdapter);
 
@@ -98,6 +100,7 @@ public class EnvelopeDetailsActivity extends ListActivity
                     int move = (head.getTop()*-2)/3;
                     mAmount.setTranslationY(move);
                     mAmountName.setTranslationY(move);
+                    mProjected.setTranslationY(move);
                 }
             }
             public void onScrollStateChanged(AbsListView lV, int state) {
@@ -212,7 +215,8 @@ public class EnvelopeDetailsActivity extends ListActivity
                            ? "envelopes"
                            : "log";
         String[] columns = id == 0
-                           ? new String[] { "name", "cents", "_id" }
+                           ? new String[] { "name", "cents", "projectedCents",
+                                            "_id" }
                            : new String[] { "description", "cents", "time",
                                             "_id" };
         String where     = id == 0
@@ -249,9 +253,19 @@ public class EnvelopeDetailsActivity extends ListActivity
                     }
                     mName.setDefaultFocus(name.equals(""));
                 }
-                mAmount.setText(EditMoney.toColoredMoney(
-                    this, data.getLong(data.getColumnIndexOrThrow("cents"))
-                ));
+                long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
+                mAmount.setText(EditMoney.toColoredMoney(this, cents));
+                long projected = data.getLong(
+                    data.getColumnIndexOrThrow("projectedCents")
+                );
+                if (projected == cents) {
+                    mProjected.setVisibility(View.GONE);
+                } else {
+                    mProjected.setVisibility(View.VISIBLE);
+                    mProjected.setText(
+                        EditMoney.toColoredMoney(this, projected)
+                    );
+                }
             }
         } else {
             mAdapter.changeCursor(data);

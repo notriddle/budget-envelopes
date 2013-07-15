@@ -39,6 +39,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
+import java.util.Date;
 
 public class EnvelopesActivity extends Activity
                                implements LoaderCallbacks<Cursor>,
@@ -72,7 +73,11 @@ public class EnvelopesActivity extends Activity
 
     @Override public void onResume() {
         super.onResume();
-        long now = System.currentTimeMillis();
+        Date today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        long now = today.getTime();
         if (now > mPrefs.getLong("com.notriddle.budget.lastCheck", now)
                   +(1000*60*60*24)) {
             EnvelopesOpenHelper.playLog(this);

@@ -27,7 +27,7 @@ import android.util.SparseArray;
 
 public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     static final String DB_NAME = "envelopes.db";
-    static final int DB_VERSION = 2;
+    static final int DB_VERSION = 3;
     public static final Uri URI = Uri.parse("sqlite://com.notriddle.budget/envelopes");
 
     Context mCntx;
@@ -36,21 +36,28 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         mCntx = cntx;
     }
     @Override public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER );");
+        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER, 'projectedCents' INTEGER );");
         ContentValues values = new ContentValues();
         values.put("name", mCntx.getString(R.string.default_envelope_1));
         values.put("cents", 0);
+        values.put("projectedCents", 0);
         db.insert("envelopes", null, values);
         values.put("name", mCntx.getString(R.string.default_envelope_2));
         values.put("cents", 0);
+        values.put("projectedCents", 0);
         db.insert("envelopes", null, values);
         values.put("name", mCntx.getString(R.string.default_envelope_3));
         values.put("cents", 0);
+        values.put("projectedCents", 0);
         db.insert("envelopes", null, values);
         db.execSQL("CREATE TABLE 'log' ( '_id' INTEGER PRIMARY KEY, 'envelope' INTEGER, 'time' TIMESTAMP, 'description' TEXT, 'cents' INTEGER )");
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
+        if (oldVer == 1 || oldVer == 2) {
+            db.execSQL("ALTER TABLE 'envelopes' ADD COLUMN 'projectedCents' INTEGER");
+            playLog(db);
+        }
     }
 
     public static void deposite(SQLiteDatabase db, int envelope, long cents,
@@ -60,11 +67,13 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             String[] envelopeStringArray = new String[] {envelopeString};
             ContentValues values = new ContentValues();
             Cursor csr
-             = db.rawQuery("SELECT cents FROM envelopes WHERE _id = ?",
+             = db.rawQuery("SELECT cents, projectedCents FROM envelopes WHERE _id = ?",
                            envelopeStringArray);
             csr.moveToFirst();
             long currentCents = csr.getLong(csr.getColumnIndexOrThrow("cents"));
+            long currentProjectedCents = csr.getLong(csr.getColumnIndexOrThrow("projectedCents"));
             values.put("cents", currentCents+cents);
+            values.put("projectedCents", currentProjectedCents+cents);
             db.update("envelopes", values, "_id = ?", envelopeStringArray);
             values.put("envelope", envelope);
             values.put("time", System.currentTimeMillis());
@@ -89,6 +98,7 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     }
     public static void playLog(SQLiteDatabase db) {
         SparseArray centsMap = new SparseArray();
+        SparseArray projectedCentsMap = new SparseArray();
         db.execSQL("UPDATE envelopes SET cents = 0");
         Cursor csr = db.rawQuery("SELECT cents, envelope, time FROM log", null);
         csr.moveToFirst();
@@ -96,20 +106,25 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         long currentTime = System.currentTimeMillis();
         for (int i = 0; i != l; ++i) {
             long time = csr.getLong(2);
+            int envelope = csr.getInt(1);
             if (time <= currentTime) {
-                int envelope = csr.getInt(1);
                 Long centsObject = (Long)(centsMap.get(envelope));
                 long cents = centsObject == null ? 0 : centsObject;
                 centsMap.put(envelope, cents+csr.getLong(0));
             }
+            Long centsObject = (Long)(projectedCentsMap.get(envelope));
+            long cents = centsObject == null ? 0 : centsObject;
+            projectedCentsMap.put(envelope, cents+csr.getLong(0));
             csr.moveToNext();
         }
-        l = centsMap.size();
+        l = projectedCentsMap.size();
         for (int i = 0; i != l; ++i) {
-            int envelope = centsMap.keyAt(i);
-            long cents = (Long) centsMap.valueAt(i);
-            db.execSQL("UPDATE envelopes SET cents = ? WHERE _id = ?",
+            int envelope = projectedCentsMap.keyAt(i);
+            long cents = (Long) centsMap.get(envelope);
+            long projectedCents = (Long) projectedCentsMap.valueAt(i);
+            db.execSQL("UPDATE envelopes SET cents = ?, projectedCents = ? WHERE _id = ?",
                        new String[] {Long.toString(cents),
+                                     Long.toString(projectedCents),
                                      Integer.toString(envelope)});
         }
     }
@@ -130,12 +145,22 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
                                        long cents, String description,
                                        long delayUntil) {
         if (cents != 0) {
+            String envelopeString = Integer.toString(envelope);
+            String[] envelopeStringArray = new String[] {envelopeString};
             ContentValues values = new ContentValues();
-            values.put("envelope", envelope);
-            values.put("time", delayUntil);
-            values.put("description", description);
-            values.put("cents", cents);
-            db.insert("log", null, values);
+            Cursor csr
+             = db.rawQuery("SELECT projectedCents FROM envelopes WHERE _id = ?",
+                           envelopeStringArray);
+            csr.moveToFirst();
+            long currentProjectedCents = csr.getLong(csr.getColumnIndexOrThrow("projectedCents"));
+            values.put("projectedCents", currentProjectedCents+cents);
+            db.update("envelopes", values, "_id = ?", envelopeStringArray);
+            ContentValues lValues = new ContentValues();
+            lValues.put("envelope", envelope);
+            lValues.put("time", delayUntil);
+            lValues.put("description", description);
+            lValues.put("cents", cents);
+            db.insert("log", null, lValues);
         }
     }
     public static void depositeDelayed(Context cntx, int envelope, long cents,
