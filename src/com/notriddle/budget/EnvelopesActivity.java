@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,15 +74,15 @@ public class EnvelopesActivity extends Activity
 
     @Override public void onResume() {
         super.onResume();
-        Date today = new Date();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
-        long now = today.getTime();
-        if (now > mPrefs.getLong("com.notriddle.budget.lastCheck", now)
-                  +(1000*60*60*24)) {
+        Date now = new Date();
+        Date today = new Date(now.getYear(), now.getMonth(), now.getDay());
+        long todayMs = today.getTime();
+        long lastCheck = mPrefs.getLong("com.notriddle.budget.lastCheck", todayMs);
+        long lastCheckPlus = lastCheck+(1000*60*60*24);
+        //Log.i("Budget", "now="+todayMs+", lastCheck="+lastCheck+", lastCheckPlus="+lastCheckPlus);
+        if (todayMs > lastCheckPlus || todayMs < lastCheck) {
             EnvelopesOpenHelper.playLog(this);
-            mPrefs.edit().putLong("com.notriddle.budget.lastCheck", now)
+            mPrefs.edit().putLong("com.notriddle.budget.lastCheck", todayMs)
                          .commit();
         }
     }
