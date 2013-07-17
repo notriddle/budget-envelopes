@@ -75,6 +75,7 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             values.put("cents", currentCents+cents);
             values.put("projectedCents", currentProjectedCents+cents);
             db.update("envelopes", values, "_id = ?", envelopeStringArray);
+            values = new ContentValues();
             values.put("envelope", envelope);
             values.put("time", System.currentTimeMillis());
             values.put("description", description);
