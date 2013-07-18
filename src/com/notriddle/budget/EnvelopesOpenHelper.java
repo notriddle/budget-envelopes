@@ -100,7 +100,7 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     public static void playLog(SQLiteDatabase db) {
         SparseArray centsMap = new SparseArray();
         SparseArray projectedCentsMap = new SparseArray();
-        db.execSQL("UPDATE envelopes SET cents = 0");
+        db.execSQL("UPDATE envelopes SET cents = 0, projectedCents = 0");
         Cursor csr = db.rawQuery("SELECT cents, envelope, time FROM log", null);
         csr.moveToFirst();
         int l = csr.getCount();
