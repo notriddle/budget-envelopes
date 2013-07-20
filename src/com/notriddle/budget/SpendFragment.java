@@ -177,7 +177,9 @@ public class SpendFragment extends OkFragment
         mDescription.setText(c.getString(
             c.getColumnIndexOrThrow("description")
         ));
-        mAmount.setCents((mNegative?-1:1) * c.getLong(c.getColumnIndexOrThrow("cents")));
+        if (mAmount.getCents() == 0) {
+            mAmount.setCents((mNegative?-1:1) * c.getLong(c.getColumnIndexOrThrow("cents")));
+        }
         c.moveToPosition(oldPos);
     }
 
