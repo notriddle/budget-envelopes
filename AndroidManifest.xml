@@ -26,6 +26,8 @@
                   android:label="@string/paycheck_name"/>
         <activity android:name=".FragmentActivity"
                   android:theme="@style/Theme.Details"/>
+        <activity android:name=".AboutActivity"
+                  android:label="@string/about_name"/>
     </application>
 </manifest>
 

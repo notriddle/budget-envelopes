@@ -16,4 +16,6 @@
           android:title="@string/import_menuItem"/>
     <item android:id="@+id/export_menuItem"
           android:title="@string/export_menuItem"/>
+    <item android:id="@+id/about_menuItem"
+          android:title="@string/about_menuItem"/>
 </menu>

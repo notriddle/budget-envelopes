@@ -222,6 +222,10 @@ public class EnvelopesActivity extends Activity
                 Intent i = new Intent(this, PaycheckActivity.class);
                 startActivity(i);
                 return true;
+            case R.id.about_menuItem:
+                i = new Intent(this, AboutActivity.class);
+                startActivity(i);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -23,7 +23,9 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
+import java.io.InputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -62,13 +64,20 @@ public class Util {
         }
         return a;
     }
-	static public int numberOf(SparseBooleanArray items, boolean value) {
-				if (items == null) return 0;
-		int retVal = 0;
-		for (int i = 0; i != items.size(); ++i) {
-			if (items.get(items.keyAt(i)) == value)
-				retVal += 1;
-		}
-		return retVal;
-	}
+    static public int numberOf(SparseBooleanArray items, boolean value) {
+                if (items == null) return 0;
+        int retVal = 0;
+        for (int i = 0; i != items.size(); ++i) {
+            if (items.get(items.keyAt(i)) == value)
+                retVal += 1;
+        }
+        return retVal;
+    }
+    static public void pump(InputStream src, OutputStream dest) throws IOException {
+        byte[] buf = new byte[2048];
+        int len;
+        while ((len = src.read(buf)) > 0) {
+            dest.write(buf, 0, len);
+        }
+    }
 };

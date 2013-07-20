@@ -34,6 +34,20 @@
     <string name="import_name">Importing&#8230;</string>
     <string name="import_menuItem">Import</string>
     <string name="delayed_checkBox">Delayed</string>
+    <string name="about_menuItem">About</string>
+    <string name="about_name">About Budget with Envelopes</string>
+    <string name="donate_button">Donate to Michael</string>
+    <string name="license">Budget version %s\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n\n
+
+Budget is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.\n\n
+
+Budget is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.</string>
     <plurals name="transactionsChecked_name">
         <item quantity="one">%d transaction selected</item>
         <item quantity="other">%d transactions selected</item>
