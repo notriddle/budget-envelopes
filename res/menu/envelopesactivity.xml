@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/newEnvelope_menuItem"
-          android:icon="@drawable/new_menuitem"
-	      android:title="@string/newEnvelope_menuItem"
-	      android:showAsAction="ifRoom"/>
     <item android:id="@+id/paycheck_menuItem"
           android:icon="@drawable/earn_menuitem"
           android:title="@string/paycheck_menuItem"
@@ -12,6 +8,10 @@
           android:icon="@drawable/transfer_menuitem"
           android:title="@string/transfer_menuItem"
           android:showAsAction="ifRoom"/>
+	<item android:id="@+id/newEnvelope_menuItem"
+          android:icon="@drawable/new_menuitem"
+	      android:title="@string/newEnvelope_menuItem"
+	      android:showAsAction="ifRoom"/>
     <item android:id="@+id/import_menuItem"
           android:title="@string/import_menuItem"/>
     <item android:id="@+id/export_menuItem"
