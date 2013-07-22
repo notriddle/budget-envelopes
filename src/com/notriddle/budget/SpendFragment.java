@@ -107,10 +107,11 @@ public class SpendFragment extends OkFragment
         mLogAdapter = new SimpleLogAdapter(getActivity(), null);
         mLogAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
+                String s = mNegative ? "<" : ">";
                 Cursor retVal = mHelper.getReadableDatabase().query(
                     "log",
                     new String[] { "description", "cents", "time", "_id" },
-                    "envelope = ? AND cents < 0 AND UPPER(description) LIKE ?",
+                    "envelope = ? AND cents "+s+" 0 AND UPPER(description) LIKE ?",
                     new String[] {Integer.toString(mId),
                                   constraint.toString().toUpperCase()+"%"},
                     null, null, "time * -1"
@@ -200,12 +201,13 @@ public class SpendFragment extends OkFragment
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String s = mNegative ? "<" : ">";
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(),
             mHelper,
             "log",
             new String[] { "description", "cents", "time", "_id" },
-            "envelope = ? AND cents < 0",
+            "envelope = ? AND cents "+s+" 0",
             new String[] {Integer.toString(mId)},
             null,
             null,
