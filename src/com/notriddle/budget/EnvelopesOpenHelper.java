@@ -98,36 +98,8 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         }
     }
     public static void playLog(SQLiteDatabase db) {
-        SparseArray centsMap = new SparseArray();
-        SparseArray projectedCentsMap = new SparseArray();
-        db.execSQL("UPDATE envelopes SET cents = 0, projectedCents = 0");
-        Cursor csr = db.rawQuery("SELECT cents, envelope, time FROM log", null);
-        csr.moveToFirst();
-        int l = csr.getCount();
         long currentTime = System.currentTimeMillis();
-        for (int i = 0; i != l; ++i) {
-            long time = csr.getLong(2);
-            int envelope = csr.getInt(1);
-            if (time <= currentTime) {
-                Long centsObject = (Long)(centsMap.get(envelope));
-                long cents = centsObject == null ? 0 : centsObject;
-                centsMap.put(envelope, cents+csr.getLong(0));
-            }
-            Long centsObject = (Long)(projectedCentsMap.get(envelope));
-            long cents = centsObject == null ? 0 : centsObject;
-            projectedCentsMap.put(envelope, cents+csr.getLong(0));
-            csr.moveToNext();
-        }
-        l = projectedCentsMap.size();
-        for (int i = 0; i != l; ++i) {
-            int envelope = projectedCentsMap.keyAt(i);
-            long cents = (Long) centsMap.get(envelope);
-            long projectedCents = (Long) projectedCentsMap.valueAt(i);
-            db.execSQL("UPDATE envelopes SET cents = ?, projectedCents = ? WHERE _id = ?",
-                       new String[] {Long.toString(cents),
-                                     Long.toString(projectedCents),
-                                     Integer.toString(envelope)});
-        }
+        db.execSQL("UPDATE envelopes SET cents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id AND log.time < ? GROUP BY log.envelope), projectedCents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id GROUP BY log.envelope)", new String[] {Long.toString(currentTime)});
     }
     public static void playLog(Context cntx) {
         SQLiteDatabase db = (new EnvelopesOpenHelper(cntx))
