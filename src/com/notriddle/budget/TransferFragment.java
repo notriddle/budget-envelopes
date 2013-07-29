@@ -84,8 +84,6 @@ public class TransferFragment extends OkFragment
     @Override public boolean isOk() {
         return mAmount != null && mCurrentCents != null
                && mAmount.getCents() != 0
-               && (Long)mCurrentCents.get((int)mFrom.getSelectedItemId())
-                  >= mAmount.getCents()
                && mFrom.getSelectedItemPosition() != mTo.getSelectedItemPosition();
     }
 
