@@ -103,7 +103,7 @@ public class PaycheckEnvelopesAdapter extends CursorAdapter {
                 if (value.getTag() == null) return;
                 long cents = value.getCents();
                 int id = (Integer) value.getTag();
-                Log.i("PaycheckEnvelopesAdapter.TextWatcher.onTextChanged",
+                Log.d("PaycheckEnvelopesAdapter.TextWatcher.onTextChanged",
                       "id="+id+", cents="+cents);
                 mDeposites.put(id, Long.valueOf(cents));
                 if (mListener != null) {
@@ -117,11 +117,15 @@ public class PaycheckEnvelopesAdapter extends CursorAdapter {
     private void fillCardContents(CardContents contents, Cursor csr) {
         contents.name.setText(csr.getString(csr.getColumnIndexOrThrow("name")));
         int id = csr.getInt(csr.getColumnIndexOrThrow("_id"));
-        long cents = (Long) mDeposites.get(id, 0l);
-        Log.i("PaycheckEnvelopesAdapter.fillCardContents",
+        long cents = (Long) mDeposites.get(
+            id,
+            csr.getLong(csr.getColumnIndexOrThrow("lastPaycheckCents"))
+        );
+        Log.d("PaycheckEnvelopesAdapter.fillCardContents",
               "id="+id+", cents="+cents);
         contents.value.setTag(null);
         contents.value.setCents(cents);
         contents.value.setTag(id);
+        mDeposites.put(id, Long.valueOf(cents));
     }
 }

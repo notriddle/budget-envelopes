@@ -68,10 +68,10 @@ public class PaycheckActivity extends Activity
         super.onCreate(state);
         setContentView(R.layout.paycheckactivity);
         mPrefs = PreferenceManager
-                .getDefaultSharedPreferences(getBaseContext());
+                 .getDefaultSharedPreferences(getBaseContext());
         View docs = findViewById(R.id.docs);
         if (mPrefs.getBoolean("com.notriddle.budget.PaycheckActivity.docs.show",
-                             true)) {
+                              true)) {
             docs.setOnClickListener(this);
         } else {
             docs.setVisibility(docs.GONE);
@@ -131,7 +131,7 @@ public class PaycheckActivity extends Activity
         SQLiteLoader retVal = new SQLiteLoader(
             this, new EnvelopesOpenHelper(this), "envelopes",
             new String[] {
-                "name", "cents", "_id"
+                "name", "lastPaycheckCents", "_id"
             }
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
@@ -144,6 +144,11 @@ public class PaycheckActivity extends Activity
 
     @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
         mEnvelopes.changeCursor(data);
+        mIncome.postDelayed(new Runnable() {
+            public void run() {
+                recalcProgress();
+            }
+        }, 5);
     }
 
     @Override public void onLoaderReset(Loader<Cursor> ldr) {
@@ -169,23 +174,17 @@ public class PaycheckActivity extends Activity
         SparseArray deposites = mEnvelopes.getDeposites();
         int l = deposites.size();
         mSpentValue = 0;
-        int accountsWithNonzero = 0;
         for (int i = 0; i != l; ++i) {
-            long newValue = (Long) deposites.valueAt(i);
-            if (newValue != 0) {
-                mSpentValue += newValue;
-                accountsWithNonzero += 1;
-            }
+            mSpentValue += (Long) deposites.valueAt(i);
         }
-        if (accountsWithNonzero <= 1 && mIncomeValue < mSpentValue) {
-            mIncomeValue = mSpentValue;
-            mIncome.setCents(mSpentValue);
+        if (mIncomeValue != 0 && mSpentValue != 0) {
+            double progress = ((double)mSpentValue)/mIncomeValue;
+            mProgress.setProgress((int)(progress*100000));
+            mProgress.setIndeterminate(mIncomeValue < mSpentValue);
+        } else {
+            mProgress.setProgress(0);
         }
-        boolean tooBig = mIncomeValue > Integer.MAX_VALUE && mSpentValue != 0;
-        int displaySpentValue = (int)(tooBig ? 1 : mSpentValue);
-        int displayMaxValue = (int)(tooBig ? (mIncomeValue/mSpentValue) : mIncomeValue);
-        mProgress.setProgress(displaySpentValue);
-        mProgress.setMax(displayMaxValue);
+        mProgress.setMax(100000);
         mSpent.setText(EditMoney.toMoney(mSpentValue));
         invalidateOptionsMenu();
     }
@@ -208,10 +207,15 @@ public class PaycheckActivity extends Activity
         SQLiteDatabase db = (new EnvelopesOpenHelper(this)).getWritableDatabase();
         db.beginTransaction();
         try {
+            ContentValues values = new ContentValues();
             for (int i = 0; i != l; ++i) {
                 int id = deposites.keyAt(i);
                 long centsDeposited = (Long) deposites.valueAt(i);
                 EnvelopesOpenHelper.deposite(db, id, centsDeposited, description);
+                values.put("lastPaycheckCents", centsDeposited);
+                db.update("envelopes", values, "_id = ?", new String[] {
+                    Integer.toString(id)
+                });
             }
             db.setTransactionSuccessful();
             getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
