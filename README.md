@@ -1,5 +1,7 @@
 Budget with envelopes
-=====================
+======================================
+Take control of your money. It's easy.
+--------------------------------------
 
 Avoid overdraft fees, unexpected shortages, the minimum payment treadmill, and that sinking dread when you realize you actually couldn't afford to go out.
 
