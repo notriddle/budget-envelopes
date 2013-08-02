@@ -157,7 +157,12 @@ public class EnvelopesActivity extends Activity
             this, new EnvelopesOpenHelper(this), "envelopes",
             new String[] {
                 "name", "cents", "_id"
-            }
+            },
+            null,
+            null,
+            null,
+            null,
+            "name"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
