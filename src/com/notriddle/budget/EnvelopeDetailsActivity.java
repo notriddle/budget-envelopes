@@ -29,6 +29,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
@@ -64,6 +65,7 @@ public class EnvelopeDetailsActivity extends ListActivity
         mId = getIntent().getIntExtra("com.notriddle.budget.envelope", -1);
         mName = new EditTextDefaultFocus(this);
         mName.setHint(getText(R.string.envelopeName_hint));
+        mName.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mName.setLayoutParams(new ActionBar.LayoutParams(
             ActionBar.LayoutParams.FILL_PARENT,
             ActionBar.LayoutParams.WRAP_CONTENT

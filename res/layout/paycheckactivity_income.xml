@@ -10,7 +10,7 @@
     android:hint="@string/description_hint"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:inputType="text|textCapWords|textAutoCorrect"
+    android:inputType="text|textNoSuggestions"
 />
 
 <com.notriddle.budget.EditMoney
