@@ -113,7 +113,7 @@ public class TransferFragment extends OkFragment
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(), new EnvelopesOpenHelper(getActivity()), "envelopes",
             new String[] {
-                "name", "cents", "_id"
+                "name", "cents", "_id", "color"
             }
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);

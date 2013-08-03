@@ -39,6 +39,18 @@ public class SimpleEnvelopesAdapter extends SimpleCursorAdapter {
     public SimpleEnvelopesAdapter(Context cntx, Cursor csr, int layout) {
         super(cntx, layout, csr, FROM, TO, 0);
     }
+    @Override public View getDropDownView(int pos, View conv, ViewGroup par) {
+        View retVal = super.getDropDownView(pos, conv, par);
+        Cursor csr = getCursor();
+        csr.moveToPosition(pos);
+        int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
+        if (color == 0xFFEEEEEE || color == 0) {
+            retVal.setBackgroundDrawable(null);
+        } else {
+            retVal.setBackgroundColor(color);
+        }
+        return retVal;
+    }
     @Override public View newDropDownView(Context cntx, Cursor csr,
                                           ViewGroup parent) {
         View retVal = LayoutInflater.from(cntx).inflate(
