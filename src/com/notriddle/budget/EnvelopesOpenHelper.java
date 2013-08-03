@@ -36,7 +36,7 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         mCntx = cntx;
     }
     @Override public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER, 'projectedCents' INTEGER );");
+        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER, 'projectedCents' INTEGER, 'lastPaycheckCents' INTEGER );");
         ContentValues values = new ContentValues();
         values.put("name", mCntx.getString(R.string.default_envelope_1));
         values.put("cents", 0);
