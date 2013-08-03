@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
+
+<GridView android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:columnWidth="@dimen/cardWidth"
+          android:horizontalSpacing="@dimen/cardSpacing"
+          android:verticalSpacing="@dimen/cardSpacing"
+          android:stretchMode="columnWidth"
+          android:numColumns="auto_fit"
+          android:listSelector="#00000000"
+          android:id="@+id/grid"/>
+
+<ProgressBar android:id="@+id/empty"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"/>
+
+</FrameLayout>
