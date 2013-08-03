@@ -6,6 +6,7 @@
     <string name="deleteTransaction_menuItem">Forget transaction</string>
     <string name="newEnvelope_menuItem">New envelope</string>
     <string name="deleteEnvelope_menuItem">Throw away envelope</string>
+    <string name="colorEnvelope_menuItem">Change color</string>
     <string name="confirm_menuItem">This action cannot be undone</string>
     <string name="envelopeName_hint">Envelope name</string>
     <string name="paycheck_name">Earn</string>

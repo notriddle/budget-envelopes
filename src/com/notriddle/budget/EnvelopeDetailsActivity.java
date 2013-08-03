@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -59,6 +60,7 @@ public class EnvelopeDetailsActivity extends ListActivity
     TextView mAmount;
     TextView mAmountName;
     TextView mProjected;
+    int mColor;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -218,7 +220,7 @@ public class EnvelopeDetailsActivity extends ListActivity
                            : "log";
         String[] columns = id == 0
                            ? new String[] { "name", "cents", "projectedCents",
-                                            "_id" }
+                                            "color", "_id" }
                            : new String[] { "description", "cents", "time",
                                             "_id" };
         String where     = id == 0
@@ -267,6 +269,11 @@ public class EnvelopeDetailsActivity extends ListActivity
                     mProjected.setText(
                         EditMoney.toColoredMoney(this, projected)
                     );
+                }
+                mColor = data.getInt(data.getColumnIndexOrThrow("color"));
+                if (mColor != 0) {
+                    getActionBar()
+                    .setBackgroundDrawable(new ColorDrawable(mColor));
                 }
             }
         } else {
@@ -326,6 +333,26 @@ public class EnvelopeDetailsActivity extends ListActivity
         csr.moveToPosition(oldPos);
     }
 
+    private void changeColor() {
+        if (mColor == 0 || mColor == 0xFFEEEEEE) {
+            mColor = 0xFFFF4444;
+        } else if (mColor == 0xFFFF4444) {
+            mColor = 0xFF99CC00;
+        } else if (mColor == 0xFF99CC00) {
+            mColor = 0xFF33B5E5;
+        } else if (mColor == 0xFF33B5E5) {
+            mColor = 0xFFAA66CC;
+        } else if (mColor == 0xFFAA66CC) {
+            mColor = 0xFFFFBB33;
+        } else {
+            mColor = 0xFFEEEEEE;
+        }
+        ContentValues values = new ContentValues();
+        values.put("color", mColor);
+        needDatabase().update("envelopes", values, "_id = ?", new String[] {Integer.toString(mId)});
+        getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+    }
+
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.envelopedetailsactivity, menu);
         return true;
@@ -349,6 +376,9 @@ public class EnvelopeDetailsActivity extends ListActivity
             case R.id.delete_menuItem:
                 deleteThis();
                 finish();
+                return true;
+            case R.id.color_menuItem:
+                changeColor();
                 return true;
         }
         return super.onOptionsItemSelected(item);

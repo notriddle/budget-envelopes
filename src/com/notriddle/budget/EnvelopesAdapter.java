@@ -20,6 +20,9 @@ package com.notriddle.budget;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,5 +65,11 @@ public class EnvelopesAdapter extends CursorAdapter {
         contents.name.setText(csr.getString(csr.getColumnIndexOrThrow("name")));
         long cents = csr.getLong(csr.getColumnIndexOrThrow("cents"));
         contents.value.setText(EditMoney.toColoredMoney(cntx, cents));
+        int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
+        if (color == 0xFFEEEEEE || color == 0) {
+            contents.name.setBackgroundDrawable(null);
+        } else {
+            contents.name.setBackgroundColor(color);
+        }
     }
 }

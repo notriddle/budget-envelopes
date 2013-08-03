@@ -47,7 +47,7 @@ public class WidgetService extends RemoteViewsService {
                 Log.d("Budget", "WidgetService.onCreate()");
                 db = (new EnvelopesOpenHelper(WidgetService.this))
                       .getReadableDatabase();
-                csr = db.rawQuery("SELECT name, cents, _id FROM envelopes ORDER BY name", null);
+                csr = db.rawQuery("SELECT name, cents, _id, color FROM envelopes ORDER BY name", null);
                 csr.setNotificationUri(
                     getContentResolver(),
                     EnvelopesOpenHelper.URI
@@ -100,6 +100,12 @@ public class WidgetService extends RemoteViewsService {
                 act.putExtra("com.notriddle.budget.envelope",
                              (int)getItemId(pos));
                 views.setOnClickFillInIntent(R.id.card, act);
+                int color = csr.getInt(3);
+                if (color == 0xFFEEEEEE || color == 0) {
+                    views.setInt(R.id.name, "setBackgroundColor", 0);
+                } else {
+                    views.setInt(R.id.name, "setBackgroundColor", color);
+                }
 
                 return views;
             }

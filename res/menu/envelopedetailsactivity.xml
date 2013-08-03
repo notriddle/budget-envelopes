@@ -8,18 +8,8 @@
           android:icon="@drawable/earn_menuitem"
           android:title="@string/earn_menuItem"
           android:showAsAction="ifRoom"/>
-    <item android:icon="@drawable/delete_menuitem"
-          android:title="@string/deleteEnvelope_menuItem"
-          android:showAsAction="ifRoom">
-        <menu>
-            <item android:title="@string/deleteEnvelope_menuItem">
-                <menu>
-                    <item android:id="@+id/delete_menuItem"
-                          android:title="@string/confirm_menuItem"/>
-                    <item android:title="@string/cancel_menuItem"/>
-                </menu>
-            </item>
-            <item android:title="@string/cancel_menuItem"/>
-        </menu>
-    </item>
+    <item android:id="@+id/color_menuItem"
+          android:icon="@drawable/color_menuitem"
+          android:title="@string/colorEnvelope_menuItem"
+          android:showAsAction="ifRoom"/>
 </menu>

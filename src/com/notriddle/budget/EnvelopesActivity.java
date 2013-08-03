@@ -156,7 +156,7 @@ public class EnvelopesActivity extends Activity
         SQLiteLoader retVal = new SQLiteLoader(
             this, new EnvelopesOpenHelper(this), "envelopes",
             new String[] {
-                "name", "cents", "_id"
+                "name", "cents", "color", "_id"
             },
             null,
             null,
@@ -206,6 +206,7 @@ public class EnvelopesActivity extends Activity
                                     .getWritableDatabase();
                 ContentValues values = new ContentValues();
                 values.put("name", "");
+                values.put("color", 0xFFEEEEEE);
                 long id = db.insert("envelopes", null, values);
                 db.close();
                 getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);

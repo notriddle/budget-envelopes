@@ -131,7 +131,7 @@ public class PaycheckActivity extends Activity
         SQLiteLoader retVal = new SQLiteLoader(
             this, new EnvelopesOpenHelper(this), "envelopes",
             new String[] {
-                "name", "lastPaycheckCents", "_id"
+                "name", "lastPaycheckCents", "_id", "color"
             }
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);

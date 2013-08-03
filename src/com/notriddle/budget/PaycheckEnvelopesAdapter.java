@@ -127,5 +127,11 @@ public class PaycheckEnvelopesAdapter extends CursorAdapter {
         contents.value.setCents(cents);
         contents.value.setTag(id);
         mDeposites.put(id, Long.valueOf(cents));
+        int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
+        if (color == 0xFFEEEEEE || color == 0) {
+            contents.name.setBackgroundDrawable(null);
+        } else {
+            contents.name.setBackgroundColor(color);
+        }
     }
 }

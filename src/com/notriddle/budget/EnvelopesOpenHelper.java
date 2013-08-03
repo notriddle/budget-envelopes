@@ -27,7 +27,7 @@ import android.util.SparseArray;
 
 public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     static final String DB_NAME = "envelopes.db";
-    static final int DB_VERSION = 4;
+    static final int DB_VERSION = 5;
     public static final Uri URI = Uri.parse("sqlite://com.notriddle.budget/envelopes");
 
     Context mCntx;
@@ -36,22 +36,25 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         mCntx = cntx;
     }
     @Override public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER, 'projectedCents' INTEGER, 'lastPaycheckCents' INTEGER );");
+        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER, 'projectedCents' INTEGER, 'lastPaycheckCents' INTEGER, 'color' INTEGER );");
         ContentValues values = new ContentValues();
         values.put("name", mCntx.getString(R.string.default_envelope_1));
         values.put("cents", 0);
         values.put("projectedCents", 0);
         values.put("lastPaycheckCents", 0);
+        values.put("color", 0);
         db.insert("envelopes", null, values);
         values.put("name", mCntx.getString(R.string.default_envelope_2));
         values.put("cents", 0);
         values.put("projectedCents", 0);
         values.put("lastPaycheckCents", 0);
+        values.put("color", 0);
         db.insert("envelopes", null, values);
         values.put("name", mCntx.getString(R.string.default_envelope_3));
         values.put("cents", 0);
         values.put("projectedCents", 0);
         values.put("lastPaycheckCents", 0);
+        values.put("color", 0);
         db.insert("envelopes", null, values);
         db.execSQL("CREATE TABLE 'log' ( '_id' INTEGER PRIMARY KEY, 'envelope' INTEGER, 'time' TIMESTAMP, 'description' TEXT, 'cents' INTEGER )");
     }
@@ -64,6 +67,10 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         if (oldVer < 4) {
             db.execSQL("ALTER TABLE 'envelopes' ADD COLUMN 'lastPaycheckCents' INTEGER");
             db.execSQL("UPDATE envelopes SET lastPaycheckCents = 0");
+        }
+        if (oldVer < 5) {
+            db.execSQL("ALTER TABLE 'envelopes' ADD COLUMN 'color' INTEGER");
+            db.execSQL("UPDATE envelopes SET color = 0");
         }
     }
 

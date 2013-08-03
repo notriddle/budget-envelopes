@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:paddingTop="@dimen/halfCardPadding"
-                android:paddingBottom="@dimen/halfCardPadding"
-                android:paddingLeft="@dimen/cardPadding"
-                android:paddingRight="@dimen/cardPadding"
-                android:background="@drawable/stateful_card_background">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@drawable/stateful_card_background">
     <TextView
         android:id="@+id/name"
         android:textColor="#000"
         android:textSize="22sp"
         android:fontFamily="sans-serif-light"
+        android:paddingTop="@dimen/cardPadding"
+        android:paddingBottom="@dimen/cardPadding"
+        android:paddingLeft="@dimen/cardPadding"
+        android:paddingRight="@dimen/cardPadding"
+        android:gravity="left"
+        android:layout_weight="1"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
     />
     <com.notriddle.budget.EditMoney
@@ -23,9 +25,13 @@
         android:textColor="#000"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_alignParentTop="true"
+        android:paddingLeft="@dimen/cardPadding"
+        android:paddingRight="@dimen/cardPadding"
+        android:gravity="right"
+        android:layout_weight="1"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
     />
-</RelativeLayout>
+</LinearLayout>
