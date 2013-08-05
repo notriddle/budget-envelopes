@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Presupuesto</string>
+    <string name="envelopeDetails_name">Sobre</string>
+    <string name="envelopeDetails_balance">Balance</string>
+    <string name="deleteTransaction_menuItem">Eliminar transacción</string>
+    <string name="newEnvelope_menuItem">Nuevo sobre</string>
+    <string name="deleteEnvelope_menuItem">Desechar</string>
+    <string name="colorEnvelope_menuItem">Cambiar color</string>
+    <string name="confirm_menuItem">Esta acción no se puede deshacer</string>
+    <string name="envelopeName_hint">Nombre</string>
+    <string name="paycheck_name">Ingreso</string>
+    <string name="paycheck_menuItem">Añadir ingreso</string>
+    <string name="paycheck_spent">Distribuidos</string>
+    <string name="paycheck_description">Sueldo</string>
+    <string name="paycheck_docs">Distribuye tus ingresos &#8593; en sobres para varios usos &#8595;</string>
+    <string name="earn_name">Ingreso</string>
+    <string name="earn_menuItem">Añadir ingreso</string>
+    <string name="spend_name">Gasto</string>
+    <string name="spend_menuItem">Añadir gasto</string>
+    <string name="edit_name">Editar</string>
+    <string name="transfer_name">Transferir</string>
+    <string name="transfer_menuItem">Transferir</string>
+    <string name="transfer_label">a</string>
+    <string name="default_envelope_1">Facturas</string>
+    <string name="default_envelope_2">Alimentos</string>
+    <string name="default_envelope_3">Vestimenta</string>
+    <string name="cancel_menuItem">Cancelar</string>
+    <string name="ok_menuItem">Aceptar</string>
+    <string name="description_hint">Descripción</string>
+    <string name="amount_hint">00.00</string>
+    <string name="gotIt">&#215;</string>
+    <string name="export_name">Exportando&#8230;</string>
+    <string name="export_menuItem">Exportar</string>
+    <string name="import_name">Importando&#8230;</string>
+    <string name="import_menuItem">Importar</string>
+    <string name="delayed_checkBox">Diferido</string>
+    <string name="about_menuItem">Acerca de</string>
+    <string name="about_name">Acerca de Presupuesto con Sobres</string>
+    <string name="donate_button">Donar a Michael</string>
+    <string name="license">Presupuesto versión %s\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n\n
+
+Presupuesto es software libre: puede redistribuirlo y/o modificarlo
+bajo los términos de la Licencia General Pública de GNU publicada por la
+Free Software Foundation, ya sea la versión 3 de la Licencia, o (a su
+elección) cualquier versión posterior.\n\n
+
+Este programa se distribuye con la esperanza de que sea útil pero SIN
+NINGUNA GARANTÍA; incluso sin la garantía implícita de MERCANTIBILIDAD o
+CALIFICADA PARA UN PROPÓSITO EN PARTICULAR. Vea la Licencia General
+Pública de GNU para más detalles.</string>
+    <plurals name="transactionsChecked_name">
+        <item quantity="one">%d transacción seleccionada</item>
+        <item quantity="other">%d transacciones seleccionadas</item>
+    </plurals>
+    <plurals name="envelopesChecked_name">
+        <item quantity="one">%d sobre seleccionado</item>
+        <item quantity="other">%d sobres seleccionados</item>
+    </plurals>
+</resources>
