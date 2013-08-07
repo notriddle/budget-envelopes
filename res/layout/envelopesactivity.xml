@@ -10,6 +10,18 @@
               android:layout_height="wrap_content">
     <include layout="@layout/totalamount"/>
     <include layout="@layout/cards"/>
+    <FrameLayout android:background="@color/cardBackground"
+                 android:padding="@dimen/cardPadding"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="@dimen/cardSpacing"
+                 android:layout_marginRight="@dimen/cardSpacing"
+                 android:layout_marginBottom="@dimen/cardSpacing">
+        <fragment android:name="com.notriddle.budget.GraphFragment"
+                  android:id="@+id/graph"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"/>
+    </FrameLayout>
 </LinearLayout>
 </com.notriddle.budget.MonitorScrollView>
 
