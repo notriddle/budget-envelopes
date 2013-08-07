@@ -16,6 +16,8 @@
  * along with Budget. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Got it from here: http://theandroidcoder.com/graphical/android-forcing-a-gridview-or-listview-to-display-at-its-full-height/
+
 package com.notriddle.budget;
 
 import android.content.Context;
