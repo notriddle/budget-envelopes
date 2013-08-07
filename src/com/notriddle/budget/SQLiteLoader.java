@@ -35,13 +35,16 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
     String mGroupBy;
     String mHaving;
     String mOrderBy;
+    String mLimit;
     Cursor mResults;
+    String mRawQuery;
     ContentObserver mObserver;
     Uri mNotificationUri;
 
     public SQLiteLoader(Context cntx, SQLiteOpenHelper helper, String table, 
                         String[] columns, String selection, String[] args, 
-                        String groupBy, String having, String orderBy) {
+                        String groupBy, String having, String orderBy,
+                        String limit) {
         super(cntx);
         mCntx = cntx;
         mDatabase = helper.getReadableDatabase();
@@ -52,17 +55,33 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
         mGroupBy = groupBy;
         mHaving = having;
         mOrderBy = orderBy;
+        mLimit = limit;
+        mObserver = new ForceLoadContentObserver();
+    }
+
+    public SQLiteLoader(Context cntx, SQLiteOpenHelper helper,
+                        String rawQuery) {
+        super(cntx);
+        mCntx = cntx;
+        mDatabase = helper.getReadableDatabase();
+        mRawQuery = rawQuery;
         mObserver = new ForceLoadContentObserver();
     }
 
     public SQLiteLoader(Context cntx, SQLiteOpenHelper helper, String table, 
+                        String[] columns, String selection, String[] args, 
+                        String groupBy, String having, String orderBy) {
+        this(cntx, helper, table, columns, selection, args, groupBy, having, orderBy, null);
+    }
+
+    public SQLiteLoader(Context cntx, SQLiteOpenHelper helper, String table, 
                         String[] columns, String selection, String[] args) {
-        this(cntx, helper, table, columns, selection, args, null, null, null);
+        this(cntx, helper, table, columns, selection, args, null, null, null, null);
     }
 
     public SQLiteLoader(Context cntx, SQLiteOpenHelper helper, String table, 
                         String[] columns) {
-        this(cntx, helper, table, columns, null, null, null, null, null);
+        this(cntx, helper, table, columns, null, null, null, null, null, null);
     }
 
     public void setNotificationUri(Uri uri) {
@@ -76,10 +95,14 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
         if (mResults != null) {
             mResults.unregisterContentObserver(mObserver);
         }
-        mResults = mDatabase.query(
-            mTable, mColumns, mSelection, mSelectionArgs,
-            mGroupBy, mHaving, mOrderBy
-        );
+        mResults = mRawQuery == null
+                   ? mDatabase.query(
+                       mTable, mColumns, mSelection, mSelectionArgs,
+                       mGroupBy, mHaving, mOrderBy, mLimit
+                   )
+                   : mDatabase.rawQuery(
+                       mRawQuery, null
+                   );
         mResults.registerContentObserver(mObserver);
         if (mNotificationUri != null) {
             mResults.setNotificationUri(mCntx.getContentResolver(), mNotificationUri);
