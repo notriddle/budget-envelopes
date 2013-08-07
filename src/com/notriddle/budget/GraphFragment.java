@@ -89,7 +89,6 @@ public class GraphFragment extends Fragment
             if (time < minTime) minTime = time;
             data.moveToNext();
         }
-        maxCents += 100;
 
         ImageView view = (ImageView)getView();
         int cardSpacing = getActivity().getResources()
@@ -114,20 +113,22 @@ public class GraphFragment extends Fragment
         brush.setDither(true);
         brush.setHinting(Paint.HINTING_ON);
         brush.setStyle(Paint.Style.STROKE);
-        brush.setStrokeWidth(
-            getActivity().getResources()
-                          .getDimension(R.dimen.graphStroke)
-        );
+        float stroke = getActivity()
+                       .getResources()
+                        .getDimension(R.dimen.graphStroke);
+        brush.setStrokeWidth(stroke);
         int currentEnvelope = -1;
         Path currentPath = null;
+        float usableHeight = height-(2*stroke);
+        float usableWidth = width-(2*stroke);
 
         data.moveToFirst();
         for (int i = 0; i != l; ++i) {
             int envelope = data.getInt(1);
             long cents = data.getLong(0);
             long time = data.getLong(3);
-            float pointHeight = height-(float)((cents-minCents)*height/((double)(maxCents-minCents)));
-            float pointPosition = (float)((time-minTime)*width/((double)(maxTime-minTime)));
+            float pointHeight = usableHeight-(float)((cents-minCents)*usableHeight/((double)(maxCents-minCents)))+stroke;
+            float pointPosition = (float)((time-minTime)*usableWidth/((double)(maxTime-minTime)))+stroke;
             Log.d("Budget", "GraphFragment.onLoadFinished(): envelope="+envelope);
             Log.d("Budget", "GraphFragment.onLoadFinished(): envelope.name="+data.getString(4));
             Log.d("Budget", "GraphFragment.onLoadFinished(): cents="+cents);
@@ -136,12 +137,12 @@ public class GraphFragment extends Fragment
             Log.d("Budget", "GraphFragment.onLoadFinished(): pointPosition="+pointPosition);
             if (envelope != currentEnvelope) {
                 if (currentPath != null) {
-                    currentPath.rLineTo(width, 0);
+                    currentPath.rLineTo(usableWidth, 0);
                     chartCanvas.drawPath(currentPath, brush);
                 }
                 int color = data.getInt(2);
                 //brush = new Paint(brush);
-                brush.setColor(color == 0 || color == 0xFFEEEEEE ? Color.BLACK : color);
+                brush.setColor(color == 0 || color == 0xFFEEEEEE ? Color.GRAY : color);
                 currentEnvelope = envelope;
                 currentPath = new Path();
                 currentPath.moveTo(pointPosition, pointHeight);
@@ -151,7 +152,7 @@ public class GraphFragment extends Fragment
             data.moveToNext();
         }
         if (currentPath != null) {
-            currentPath.rLineTo(width, 0);
+            currentPath.rLineTo(usableWidth, 0);
             chartCanvas.drawPath(currentPath, brush);
         }
         view.setImageBitmap(chart);
