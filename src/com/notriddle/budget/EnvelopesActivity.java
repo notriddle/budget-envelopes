@@ -20,6 +20,8 @@ package com.notriddle.budget;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentValues;
@@ -36,6 +38,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -46,7 +49,8 @@ public class EnvelopesActivity extends Activity
                                implements LoaderCallbacks<Cursor>,
                                           GridView.OnItemClickListener,
                                           MonitorScrollView.OnScrollListener,
-                                          AbsListView.MultiChoiceModeListener {
+                                          AbsListView.MultiChoiceModeListener,
+                                          View.OnClickListener {
     GridView mGrid;
     EnvelopesAdapter mEnvelopes;
     TextView mTotal;
@@ -70,6 +74,8 @@ public class EnvelopesActivity extends Activity
         mScroll.setOnScrollListener(this);
         mGrid.setChoiceMode(mGrid.CHOICE_MODE_MULTIPLE_MODAL);
         mGrid.setMultiChoiceModeListener(this);
+        findViewById(R.id.graph).setOnClickListener(this);
+        setGraphVisible(mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
     }
 
     @Override public void onResume() {
@@ -85,6 +91,33 @@ public class EnvelopesActivity extends Activity
             mPrefs.edit().putLong("com.notriddle.budget.lastCheck", todayMs)
                          .commit();
         }
+    }
+
+    @Override public void onClick(View v) {
+        setGraphVisible(!mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
+    }
+
+    private void setGraphVisible(boolean visible) {
+        View label = findViewById(R.id.graphLabel);
+        Fragment chart = getFragmentManager().findFragmentById(R.id.graph);
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        if (chart == null) {
+            if (visible) {
+                label.setVisibility(View.GONE);
+                trans.add(R.id.graph, new GraphFragment());
+            }
+        } else {
+            label.setVisibility(visible ? View.GONE : View.VISIBLE);
+            if (visible) {
+                trans.show(chart);
+            } else {
+                trans.hide(chart);
+            }
+        }
+        trans.commit();
+        mPrefs.edit()
+               .putBoolean("com.notriddle.budget.graphVisible", visible)
+               .apply();
     }
 
     @Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
