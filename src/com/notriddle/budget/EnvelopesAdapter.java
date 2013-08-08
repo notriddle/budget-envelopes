@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,15 @@ public class EnvelopesAdapter extends CursorAdapter {
         if (color == 0xFFEEEEEE || color == 0) {
             contents.name.setBackgroundDrawable(null);
         } else {
-            contents.name.setBackgroundColor(color);
+            StateListDrawable bg = new StateListDrawable();
+            Drawable normal = new ColorDrawable(color);
+            Drawable transparent = new ColorDrawable(0);
+            bg.addState(new int[] {android.R.attr.state_pressed}, transparent);
+            bg.addState(new int[] {android.R.attr.state_focused}, transparent);
+            bg.addState(new int[] {android.R.attr.state_checked}, transparent);
+            bg.addState(new int[] {android.R.attr.state_selected}, transparent);
+            bg.addState(new int[0], normal);
+            contents.name.setBackgroundDrawable(bg);
         }
     }
 }

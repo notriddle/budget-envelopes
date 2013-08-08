@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/stateful_card_background">
-    <TextView android:id="@+id/name"
+    <CheckedTextView android:id="@+id/name"
               android:padding="@dimen/cardPadding"
               android:textColor="#000"
               android:textSize="22sp"
