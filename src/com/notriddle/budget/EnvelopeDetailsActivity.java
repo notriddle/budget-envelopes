@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -274,6 +275,9 @@ public class EnvelopeDetailsActivity extends ListActivity
                 if (mColor != 0) {
                     getActionBar()
                     .setBackgroundDrawable(new ColorDrawable(mColor));
+                    if (Build.VERSION.SDK_INT < 18) {
+                        invalidateOptionsMenu();
+                    }
                 }
             }
         } else {
