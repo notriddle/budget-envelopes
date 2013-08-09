@@ -49,7 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.database.sqlite.SQLiteDatabase;
 
-public class EnvelopeDetailsActivity extends ListActivity
+public class EnvelopeDetailsActivity extends LockedListActivity
                                      implements LoaderCallbacks<Cursor>,
                                                 TextWatcher,
                                             AbsListView.MultiChoiceModeListener,
@@ -65,9 +65,6 @@ public class EnvelopeDetailsActivity extends ListActivity
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        if (!PinActivity.ensureUnlocked(this)) {
-            finish(); return;
-        }
         mId = getIntent().getIntExtra("com.notriddle.budget.envelope", -1);
         mName = new EditTextDefaultFocus(this);
         mName.setHint(getText(R.string.envelopeName_hint));

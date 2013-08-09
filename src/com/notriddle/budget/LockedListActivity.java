@@ -18,39 +18,24 @@
 
 package com.notriddle.budget;
 
+import android.app.ListActivity;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.text.InputType;
 
-public class SettingsActivity extends PreferenceActivity {
+public class LockedListActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        if (!PinActivity.ensureUnlocked(this)) {
-            finish(); return;
-        }
-		getFragmentManager().beginTransaction()
-				.replace(android.R.id.content, new SettingsFragment()).commit();
+        check();
 	}
 
     @Override public void onResume() {
         super.onResume();
+        check();
+    }
+
+    private void check() {
         if (!PinActivity.ensureUnlocked(this)) {
             finish();
         }
     }
-
-	public static class SettingsFragment extends PreferenceFragment {
-		@Override
-		public void onCreate(final Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.settings);
-
-			EditTextPreference pref
-             = (EditTextPreference) findPreference("com.notriddle.budget.pin");
-			pref.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
-		}
-	}
 }

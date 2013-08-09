@@ -45,7 +45,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class PaycheckActivity extends Activity
+public class PaycheckActivity extends LockedActivity
                               implements LoaderCallbacks<Cursor>,
                                          PaycheckEnvelopesAdapter
                                          .DepositesChangeListener,
@@ -66,9 +66,6 @@ public class PaycheckActivity extends Activity
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        if (!PinActivity.ensureUnlocked(this)) {
-            finish(); return;
-        }
         setContentView(R.layout.paycheckactivity);
         mPrefs = PreferenceManager
                  .getDefaultSharedPreferences(getBaseContext());
