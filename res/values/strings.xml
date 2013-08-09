@@ -2,6 +2,7 @@
 <!--
  This file is a part of Budget with Envelopes.
  Copyright 2013 Michael Howell <michael@notriddle.com>
+ Copyright 2013 Anatolij Zelenin <az@azapps.de>
 
  Budget is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -78,15 +79,12 @@ GNU General Public License for more details.</string>
         <item quantity="one">%d envelope selected</item>
         <item quantity="other">%d envelopes selected</item>
     </plurals>
-
-    <string name="title_activity_pin">Unlock</string>
-    <string name="action_settings">Settings</string>
-    <string name="pin_about">Enter your PIN</string>
-    <string name="pin_enter">Unlock</string>
-    <string name="pin_wrong">Try again</string>
+    <string name="pin_name">Unlock</string>
+    <string name="pin_label">Enter your PIN</string>
+    <string name="pin_enter_button">Unlock</string>
+    <string name="pin_label_wrong">Try again</string>
     <string name="pin_settings">PIN</string>
     <string name="pin_settings_summary">Leave empty if you don\'t need this</string>
     <string name="settings_menuItem">Settings</string>
     <string name="settings_name">Settings</string>
-
 </resources>

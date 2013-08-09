@@ -9,7 +9,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/pin_about"
+        android:text="@string/pin_label"
         android:textAlignment="center"
         android:textSize="20sp" />
 
@@ -26,6 +26,6 @@
         android:id="@+id/pinEnter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/pin_enter" />
+        android:text="@string/pin_enter_button" />
 
 </LinearLayout>
