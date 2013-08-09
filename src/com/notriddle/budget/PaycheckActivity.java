@@ -66,6 +66,9 @@ public class PaycheckActivity extends Activity
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        if (!PinActivity.ensureUnlocked(this)) {
+            finish(); return;
+        }
         setContentView(R.layout.paycheckactivity);
         mPrefs = PreferenceManager
                  .getDefaultSharedPreferences(getBaseContext());

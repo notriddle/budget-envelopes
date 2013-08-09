@@ -60,6 +60,9 @@ public class EnvelopesActivity extends Activity
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        if (!PinActivity.ensureUnlocked(this)) {
+            finish(); return;
+        }
         setContentView(R.layout.envelopesactivity);
         mPrefs = PreferenceManager
                  .getDefaultSharedPreferences(getBaseContext());

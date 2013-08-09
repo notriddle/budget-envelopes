@@ -82,9 +82,10 @@ GNU General Public License for more details.</string>
     <string name="pin_name">Unlock</string>
     <string name="pin_label">Enter your PIN</string>
     <string name="pin_enter_button">Unlock</string>
-    <string name="pin_label_wrong">Try again</string>
+    <string name="pin_toast_wrong">Try again</string>
     <string name="pin_settings">PIN</string>
     <string name="pin_settings_summary">Leave empty if you don\'t need this</string>
     <string name="settings_menuItem">Settings</string>
     <string name="settings_name">Settings</string>
+    <string name="pin_notify">Unlocked. Tap to lock.</string>
 </resources>

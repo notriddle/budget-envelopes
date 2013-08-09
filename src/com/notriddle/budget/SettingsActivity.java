@@ -28,6 +28,9 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        if (!PinActivity.ensureUnlocked(this)) {
+            finish(); return;
+        }
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new SettingsFragment()).commit();
 	}
@@ -38,7 +41,8 @@ public class SettingsActivity extends PreferenceActivity {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.settings);
 
-			EditTextPreference pref = (EditTextPreference) findPreference("pin");
+			EditTextPreference pref
+             = (EditTextPreference) findPreference("com.notriddle.budget.pin");
 			pref.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
 		}
 	}

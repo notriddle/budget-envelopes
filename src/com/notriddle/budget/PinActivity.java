@@ -19,6 +19,9 @@
 package com.notriddle.budget;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -34,56 +37,106 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class PinActivity extends Activity {
-	private EditText pin;
-	private SharedPreferences preferences;
+    private EditText mPin;
+    private SharedPreferences mPrefs;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		preferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		if (preferences.getString("pin", "").equals("")) {
-			start();
-		}
+        mPrefs = PreferenceManager
+                 .getDefaultSharedPreferences(getApplicationContext());
 
-		setContentView(R.layout.activity_pin);
-		setTitle(R.string.pin_name);
+        Intent i = getIntent();
+        if (i != null && "com.notriddle.budget.LOCK".equals(i.getAction())) {
+            lock();
+        } else if (mPrefs.getString("com.notriddle.budget.pin", "").equals("")
+                   || mPrefs.getBoolean("com.notriddle.budget.unlocked", false)) {
+            finish();
+        } else {
+            setContentView(R.layout.activity_pin);
 
-		pin = (EditText) findViewById(R.id.pin);
-		pin.setOnEditorActionListener(new OnEditorActionListener() {
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					check();
-					return true;
-				}
-				return false;
-			}
-		});
-		Button pinEnter = (Button) findViewById(R.id.pinEnter);
-		pinEnter.setOnClickListener(new OnClickListener() {
+            mPin = (EditText) findViewById(R.id.pin);
+            mPin.setOnEditorActionListener(new OnEditorActionListener() {
+                public boolean onEditorAction(TextView v, int actionId,
+                        KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        check();
+                        return true;
+                    }
+                    return false;
+                }
+            });
 
-			@Override
-			public void onClick(View v) {
-				check();
-			}
-		});
+            Button pinEnter = (Button) findViewById(R.id.pinEnter);
+            pinEnter.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    check();
+                }
+            });
+        }
+    }
 
-	}
+    private void check() {
+        if (mPin.getText().toString().equals(mPrefs.getString("com.notriddle.budget.pin", ""))) {
+            unlock();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.pin_toast_wrong,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
-	private void check() {
-		if (pin.getText().toString().equals(preferences.getString("pin", ""))) {
-			start();
-		} else {
-			Toast.makeText(getApplicationContext(), R.string.pin_label_wrong,
-					Toast.LENGTH_LONG).show();
-		}
-	}
+    private void unlock() {
+        notify(this);
+        mPrefs.edit()
+               .putBoolean("com.notriddle.budget.unlocked", true)
+               .apply();
+        startActivity(new Intent(this, EnvelopesActivity.class));
+        finish();
+    }
 
-	private void start() {
-		Intent intent = new Intent(PinActivity.this, EnvelopesActivity.class);
-		startActivity(intent);
-	}
+    private void lock() {
+        NotificationManager nM = (NotificationManager)
+                                 getSystemService(NOTIFICATION_SERVICE);
+        nM.cancel(R.string.pin_notify);
+        mPrefs.edit()
+               .putBoolean("com.notriddle.budget.unlocked", false)
+               .apply();
+        finish();
+    }
 
+    private static void notify(Activity cntx) {
+        Notification.Builder nB = new Notification.Builder(cntx);
+        nB.setSmallIcon(R.drawable.ic_notification);
+        nB.setContentTitle(cntx.getText(R.string.app_name));
+        nB.setContentText(cntx.getText(R.string.pin_notify));
+        Intent i = new Intent(cntx, PinActivity.class);
+        i.setAction("com.notriddle.budget.LOCK");
+        PendingIntent pI = PendingIntent.getActivity(cntx, 0, i, 0);
+        nB.setContentIntent(pI);
+        nB.setDeleteIntent(pI);
+        nB.setAutoCancel(true);
+        NotificationManager nM = (NotificationManager)
+                                 cntx.getSystemService(NOTIFICATION_SERVICE);
+        nM.notify(R.string.pin_notify, nB.getNotification());
+    }
+
+    public static boolean ensureUnlocked(Activity a) {
+        SharedPreferences prefs
+         = PreferenceManager
+           .getDefaultSharedPreferences(a.getApplicationContext());
+        
+        boolean done
+         = prefs.getString("com.notriddle.budget.pin", "").equals("")
+           || prefs.getBoolean("com.notriddle.budget.unlocked", false);
+
+        if (!done) {
+            a.startActivity(new Intent(a, PinActivity.class));
+        } else {
+            notify(a);
+        }
+
+        return done;
+    }
 }
