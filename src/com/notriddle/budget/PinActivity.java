@@ -30,6 +30,7 @@ public class PinActivity extends Activity {
 		}
 
 		setContentView(R.layout.activity_pin);
+		setTitle(R.string.title_activity_pin);
 
 		pin = (EditText) findViewById(R.id.pin);
 		pin.setOnEditorActionListener(new OnEditorActionListener() {
