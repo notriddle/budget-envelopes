@@ -27,6 +27,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -40,8 +43,7 @@ public class PinActivity extends Activity {
     private EditText mPin;
     private SharedPreferences mPrefs;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mPrefs = PreferenceManager
@@ -67,19 +69,27 @@ public class PinActivity extends Activity {
                     return false;
                 }
             });
-
-            Button pinEnter = (Button) findViewById(R.id.pinEnter);
-            pinEnter.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    check();
-                }
-            });
         }
     }
 
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.ok, menu);
+        return true;
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.ok_menuItem:
+                check();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void check() {
-        if (mPin.getText().toString().equals(mPrefs.getString("com.notriddle.budget.pin", ""))) {
+        if (mPin.getText()
+                 .toString()
+                  .equals(mPrefs.getString("com.notriddle.budget.pin", ""))) {
             unlock();
         } else {
             Toast.makeText(getApplicationContext(), R.string.pin_toast_wrong,
