@@ -17,14 +17,15 @@
         android:id="@+id/pin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword" >
+        android:inputType="numberPassword">
 
         <requestFocus />
     </EditText>
-    <Button 
+
+    <Button
         android:id="@+id/pinEnter"
-        android:text="@string/pin_enter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/pin_enter" />
 
 </LinearLayout>

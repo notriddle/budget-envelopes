@@ -58,7 +58,9 @@
 
         <activity
             android:name="com.notriddle.budget.PinActivity"
-            android:label="@string/title_activity_pin" >
+            android:label="@string/title_activity_pin"
+            android:windowSoftInputMode="stateVisible"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
