@@ -18,6 +18,7 @@
 -->
 
 <resources>
+
     <string name="app_name">Budget</string>
     <string name="envelopeDetails_name">Envelope</string>
     <string name="envelopeDetails_balance">Balance</string>
@@ -68,6 +69,7 @@ Budget is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.</string>
+
     <plurals name="transactionsChecked_name">
         <item quantity="one">%d transaction selected</item>
         <item quantity="other">%d transactions selected</item>
@@ -76,4 +78,15 @@ GNU General Public License for more details.</string>
         <item quantity="one">%d envelope selected</item>
         <item quantity="other">%d envelopes selected</item>
     </plurals>
+
+    <string name="title_activity_pin">Unlock</string>
+    <string name="action_settings">Settings</string>
+    <string name="pin_about">Enter your PIN</string>
+    <string name="pin_enter">Unlock</string>
+    <string name="pin_wrong">Try again</string>
+    <string name="pin_settings">PIN</string>
+    <string name="pin_settings_summary">Leave empty if you don\'t need this</string>
+    <string name="settings_menuItem">Settings</string>
+    <string name="settings_name">Settings</string>
+
 </resources>
