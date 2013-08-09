@@ -1,44 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.notriddle.budget"
-          android:versionCode="23"
-          android:versionName="2.3"
-          android:hardwareAccelerated="true"
-          android:installLocation="auto">
-    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="18"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <application android:label="@string/app_name"
-                 android:allowBackup="true"
-                 android:icon="@drawable/ic_launcher"
-                 android:theme="@style/Theme">
-        <activity android:name=".EnvelopesActivity"
-                  android:label="@string/app_name">
+    package="com.notriddle.budget"
+    android:hardwareAccelerated="true"
+    android:installLocation="auto"
+    android:versionCode="23"
+    android:versionName="2.3" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme" >
+        <activity
+            android:name="com.notriddle.budget.EnvelopesActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.notriddle.budget.EnvelopeDetailsActivity"
+            android:label="@string/envelopeDetails_name"
+            android:theme="@style/Theme.Details" />
+        <activity
+            android:name="com.notriddle.budget.PaycheckActivity"
+            android:label="@string/paycheck_name" />
+        <activity
+            android:name="com.notriddle.budget.FragmentActivity"
+            android:theme="@style/Theme.Details" />
+        <activity
+            android:name="com.notriddle.budget.AboutActivity"
+            android:label="@string/about_name" />
+        <activity
+            android:name="com.notriddle.budget.SettingsActivity"
+            android:label="@string/settings_name" />
+
+        <receiver
+            android:name="com.notriddle.budget.WidgetProvider"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
+        </receiver>
+
+        <service
+            android:name="com.notriddle.budget.WidgetService"
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity
+            android:name="com.notriddle.budget.PinActivity"
+            android:label="@string/title_activity_pin" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EnvelopeDetailsActivity"
-                  android:label="@string/envelopeDetails_name"
-                  android:theme="@style/Theme.Details"/>
-        <activity android:name=".PaycheckActivity"
-                  android:label="@string/paycheck_name"/>
-        <activity android:name=".FragmentActivity"
-                  android:theme="@style/Theme.Details"/>
-        <activity android:name=".AboutActivity"
-                  android:label="@string/about_name"/>
-        <receiver android:name=".WidgetProvider"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                       android:resource="@xml/widget"/>
-        </receiver>
-        <service android:name=".WidgetService"
-                 android:permission="android.permission.BIND_REMOTEVIEWS"
-                 android:exported="true"/>
     </application>
-</manifest>
 
+</manifest>
