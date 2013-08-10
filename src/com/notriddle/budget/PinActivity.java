@@ -25,6 +25,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -42,6 +44,7 @@ import android.widget.Toast;
 public class PinActivity extends Activity {
     private EditText mPin;
     private SharedPreferences mPrefs;
+    private PendingIntent mNextActivity;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +53,27 @@ public class PinActivity extends Activity {
                  .getDefaultSharedPreferences(getApplicationContext());
 
         Intent i = getIntent();
+
         if (i != null && "com.notriddle.budget.LOCK".equals(i.getAction())) {
             lock();
         } else if (mPrefs.getString("com.notriddle.budget.pin", "").equals("")
                    || mPrefs.getBoolean("com.notriddle.budget.unlocked", false)) {
             finish();
         } else {
+            Parcelable nextActivity
+             = i == null
+               ? null
+               : i.getParcelableExtra("com.notriddle.budget.NEXT_ACTIVITY");
+            if (nextActivity == null) {
+                Intent nextA = new Intent(this, EnvelopesActivity.class);
+                mNextActivity = PendingIntent.getActivity(
+                    this, 0, nextA, PendingIntent.FLAG_UPDATE_CURRENT
+                );
+            } else {
+                mNextActivity = (PendingIntent) nextActivity;
+            }
+            Log.d("Budget", "mNextActivity="+mNextActivity);
+
             setContentView(R.layout.activity_pin);
 
             mPin = (EditText) findViewById(R.id.pin);
@@ -102,7 +120,11 @@ public class PinActivity extends Activity {
         mPrefs.edit()
                .putBoolean("com.notriddle.budget.unlocked", true)
                .apply();
-        startActivity(new Intent(this, EnvelopesActivity.class));
+        try {
+            mNextActivity.send(this, 0, null);
+        } catch (PendingIntent.CanceledException e) {
+            throw new Error(e);
+        }
         finish();
     }
 
@@ -142,7 +164,16 @@ public class PinActivity extends Activity {
            || prefs.getBoolean("com.notriddle.budget.unlocked", false);
 
         if (!done) {
-            a.startActivity(new Intent(a, PinActivity.class));
+            Intent i = new Intent(a, PinActivity.class);
+            Intent j = new Intent(a.getApplicationContext(), a.getClass());
+            //j.setData(a.getIntent().getData());
+            //j.setAction(a.getIntent().getAction());
+            j.putExtras(a.getIntent().getExtras());
+            PendingIntent pJ = PendingIntent.getActivity(a.getApplicationContext(), 0, j, PendingIntent.FLAG_UPDATE_CURRENT);
+            Log.d("Budget", "pJ="+pJ);
+            i.putExtra("com.notriddle.budget.NEXT_ACTIVITY",
+                       (Parcelable)pJ);
+            a.startActivity(i);
         } else {
             notify(a);
         }
