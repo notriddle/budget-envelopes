@@ -44,3 +44,19 @@ And to actually build the program:
     ant clean
     ant release
 
+
+Within an Android tree
+----------------------
+
+If you want to distribute Budget with a custom Android ROM, you'll want to build it this way. Here's an example `.repo/local_manifest.xml` file:
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <manifest>
+        <remote fetch="http://github.com/" name="gh" revision="master"/>
+        <project name="notriddle/budget-envelopes" path="packages/apps/budget-envelopes" remote="gh" revision="release"/>
+    </manifest>
+
+This will build Budget, in release mode signed with your platform key. If you want to be able to install your own build of Budget *and* the one from the Play Store or F-Droid, you can define `BUDGET_DEBUG` while building:
+
+    BUDGET_DEBUG=1 mm
+
