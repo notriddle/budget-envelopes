@@ -168,7 +168,7 @@ public class PinActivity extends Activity {
             Intent j = new Intent(a.getApplicationContext(), a.getClass());
             //j.setData(a.getIntent().getData());
             //j.setAction(a.getIntent().getAction());
-            j.putExtras(a.getIntent().getExtras());
+            j.putExtras(a.getIntent());
             PendingIntent pJ = PendingIntent.getActivity(a.getApplicationContext(), 0, j, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.d("Budget", "pJ="+pJ);
             i.putExtra("com.notriddle.budget.NEXT_ACTIVITY",
