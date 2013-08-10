@@ -63,7 +63,11 @@
         <activity
             android:name="com.notriddle.budget.PinActivity"
             android:label="@string/pin_name"
-            android:windowSoftInputMode="stateVisible"/>
+            android:windowSoftInputMode="stateVisible">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
 
     </application>
 

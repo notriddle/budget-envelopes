@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,20 +59,13 @@ public class PinActivity extends Activity {
             lock();
         } else if (mPrefs.getString("com.notriddle.budget.pin", "").equals("")
                    || mPrefs.getBoolean("com.notriddle.budget.unlocked", false)) {
-            finish();
+            finishSuccessful();
         } else {
             Parcelable nextActivity
              = i == null
                ? null
                : i.getParcelableExtra("com.notriddle.budget.NEXT_ACTIVITY");
-            if (nextActivity == null) {
-                Intent nextA = new Intent(this, EnvelopesActivity.class);
-                mNextActivity = PendingIntent.getActivity(
-                    this, 0, nextA, PendingIntent.FLAG_UPDATE_CURRENT
-                );
-            } else {
-                mNextActivity = (PendingIntent) nextActivity;
-            }
+            mNextActivity = (PendingIntent) nextActivity;
             Log.d("Budget", "mNextActivity="+mNextActivity);
 
             setContentView(R.layout.activity_pin);
@@ -115,17 +109,38 @@ public class PinActivity extends Activity {
         }
     }
 
+    private void finishSuccessful() {
+        try {
+            if (mNextActivity != null) {
+                mNextActivity.send(this, 0, null);
+            } else {
+                if (getIntent() != null
+                    && getIntent()
+                       .hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
+                    Intent i = new Intent();
+                    i.putExtra(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        getIntent()
+                        .getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                                     AppWidgetManager.INVALID_APPWIDGET_ID)
+                    );
+                    setResult(RESULT_OK, i);
+                } else {
+                    setResult(RESULT_OK);
+                }
+            }
+        } catch (PendingIntent.CanceledException e) {
+            throw new Error(e);
+        }
+        finish();
+    }
+
     private void unlock() {
         notify(this);
         mPrefs.edit()
                .putBoolean("com.notriddle.budget.unlocked", true)
                .apply();
-        try {
-            mNextActivity.send(this, 0, null);
-        } catch (PendingIntent.CanceledException e) {
-            throw new Error(e);
-        }
-        finish();
+        finishSuccessful();
     }
 
     private void lock() {
