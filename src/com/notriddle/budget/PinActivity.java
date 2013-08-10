@@ -154,6 +154,12 @@ public class PinActivity extends Activity {
     }
 
     private static void notify(Activity cntx) {
+        SharedPreferences prefs
+         = PreferenceManager
+           .getDefaultSharedPreferences(cntx.getApplicationContext());
+        if (prefs.getString("com.notriddle.budget.pin", "").equals("")) {
+            return;
+        }
         Notification.Builder nB = new Notification.Builder(cntx);
         nB.setSmallIcon(R.drawable.ic_notification);
         nB.setContentTitle(cntx.getText(R.string.app_name));
