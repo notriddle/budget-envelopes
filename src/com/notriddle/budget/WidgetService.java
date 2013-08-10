@@ -85,7 +85,7 @@ public class WidgetService extends RemoteViewsService {
                 return count;
             }
             public RemoteViews getLoadingView() {
-                return new RemoteViews(getPackageName(), R.layout.card);
+                return new RemoteViews(getPackageName(), R.layout.card_widget);
             }
             public RemoteViews getViewAt(int pos) {
                 Log.d("Budget", "WidgetService.getViewAt("+pos+")");
