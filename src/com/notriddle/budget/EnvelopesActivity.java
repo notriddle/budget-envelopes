@@ -45,7 +45,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import java.util.Date;
 
-public class EnvelopesActivity extends Activity
+public class EnvelopesActivity extends LockedActivity
                                implements LoaderCallbacks<Cursor>,
                                           GridView.OnItemClickListener,
                                           MonitorScrollView.OnScrollListener,
@@ -265,6 +265,11 @@ public class EnvelopesActivity extends Activity
                 i = new Intent(this, AboutActivity.class);
                 startActivity(i);
                 return true;
+            case R.id.settings_menuItem:
+                i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+                return true;
+            	
         }
         return super.onOptionsItemSelected(item);
     }

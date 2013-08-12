@@ -45,7 +45,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class PaycheckActivity extends Activity
+public class PaycheckActivity extends LockedActivity
                               implements LoaderCallbacks<Cursor>,
                                          PaycheckEnvelopesAdapter
                                          .DepositesChangeListener,

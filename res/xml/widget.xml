@@ -7,4 +7,5 @@
     android:initialLayout="@layout/widget"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard"
+    android:configure="com.notriddle.budget.PinActivity"
 />

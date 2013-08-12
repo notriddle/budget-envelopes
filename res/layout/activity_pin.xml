@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".PinActivity">
+
+    <TextView android:id="@+id/textView1"
+              android:paddingLeft="@dimen/fullPadding"
+              android:paddingRight="@dimen/fullPadding"
+              android:paddingTop="@dimen/cardPadding"
+              android:paddingBottom="@dimen/cardPadding"
+              android:text="@string/pin_label"
+              android:textSize="@dimen/presentText"
+              android:fontFamily="sans-serif-light"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+
+    <FrameLayout android:background="@color/cardBackground"
+                 android:padding="@dimen/cardPadding"
+                 android:layout_margin="@dimen/cardSpacing"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+        <EditText android:id="@+id/pin"
+                  android:gravity="center_horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:inputType="numberPassword">
+            <requestFocus/>
+        </EditText>
+    </FrameLayout>
+
+</LinearLayout>

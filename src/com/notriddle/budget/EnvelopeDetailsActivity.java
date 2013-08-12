@@ -49,7 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.database.sqlite.SQLiteDatabase;
 
-public class EnvelopeDetailsActivity extends ListActivity
+public class EnvelopeDetailsActivity extends LockedListActivity
                                      implements LoaderCallbacks<Cursor>,
                                                 TextWatcher,
                                             AbsListView.MultiChoiceModeListener,
@@ -62,6 +62,8 @@ public class EnvelopeDetailsActivity extends ListActivity
     TextView mAmountName;
     TextView mProjected;
     int mColor;
+    boolean mLoadedCard;
+    boolean mLoadedLog;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -74,6 +76,8 @@ public class EnvelopeDetailsActivity extends ListActivity
             ActionBar.LayoutParams.WRAP_CONTENT
         ));
         mName.setSingleLine(true);
+        mLoadedCard = false;
+        mLoadedLog = false;
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
         ActionBar ab = getActionBar();
@@ -140,7 +144,7 @@ public class EnvelopeDetailsActivity extends ListActivity
 
     @Override public void onDestroy() {
         super.onDestroy();
-        if (mName.getText().length() == 0 && mAdapter.getCount() == 0) {
+        if (mName.getText().length() == 0 && mAdapter.getCount() == 0 && mLoadedCard && mLoadedLog) {
             deleteThis();
             mDatabase.close();
             mDatabase = null;
@@ -247,6 +251,7 @@ public class EnvelopeDetailsActivity extends ListActivity
 
     @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
         if (ldr.getId() == 0) {
+            mLoadedCard = true;
             if (data.getCount() == 0) {
                 finish();
             } else {
@@ -281,6 +286,7 @@ public class EnvelopeDetailsActivity extends ListActivity
                 }
             }
         } else {
+            mLoadedLog = true;
             mAdapter.changeCursor(data);
             ListView lV = getListView();
             if (lV.getLastVisiblePosition() == mAdapter.getCount()
