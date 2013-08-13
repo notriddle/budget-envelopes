@@ -1,4 +1,3 @@
-#!/bin/sh
 #
 # This file is a part of Budget with Envelopes.
 # Copyright 2013 Emilio López <emilio@elopez.com.ar>
