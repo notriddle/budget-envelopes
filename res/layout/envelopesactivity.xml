@@ -15,9 +15,7 @@
                   android:padding="@dimen/cardPadding"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
-                  android:layout_marginLeft="@dimen/cardSpacing"
-                  android:layout_marginRight="@dimen/cardSpacing"
-                  android:layout_marginBottom="@dimen/cardSpacing"
+                  android:layout_margin="@dimen/cardSpacing"
                   android:orientation="vertical"
                   android:visibility="gone">
         <TextView android:id="@+id/graphLabel"
