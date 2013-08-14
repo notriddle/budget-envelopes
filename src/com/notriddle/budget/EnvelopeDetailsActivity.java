@@ -347,7 +347,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
         if (mColor == 0) {
             mColor = 0xFFFF4444;
         } else if (mColor == 0xFFFF4444) {
-            mColor = 0xFF99CC00;
+            mColor = 0xFF33B5E5;
         } else if (mColor == 0xFF99CC00) {
             mColor = 0xFF33B5E5;
         } else if (mColor == 0xFF33B5E5) {
