@@ -98,19 +98,18 @@ public class EnvelopesActivity extends LockedActivity
     }
 
     private void setGraphVisible(boolean visible) {
-        View label = findViewById(R.id.graphLabel);
+        TextView label = (TextView) findViewById(R.id.graphLabel);
         Fragment chart = getFragmentManager().findFragmentById(R.id.graph);
         FragmentTransaction trans = getFragmentManager().beginTransaction();
-        if (chart == null) {
-            if (visible) {
-                label.setVisibility(View.GONE);
+        label.setText(visible ? R.string.hideGraph_button : R.string.showGraph_button);
+        if (visible) {
+            if (chart == null) {
                 trans.add(R.id.graph, new GraphFragment());
+            } else {
+                trans.show(chart);
             }
         } else {
-            label.setVisibility(visible ? View.GONE : View.VISIBLE);
-            if (visible) {
-                trans.show(chart);
-            } else {
+            if (chart != null) {
                 trans.hide(chart);
             }
         }
@@ -205,12 +204,18 @@ public class EnvelopesActivity extends LockedActivity
         data.moveToFirst();
         int l = data.getCount();
         long total = 0;
+        boolean hasColor = false;
         for (int i = 0; i != l; ++i) {
             total += data.getLong(data.getColumnIndexOrThrow("cents"));
+            int color = data.getInt(data.getColumnIndexOrThrow("color"));
+            if (color != 0) {
+                hasColor = true;
+            }
             data.moveToNext();
         }
         mTotal.setText(EditMoney.toColoredMoney(this, total));
         mEnvelopes.changeCursor(data);
+        findViewById(R.id.graph).setVisibility(hasColor ? View.VISIBLE : View.GONE);
     }
 
     @Override public void onLoaderReset(Loader<Cursor> ldr) {
@@ -239,7 +244,7 @@ public class EnvelopesActivity extends LockedActivity
                                     .getWritableDatabase();
                 ContentValues values = new ContentValues();
                 values.put("name", "");
-                values.put("color", 0xFFEEEEEE);
+                values.put("color", 0);
                 long id = db.insert("envelopes", null, values);
                 db.close();
                 getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);

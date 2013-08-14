@@ -67,7 +67,7 @@ public class GraphFragment extends Fragment
             getActivity(),
             new EnvelopesOpenHelper(getActivity()),
             // 1000*60*60*24*7 = one week in milliseconds
-            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) ORDER BY e._id, l.time asc"
+            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 ORDER BY e._id, l.time asc"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -142,7 +142,7 @@ public class GraphFragment extends Fragment
                 }
                 int color = data.getInt(2);
                 //brush = new Paint(brush);
-                brush.setColor(color == 0 || color == 0xFFEEEEEE ? Color.GRAY : color);
+                brush.setColor(color);
                 currentEnvelope = envelope;
                 currentPath = new Path();
                 currentPath.moveTo(pointPosition, pointHeight);

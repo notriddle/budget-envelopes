@@ -67,7 +67,7 @@ public class EnvelopesAdapter extends CursorAdapter {
         long cents = csr.getLong(csr.getColumnIndexOrThrow("cents"));
         contents.value.setText(EditMoney.toColoredMoney(cntx, cents));
         int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
-        if (color == 0xFFEEEEEE || color == 0) {
+        if (color == 0) {
             contents.name.setBackgroundDrawable(null);
         } else {
             StateListDrawable bg = new StateListDrawable();

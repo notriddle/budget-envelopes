@@ -344,7 +344,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
     }
 
     private void changeColor() {
-        if (mColor == 0 || mColor == 0xFFEEEEEE) {
+        if (mColor == 0) {
             mColor = 0xFFFF4444;
         } else if (mColor == 0xFFFF4444) {
             mColor = 0xFF99CC00;
@@ -355,7 +355,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
         } else if (mColor == 0xFFAA66CC) {
             mColor = 0xFFFFBB33;
         } else {
-            mColor = 0xFFEEEEEE;
+            mColor = 0;
         }
         ContentValues values = new ContentValues();
         values.put("color", mColor);

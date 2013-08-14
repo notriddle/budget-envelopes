@@ -44,7 +44,7 @@ public class SimpleEnvelopesAdapter extends SimpleCursorAdapter {
         Cursor csr = getCursor();
         csr.moveToPosition(pos);
         int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
-        if (color == 0xFFEEEEEE || color == 0) {
+        if (color == 0) {
             retVal.setBackgroundDrawable(null);
         } else {
             retVal.setBackgroundColor(color);

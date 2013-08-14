@@ -27,7 +27,7 @@ import android.util.SparseArray;
 
 public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     static final String DB_NAME = "envelopes.db";
-    static final int DB_VERSION = 5;
+    static final int DB_VERSION = 6;
     public static final Uri URI = Uri.parse("sqlite://com.notriddle.budget/envelopes");
 
     Context mCntx;
@@ -71,6 +71,8 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         if (oldVer < 5) {
             db.execSQL("ALTER TABLE 'envelopes' ADD COLUMN 'color' INTEGER");
             db.execSQL("UPDATE envelopes SET color = 0");
+        } else if (oldVer == 5) {
+            db.execSQL("UPDATE envelopes SET color = 0 WHERE color = ?", new String[] {Integer.toString(0xFFEEEEEE)});
         }
     }
 
