@@ -132,7 +132,12 @@ public class PaycheckActivity extends LockedActivity
             this, new EnvelopesOpenHelper(this), "envelopes",
             new String[] {
                 "name", "lastPaycheckCents", "_id", "color"
-            }
+            },
+            null,
+            null,
+            null,
+            null,
+            "name"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
