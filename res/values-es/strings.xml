@@ -48,6 +48,7 @@
     <string name="description_hint">Descripción</string>
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
+    <string name="showGraph_button">Mostrar gráfico</string>
     <string name="export_name">Exportando&#8230;</string>
     <string name="export_menuItem">Exportar</string>
     <string name="import_name">Importando&#8230;</string>
@@ -75,4 +76,12 @@ Pública de GNU para más detalles.</string>
         <item quantity="one">%d sobre seleccionado</item>
         <item quantity="other">%d sobres seleccionados</item>
     </plurals>
+    <string name="pin_name">Desbloquear</string>
+    <string name="pin_label">Ingrese su PIN</string>
+    <string name="pin_toast_wrong">Intente nuevamente.</string>
+    <string name="pin_settings">PIN</string>
+    <string name="pin_settings_summary">Deje el campo vacío si no necesita esto</string>
+    <string name="settings_menuItem">Ajustes</string>
+    <string name="settings_name">Ajustes</string>
+    <string name="pin_notify">Desbloqueado. Toque para bloquear.</string>
 </resources>
