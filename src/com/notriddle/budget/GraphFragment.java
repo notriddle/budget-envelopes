@@ -63,11 +63,12 @@ public class GraphFragment extends Fragment
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String month = Long.toString(System.currentTimeMillis()-31536000000l);
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(),
             new EnvelopesOpenHelper(getActivity()),
             // 1000*60*60*24*7 = one week in milliseconds
-            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 ORDER BY e._id, l.time asc"
+            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+month+" ORDER BY e._id, l.time asc"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
