@@ -88,4 +88,5 @@ GNU General Public License for more details.</string>
     <string name="settings_menuItem">Settings</string>
     <string name="settings_name">Settings</string>
     <string name="pin_notify">Unlocked. Tap to lock.</string>
+    <string name="graph_time">Time</string>
 </resources>

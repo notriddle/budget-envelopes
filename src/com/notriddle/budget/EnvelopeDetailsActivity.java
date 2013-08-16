@@ -277,13 +277,12 @@ public class EnvelopeDetailsActivity extends LockedListActivity
                     );
                 }
                 mColor = data.getInt(data.getColumnIndexOrThrow("color"));
-                if (mColor != 0) {
-                    getActionBar()
-                    .setBackgroundDrawable(new ColorDrawable(mColor));
-                    if (Build.VERSION.SDK_INT < 18) {
-                        invalidateOptionsMenu();
-                    }
+                getActionBar()
+                .setBackgroundDrawable(new ColorDrawable(mColor == 0 ? 0xFFEEEEEE : mColor));
+                if (Build.VERSION.SDK_INT < 18) {
+                    invalidateOptionsMenu();
                 }
+
             }
         } else {
             mLoadedLog = true;

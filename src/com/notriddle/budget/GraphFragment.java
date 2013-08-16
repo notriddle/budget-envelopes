@@ -96,6 +96,7 @@ public class GraphFragment extends Fragment
                           .getDimensionPixelSize(R.dimen.cardSpacing);
         int cardPadding = getActivity().getResources()
                           .getDimensionPixelSize(R.dimen.cardPadding);
+        int textSize = cardPadding*2;
         int width = getActivity().getWindow().getWindowManager().getDefaultDisplay().getWidth()-2*(cardSpacing)-2*(cardPadding);
         Log.d("Budget", "GraphFragment.onLoadFinished(): width="+width);
         int height = getActivity().getResources()
@@ -110,6 +111,10 @@ public class GraphFragment extends Fragment
         Paint bucket = new Paint();
         bucket.setColor(getActivity().getResources().getColor(R.color.cardBackground));
         chartCanvas.drawPaint(bucket);
+        Paint pen = new Paint();
+        pen.setColor(0xFF000000);
+        pen.setTextAlign(Paint.Align.CENTER);
+        pen.setTextSize(textSize);
         Paint brush = new Paint();
         brush.setDither(true);
         brush.setHinting(Paint.HINTING_ON);
@@ -120,8 +125,8 @@ public class GraphFragment extends Fragment
         brush.setStrokeWidth(stroke);
         int currentEnvelope = -1;
         Path currentPath = null;
-        float usableHeight = height-(2*stroke);
-        float usableWidth = width-(2*stroke);
+        float usableHeight = height-(2*stroke)-textSize;
+        float usableWidth = width-(2*stroke)-textSize;
 
         data.moveToFirst();
         for (int i = 0; i != l; ++i) {
@@ -129,7 +134,7 @@ public class GraphFragment extends Fragment
             long cents = data.getLong(0);
             long time = data.getLong(3);
             float pointHeight = usableHeight-(float)((cents-minCents)*usableHeight/((double)(maxCents-minCents)))+stroke;
-            float pointPosition = (float)((time-minTime)*usableWidth/((double)(maxTime-minTime)))+stroke;
+            float pointPosition = (float)((time-minTime)*usableWidth/((double)(maxTime-minTime)))+stroke+textSize;
             Log.d("Budget", "GraphFragment.onLoadFinished(): envelope="+envelope);
             Log.d("Budget", "GraphFragment.onLoadFinished(): envelope.name="+data.getString(4));
             Log.d("Budget", "GraphFragment.onLoadFinished(): cents="+cents);
@@ -156,6 +161,14 @@ public class GraphFragment extends Fragment
             currentPath.rLineTo(usableWidth, 0);
             chartCanvas.drawPath(currentPath, brush);
         }
+        Path side = new Path();
+        side.moveTo(textSize, height);
+        side.lineTo(textSize, 0);
+        chartCanvas.drawTextOnPath(getActivity().getString(R.string.envelopeDetails_balance), side, 0, 0, pen);
+        Path bottom = new Path();
+        bottom.moveTo(0, height);
+        bottom.lineTo(width, height);
+        chartCanvas.drawTextOnPath(getActivity().getString(R.string.graph_time), bottom, 0, 0, pen);
         view.setImageBitmap(chart);
     }
 
