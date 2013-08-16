@@ -39,6 +39,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import java.text.DateFormat;
+import java.util.Date;
 
 public class GraphFragment extends Fragment
                            implements LoaderCallbacks<Cursor> {
@@ -63,11 +65,11 @@ public class GraphFragment extends Fragment
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String time = Long.toString(System.currentTimeMillis()-5184000000l);
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(),
             new EnvelopesOpenHelper(getActivity()),
-            // 1000*60*60*24*7 = one week in milliseconds
-            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) ORDER BY e._id, l.time asc"
+            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+time+" ORDER BY e._id, l.time asc"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -95,6 +97,7 @@ public class GraphFragment extends Fragment
                           .getDimensionPixelSize(R.dimen.cardSpacing);
         int cardPadding = getActivity().getResources()
                           .getDimensionPixelSize(R.dimen.cardPadding);
+        int textSize = cardPadding*2;
         int width = getActivity().getWindow().getWindowManager().getDefaultDisplay().getWidth()-2*(cardSpacing)-2*(cardPadding);
         Log.d("Budget", "GraphFragment.onLoadFinished(): width="+width);
         int height = getActivity().getResources()
@@ -109,6 +112,10 @@ public class GraphFragment extends Fragment
         Paint bucket = new Paint();
         bucket.setColor(getActivity().getResources().getColor(R.color.cardBackground));
         chartCanvas.drawPaint(bucket);
+        Paint pen = new Paint();
+        pen.setColor(0xFF000000);
+        pen.setTextAlign(Paint.Align.CENTER);
+        pen.setTextSize(textSize);
         Paint brush = new Paint();
         brush.setDither(true);
         brush.setHinting(Paint.HINTING_ON);
@@ -119,8 +126,8 @@ public class GraphFragment extends Fragment
         brush.setStrokeWidth(stroke);
         int currentEnvelope = -1;
         Path currentPath = null;
-        float usableHeight = height-(2*stroke);
-        float usableWidth = width-(2*stroke);
+        float usableHeight = height-(2*stroke)-textSize;
+        float usableWidth = width-(2*stroke)-textSize;
 
         data.moveToFirst();
         for (int i = 0; i != l; ++i) {
@@ -128,7 +135,7 @@ public class GraphFragment extends Fragment
             long cents = data.getLong(0);
             long time = data.getLong(3);
             float pointHeight = usableHeight-(float)((cents-minCents)*usableHeight/((double)(maxCents-minCents)))+stroke;
-            float pointPosition = (float)((time-minTime)*usableWidth/((double)(maxTime-minTime)))+stroke;
+            float pointPosition = (float)((time-minTime)*usableWidth/((double)(maxTime-minTime)))+stroke+textSize;
             Log.d("Budget", "GraphFragment.onLoadFinished(): envelope="+envelope);
             Log.d("Budget", "GraphFragment.onLoadFinished(): envelope.name="+data.getString(4));
             Log.d("Budget", "GraphFragment.onLoadFinished(): cents="+cents);
@@ -142,7 +149,7 @@ public class GraphFragment extends Fragment
                 }
                 int color = data.getInt(2);
                 //brush = new Paint(brush);
-                brush.setColor(color == 0 || color == 0xFFEEEEEE ? Color.GRAY : color);
+                brush.setColor(color);
                 currentEnvelope = envelope;
                 currentPath = new Path();
                 currentPath.moveTo(pointPosition, pointHeight);
@@ -154,6 +161,24 @@ public class GraphFragment extends Fragment
         if (currentPath != null) {
             currentPath.rLineTo(usableWidth, 0);
             chartCanvas.drawPath(currentPath, brush);
+        }
+        Path side = new Path();
+        side.moveTo(textSize, height);
+        side.lineTo(textSize, 0);
+        chartCanvas.drawTextOnPath(getActivity().getString(R.string.envelopeDetails_balance), side, 0, 0, pen);
+        Path bottom = new Path();
+        bottom.moveTo(0, height-cardPadding);
+        bottom.lineTo(width, height-cardPadding);
+        chartCanvas.drawTextOnPath(getActivity().getString(R.string.graph_time), bottom, 0, 0, pen);
+        if (maxTime != 0) {
+            Date maxTimeD = new Date(maxTime);
+            Date minTimeD = new Date(minTime);
+            DateFormat timeFormat
+             = android.text.format.DateFormat.getDateFormat(getActivity());
+            pen.setTextAlign(Paint.Align.LEFT);
+            chartCanvas.drawTextOnPath(timeFormat.format(minTimeD), bottom, 0, 0, pen);
+            pen.setTextAlign(Paint.Align.RIGHT);
+            chartCanvas.drawTextOnPath(timeFormat.format(maxTimeD), bottom, 0, 0, pen);
         }
         view.setImageBitmap(chart);
     }

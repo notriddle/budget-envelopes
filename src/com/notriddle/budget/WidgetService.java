@@ -101,11 +101,7 @@ public class WidgetService extends RemoteViewsService {
                              (int)getItemId(pos));
                 views.setOnClickFillInIntent(R.id.card, act);
                 int color = csr.getInt(3);
-                if (color == 0xFFEEEEEE || color == 0) {
-                    views.setInt(R.id.name, "setBackgroundColor", 0);
-                } else {
-                    views.setInt(R.id.name, "setBackgroundColor", color);
-                }
+                views.setInt(R.id.name, "setBackgroundColor", color);
 
                 return views;
             }

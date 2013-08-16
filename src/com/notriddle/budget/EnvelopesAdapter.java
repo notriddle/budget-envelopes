@@ -22,7 +22,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,18 +66,19 @@ public class EnvelopesAdapter extends CursorAdapter {
         long cents = csr.getLong(csr.getColumnIndexOrThrow("cents"));
         contents.value.setText(EditMoney.toColoredMoney(cntx, cents));
         int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
-        if (color == 0xFFEEEEEE || color == 0) {
-            contents.name.setBackgroundDrawable(null);
-        } else {
-            StateListDrawable bg = new StateListDrawable();
-            Drawable normal = new ColorDrawable(color);
-            Drawable transparent = new ColorDrawable(0);
-            bg.addState(new int[] {android.R.attr.state_pressed}, transparent);
-            bg.addState(new int[] {android.R.attr.state_focused}, transparent);
-            bg.addState(new int[] {android.R.attr.state_checked}, transparent);
-            bg.addState(new int[] {android.R.attr.state_selected}, transparent);
-            bg.addState(new int[0], normal);
-            contents.name.setBackgroundDrawable(bg);
-        }
+        contents.name.setBackgroundDrawable(getColorStateDrawable(color));
+    }
+
+    public static Drawable getColorStateDrawable(int color) {
+        StateListDrawable retVal = new StateListDrawable();
+        Drawable normal = new ColorDrawable(color);
+        Drawable superS = new ColorDrawable(0xFF99CC00);
+        Drawable select = new ColorDrawable(0x8899CC00);
+        retVal.addState(new int[] {android.R.attr.state_pressed}, select);
+        retVal.addState(new int[] {android.R.attr.state_focused}, select);
+        retVal.addState(new int[] {android.R.attr.state_checked}, superS);
+        retVal.addState(new int[] {android.R.attr.state_selected}, select);
+        retVal.addState(new int[0], normal);
+        return retVal;
     }
 }

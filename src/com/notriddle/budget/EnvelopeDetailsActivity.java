@@ -277,13 +277,12 @@ public class EnvelopeDetailsActivity extends LockedListActivity
                     );
                 }
                 mColor = data.getInt(data.getColumnIndexOrThrow("color"));
-                if (mColor != 0) {
-                    getActionBar()
-                    .setBackgroundDrawable(new ColorDrawable(mColor));
-                    if (Build.VERSION.SDK_INT < 18) {
-                        invalidateOptionsMenu();
-                    }
+                getActionBar()
+                .setBackgroundDrawable(new ColorDrawable(mColor == 0 ? 0xFFEEEEEE : mColor));
+                if (Build.VERSION.SDK_INT < 18) {
+                    invalidateOptionsMenu();
                 }
+
             }
         } else {
             mLoadedLog = true;
@@ -344,10 +343,10 @@ public class EnvelopeDetailsActivity extends LockedListActivity
     }
 
     private void changeColor() {
-        if (mColor == 0 || mColor == 0xFFEEEEEE) {
+        if (mColor == 0) {
             mColor = 0xFFFF4444;
         } else if (mColor == 0xFFFF4444) {
-            mColor = 0xFF99CC00;
+            mColor = 0xFF33B5E5;
         } else if (mColor == 0xFF99CC00) {
             mColor = 0xFF33B5E5;
         } else if (mColor == 0xFF33B5E5) {
@@ -355,7 +354,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
         } else if (mColor == 0xFFAA66CC) {
             mColor = 0xFFFFBB33;
         } else {
-            mColor = 0xFFEEEEEE;
+            mColor = 0;
         }
         ContentValues values = new ContentValues();
         values.put("color", mColor);
