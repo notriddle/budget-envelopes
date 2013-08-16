@@ -41,7 +41,8 @@
             android:label="@string/about_name" />
         <activity
             android:name="com.notriddle.budget.SettingsActivity"
-            android:label="@string/settings_name" />
+            android:label="@string/settings_name"
+            android:theme="@style/Theme.Details" />
 
         <receiver
             android:name="com.notriddle.budget.WidgetProvider"

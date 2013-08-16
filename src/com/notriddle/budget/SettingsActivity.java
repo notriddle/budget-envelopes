@@ -18,11 +18,13 @@
 
 package com.notriddle.budget;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.text.InputType;
+import android.view.MenuItem;
 
 public class SettingsActivity extends PreferenceActivity {
 	@Override
@@ -31,6 +33,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (!PinActivity.ensureUnlocked(this)) {
             finish(); return;
         }
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new SettingsFragment()).commit();
 	}
@@ -53,4 +56,15 @@ public class SettingsActivity extends PreferenceActivity {
 			pref.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
 		}
 	}
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent i = new Intent(this, EnvelopesActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
