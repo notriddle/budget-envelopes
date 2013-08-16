@@ -12,10 +12,6 @@
           android:icon="@drawable/new_menuitem"
 	      android:title="@string/newEnvelope_menuItem"
 	      android:showAsAction="ifRoom"/>
-    <item android:id="@+id/import_menuItem"
-          android:title="@string/import_menuItem"/>
-    <item android:id="@+id/export_menuItem"
-          android:title="@string/export_menuItem"/>
     <item android:id="@+id/settings_menuItem"
           android:title="@string/settings_menuItem"/>
     <item android:id="@+id/about_menuItem"

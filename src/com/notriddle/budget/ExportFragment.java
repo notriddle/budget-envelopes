@@ -58,7 +58,7 @@ public class ExportFragment extends FileCreatorFragment {
     }
 
     @Override protected int getButtonTitle() {
-        return R.string.export_menuItem;
+        return R.string.export_name;
     }
     @Override protected int getDialogTitle() {
         return R.string.export_name;

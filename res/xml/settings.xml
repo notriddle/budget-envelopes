@@ -6,4 +6,14 @@
         android:summary="@string/pin_settings_summary"
         android:title="@string/pin_settings" />
 
+    <Preference
+        android:key="com.notriddle.budget.import"
+        android:summary="@string/import_settings_summary"
+        android:title="@string/import_settings" />
+
+    <Preference
+        android:key="com.notriddle.budget.export"
+        android:summary="@string/export_settings_summary"
+        android:title="@string/export_settings" />
+
 </PreferenceScreen>

@@ -53,9 +53,11 @@
     <string name="showGraph_button">Show graph</string>
     <string name="hideGraph_button">Hide graph</string>
     <string name="export_name">Exporting&#8230;</string>
-    <string name="export_menuItem">Export</string>
+    <string name="export_settings">Export</string>
+    <string name="export_settings_summary">Back up financial data</string>
     <string name="import_name">Importing&#8230;</string>
-    <string name="import_menuItem">Import</string>
+    <string name="import_settings">Import</string>
+    <string name="import_settings_summary">Restore financial data</string>
     <string name="delayed_checkBox">Delayed</string>
     <string name="about_menuItem">About</string>
     <string name="about_name">About Budget with Envelopes</string>
