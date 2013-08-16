@@ -39,6 +39,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import java.text.DateFormat;
+import java.util.Date;
 
 public class GraphFragment extends Fragment
                            implements LoaderCallbacks<Cursor> {
@@ -63,12 +65,11 @@ public class GraphFragment extends Fragment
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String month = Long.toString(System.currentTimeMillis()-31536000000l);
+        String time = Long.toString(System.currentTimeMillis()-5184000000l);
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(),
             new EnvelopesOpenHelper(getActivity()),
-            // 1000*60*60*24*7 = one week in milliseconds
-            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+month+" ORDER BY e._id, l.time asc"
+            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+time+" ORDER BY e._id, l.time asc"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -166,9 +167,19 @@ public class GraphFragment extends Fragment
         side.lineTo(textSize, 0);
         chartCanvas.drawTextOnPath(getActivity().getString(R.string.envelopeDetails_balance), side, 0, 0, pen);
         Path bottom = new Path();
-        bottom.moveTo(0, height);
-        bottom.lineTo(width, height);
+        bottom.moveTo(0, height-cardPadding);
+        bottom.lineTo(width, height-cardPadding);
         chartCanvas.drawTextOnPath(getActivity().getString(R.string.graph_time), bottom, 0, 0, pen);
+        if (maxTime != 0) {
+            Date maxTimeD = new Date(maxTime);
+            Date minTimeD = new Date(minTime);
+            DateFormat timeFormat
+             = android.text.format.DateFormat.getDateFormat(getActivity());
+            pen.setTextAlign(Paint.Align.LEFT);
+            chartCanvas.drawTextOnPath(timeFormat.format(minTimeD), bottom, 0, 0, pen);
+            pen.setTextAlign(Paint.Align.RIGHT);
+            chartCanvas.drawTextOnPath(timeFormat.format(maxTimeD), bottom, 0, 0, pen);
+        }
         view.setImageBitmap(chart);
     }
 
