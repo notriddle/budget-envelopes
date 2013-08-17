@@ -10,6 +10,17 @@ That's what Budget is for, and it's easy. You put money into the envelopes at pa
 Managing money is a drag, but it doesn't have to be painful or difficult.
 
 
+What's new in version 3.0
+=========================
+
+* Color-code your envelopes.
+
+* Graph your running balance. Works together with color-coding.
+
+* Keep your budget private with a PIN.
+
+
+
 Compiling
 =========
 
