@@ -55,6 +55,7 @@ public class EnvelopesActivity extends LockedActivity
     EnvelopesAdapter mEnvelopes;
     TextView mTotal;
     View mTotalContainer;
+    View mTotalLabel;
     MonitorScrollView mScroll;
     SharedPreferences mPrefs;
 
@@ -70,6 +71,7 @@ public class EnvelopesActivity extends LockedActivity
         mGrid.setOnItemClickListener(this);
         mTotalContainer = findViewById(R.id.totalamount);
         mTotal = (TextView) mTotalContainer.findViewById(R.id.value);
+        mTotalLabel = mTotalContainer.findViewById(R.id.name);
         mScroll = (MonitorScrollView) findViewById(R.id.scroll);
         mScroll.setOnScrollListener(this);
         mGrid.setChoiceMode(mGrid.CHOICE_MODE_MULTIPLE_MODAL);
@@ -181,7 +183,8 @@ public class EnvelopesActivity extends LockedActivity
     }
 
     @Override public void onScrollChanged(int pos, int oldPos) {
-        mTotalContainer.setTranslationY((pos*2)/3);
+        mTotal.setTranslationY((pos*2)/3);
+        mTotalLabel.setTranslationY((pos*2)/3);
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
