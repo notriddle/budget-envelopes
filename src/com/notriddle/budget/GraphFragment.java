@@ -124,7 +124,7 @@ public class GraphFragment extends Fragment
         brush.setStrokeWidth(stroke);
         int currentEnvelope = -1;
         Path currentPath = null;
-        float usableHeight = height-(2*stroke)-textSize;
+        float usableHeight = height-(2*stroke)-textSize-cardPadding;
         float usableWidth = width-(2*stroke)-textSize;
 
         data.moveToFirst();
