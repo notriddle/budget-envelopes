@@ -85,5 +85,5 @@ Pública de GNU para más detalles.</string>
     <string name="settings_menuItem">Ajustes</string>
     <string name="settings_name">Ajustes</string>
     <string name="pin_notify">Desbloqueado. Toque para bloquear.</string>
-    <string name="graph_time">Hora</string>
+    <string name="graph_time">Fecha</string>
 </resources>
