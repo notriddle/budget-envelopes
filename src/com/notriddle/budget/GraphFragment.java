@@ -106,12 +106,10 @@ public class GraphFragment extends Fragment
         Bitmap chart = Bitmap.createBitmap(
             width,
             height,
-            Bitmap.Config.RGB_565
+            Bitmap.Config.ARGB_8888
         );
         Canvas chartCanvas = new Canvas(chart);
-        Paint bucket = new Paint();
-        bucket.setColor(getActivity().getResources().getColor(R.color.cardBackground));
-        chartCanvas.drawPaint(bucket);
+        chartCanvas.drawColor(Color.TRANSPARENT);
         Paint pen = new Paint();
         pen.setColor(0xFF000000);
         pen.setTextAlign(Paint.Align.CENTER);
