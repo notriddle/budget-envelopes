@@ -58,7 +58,7 @@
     <string name="about_menuItem">Acerca de</string>
     <string name="about_name">Acerca de Presupuesto con Sobres</string>
     <string name="donate_button">Donar a Michael</string>
-    <string name="license">Presupuesto versión %s\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n\n
+    <string name="license">Presupuesto versión %s\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n&#169; 2013 Emilio López &lt;emilio@elopez.com.ar&gt;\n\n
 
 Presupuesto es software libre: puede redistribuirlo y/o modificarlo
 bajo los términos de la Licencia General Pública de GNU publicada por la
