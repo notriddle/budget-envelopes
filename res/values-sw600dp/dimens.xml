@@ -1,12 +1,11 @@
 <resources>
 	<dimen name="cardWidth">200dp</dimen>
-    <dimen name="cardSpacing">8dp</dimen>
+    <dimen name="cardSpacing">16dp</dimen>
     <dimen name="cardPadding">8dp</dimen>
     <dimen name="halfCardPadding">4dp</dimen>
-    <dimen name="fullPadding">16dp</dimen>
-    <dimen name="fullPadded">72dp</dimen>
+    <dimen name="fullPadding">24dp</dimen>
+    <dimen name="fullPadded">88dp</dimen>
     <dimen name="presentText">40sp</dimen>
-
     <dimen name="tabletBool">1dp</dimen>
 </resources>
 
