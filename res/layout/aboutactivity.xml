@@ -29,7 +29,10 @@
     <TextView android:textSize="14sp"
               android:background="@color/cardBackground"
               android:id="@+id/gplText"
-              android:padding="@dimen/fullPadding"
+              android:paddingLeft="@dimen/fullPadding"
+              android:paddingRight="@dimen/fullPadding"
+              android:paddingTop="@dimen/cardPadding"
+              android:paddingBottom="@dimen/cardPadding"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"/>
 </LinearLayout>
