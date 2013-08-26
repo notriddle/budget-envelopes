@@ -3,8 +3,8 @@
     package="com.notriddle.budget"
     android:hardwareAccelerated="true"
     android:installLocation="auto"
-    android:versionCode="29"
-    android:versionName="2.9" >
+    android:versionCode="30"
+    android:versionName="3.0" >
 
     <uses-sdk
         android:minSdkVersion="15"
