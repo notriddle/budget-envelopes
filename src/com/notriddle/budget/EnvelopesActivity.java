@@ -257,14 +257,14 @@ public class EnvelopesActivity extends LockedActivity
                 DialogFragment f = TransferFragment.newInstance();
                 f.show(getFragmentManager(), "dialog");
                 return true;
-            case R.id.export_menuItem:
+            /*case R.id.export_menuItem:
                 f = ExportFragment.newInstance();
                 f.show(getFragmentManager(), "dialog");
                 return true;
             case R.id.import_menuItem:
                 f = ImportFragment.newInstance();
                 f.show(getFragmentManager(), "dialog");
-                return true;
+                return true;*/
             case R.id.paycheck_menuItem:
                 Intent i = new Intent(this, PaycheckActivity.class);
                 startActivity(i);

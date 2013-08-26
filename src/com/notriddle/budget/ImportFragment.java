@@ -176,7 +176,7 @@ public class ImportFragment extends FileCreatorFragment {
     }
 
     @Override protected int getButtonTitle() {
-        return R.string.import_menuItem;
+        return R.string.import_name;
     }
     @Override protected int getDialogTitle() {
         return R.string.import_name;

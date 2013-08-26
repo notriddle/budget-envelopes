@@ -1,5 +1,5 @@
 <resources>
-	<dimen name="cardWidth">200dp</dimen>
+	<dimen name="cardWidth">256dp</dimen>
     <dimen name="cardSpacing">8dp</dimen>
     <dimen name="cardPadding">8dp</dimen>
     <dimen name="halfCardPadding">4dp</dimen>

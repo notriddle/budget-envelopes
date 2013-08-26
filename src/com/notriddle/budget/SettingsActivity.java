@@ -18,11 +18,15 @@
 
 package com.notriddle.budget;
 
+import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.text.InputType;
+import android.view.MenuItem;
 
 public class SettingsActivity extends PreferenceActivity {
 	@Override
@@ -31,6 +35,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (!PinActivity.ensureUnlocked(this)) {
             finish(); return;
         }
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 		getFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new SettingsFragment()).commit();
 	}
@@ -42,7 +47,9 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
-	public static class SettingsFragment extends PreferenceFragment {
+	public static class SettingsFragment extends PreferenceFragment
+                                         implements Preference
+                                                    .OnPreferenceClickListener {
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
@@ -51,6 +58,29 @@ public class SettingsActivity extends PreferenceActivity {
 			EditTextPreference pref
              = (EditTextPreference) findPreference("com.notriddle.budget.pin");
 			pref.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
+
+            Preference p = findPreference("com.notriddle.budget.export");
+            p.setOnPreferenceClickListener(this);
+            p = findPreference("com.notriddle.budget.import");
+            p.setOnPreferenceClickListener(this);
 		}
+
+        @Override
+        public boolean onPreferenceClick(Preference p) {
+            DialogFragment f = (p == findPreference("com.notriddle.budget.import")) ? ImportFragment.newInstance() : ExportFragment.newInstance();
+            f.show(getFragmentManager(), "dialog");
+            return true;
+        }
 	}
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent i = new Intent(this, EnvelopesActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -49,7 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.database.sqlite.SQLiteDatabase;
 
-public class EnvelopeDetailsActivity extends LockedListActivity
+public class EnvelopeDetailsActivity extends LockedActivity
                                      implements LoaderCallbacks<Cursor>,
                                                 TextWatcher,
                                             AbsListView.MultiChoiceModeListener,
@@ -57,17 +57,23 @@ public class EnvelopeDetailsActivity extends LockedListActivity
     EditTextDefaultFocus mName;
     int mId;
     SQLiteDatabase mDatabase;
-    LogAdapter mAdapter;
+    LogAdapter mLogAdapter;
+    ListView mLogView;
+    SimpleEnvelopesAdapter mNavAdapter;
+    ListView mNavView;
     TextView mAmount;
     TextView mAmountName;
     TextView mProjected;
     int mColor;
-    boolean mLoadedCard;
+    boolean mLoadedEnvelope;
     boolean mLoadedLog;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        mId = getIntent().getIntExtra("com.notriddle.budget.envelope", -1);
+        setContentView(R.layout.envelopedetailsactivity);
+        mId = state != null && state.containsKey("com.notriddle.budget.envelope")
+              ? state.getInt("com.notriddle.budget.envelope")
+              : getIntent().getIntExtra("com.notriddle.budget.envelope", -1);
         mName = new EditTextDefaultFocus(this);
         mName.setHint(getText(R.string.envelopeName_hint));
         mName.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -76,18 +82,29 @@ public class EnvelopeDetailsActivity extends LockedListActivity
             ActionBar.LayoutParams.WRAP_CONTENT
         ));
         mName.setSingleLine(true);
-        mLoadedCard = false;
+        mLoadedEnvelope = false;
         mLoadedLog = false;
+
+        final ListView nV = mNavView = (ListView) findViewById(R.id.nav);
+        if (nV != null) {
+            mNavAdapter = new SimpleEnvelopesAdapter(this, null, R.layout.card_just_text);
+            mNavAdapter.setExpanded(true);
+            nV.setAdapter(mNavAdapter);
+            nV.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            nV.setOnItemClickListener(this);
+        }
+
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
+
         ActionBar ab = getActionBar();
         ab.setDisplayShowTitleEnabled(false);
         ab.setDisplayShowCustomEnabled(true);
         ab.setCustomView(mName);
         ab.setDisplayHomeAsUpEnabled(true);
         mName.addTextChangedListener(this);
-        mAdapter = new LogAdapter(this, null);
-        final ListView lV = getListView();
+        mLogAdapter = new LogAdapter(this, null);
+        final ListView lV = mLogView = (ListView) findViewById(android.R.id.list);
         //lV.setOverScrollMode(lV.OVER_SCROLL_NEVER);
         final View head = getLayoutInflater().inflate(
             R.layout.totalamount,
@@ -100,7 +117,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
         mAmountName = (TextView) head.findViewById(R.id.name);
         mProjected = (TextView) head.findViewById(R.id.projectedValue);
         lV.addHeaderView(head);
-        setListAdapter(mAdapter);
+        lV.setAdapter(mLogAdapter);
 
         lV.setOnScrollListener(new AbsListView.OnScrollListener() {
             public void onScroll(AbsListView lV, int first, int count, int total) {
@@ -134,6 +151,11 @@ public class EnvelopeDetailsActivity extends LockedListActivity
         ));
     }
 
+    @Override public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        state.putInt("com.notriddle.budget.envelope", mId);
+    }
+
     @Override public void onPause() {
         super.onPause();
         if (mDatabase != null) {
@@ -144,7 +166,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
 
     @Override public void onDestroy() {
         super.onDestroy();
-        if (mName.getText().length() == 0 && mAdapter.getCount() == 0 && mLoadedCard && mLoadedLog) {
+        if (mName.getText().length() == 0 && mLogAdapter.getCount() == 0 && mLoadedEnvelope && mLoadedLog) {
             deleteThis();
             mDatabase.close();
             mDatabase = null;
@@ -165,7 +187,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
     @Override public void onItemCheckedStateChanged(ActionMode mode, int pos,
                                                     long id, boolean chk) {
         if (pos == 0 && chk) {
-            getListView().setItemChecked(0, false);
+            mLogView.setItemChecked(0, false);
         }
         countItems(mode);
     }
@@ -178,7 +200,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
                                                  MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_menuItem:
-                long[] items = getListView().getCheckedItemIds();
+                long[] items = mLogView.getCheckedItemIds();
                 int l = items.length;
                 for (int i = 0; i != l; ++i) {
                     deleteTransaction((int)items[i]);
@@ -190,7 +212,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
     }
 
     private void countItems(ActionMode mode) {
-        int count = Util.numberOf(getListView().getCheckedItemPositions(),
+        int count = Util.numberOf(mLogView.getCheckedItemPositions(),
                                   true);
         String titler = getResources().getQuantityString(
             R.plurals.transactionsChecked_name, count
@@ -229,10 +251,13 @@ public class EnvelopeDetailsActivity extends LockedListActivity
                            : new String[] { "description", "cents", "time",
                                             "_id" };
         String where     = id == 0
-                           ? "_id = ?"
+                           ? (mNavAdapter == null ? "_id = ?" : null)
                            : "envelope = ?";
-        String sort      = id == 0
+        String[] wArgs   = id == 0 && mNavAdapter != null
                            ? null
+                           : new String[] {Integer.toString(mId)};
+        String sort      = id == 0
+                           ? "name"
                            : "time * -1";
         SQLiteLoader retVal = new SQLiteLoader(
             this,
@@ -240,7 +265,7 @@ public class EnvelopeDetailsActivity extends LockedListActivity
             table,
             columns,
             where,
-            new String[] {Integer.toString(mId)},
+            wArgs,
             null,
             null,
             sort
@@ -251,11 +276,14 @@ public class EnvelopeDetailsActivity extends LockedListActivity
 
     @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
         if (ldr.getId() == 0) {
-            mLoadedCard = true;
+            mLoadedEnvelope = true;
             if (data.getCount() == 0) {
                 finish();
             } else {
                 data.moveToFirst();
+                while (data.getInt(data.getColumnIndexOrThrow("_id")) != mId) {
+                    data.moveToNext();
+                }
                 String name = data.getString(data.getColumnIndexOrThrow("name"));
                 if (!mName.hasFocus()) {
                     if (!mName.getText().toString().equals(name)) {
@@ -279,16 +307,26 @@ public class EnvelopeDetailsActivity extends LockedListActivity
                 mColor = data.getInt(data.getColumnIndexOrThrow("color"));
                 getActionBar()
                 .setBackgroundDrawable(new ColorDrawable(mColor == 0 ? 0xFFEEEEEE : mColor));
+                if (mNavAdapter != null) {
+                    mNavAdapter.changeCursor(data);
+                    if (mNavView != null) {
+                        int l = mNavAdapter.getCount();
+                        for (int i = 0; i != l; ++i) {
+                            if (mNavAdapter.getItemId(i) == mId) {
+                                mNavView.setItemChecked(i, true);
+                            }
+                        }
+                    }
+                }
                 if (Build.VERSION.SDK_INT < 18) {
                     invalidateOptionsMenu();
                 }
-
             }
         } else {
             mLoadedLog = true;
-            mAdapter.changeCursor(data);
-            ListView lV = getListView();
-            if (lV.getLastVisiblePosition() == mAdapter.getCount()
+            mLogAdapter.changeCursor(data);
+            final ListView lV = mLogView;
+            if (lV.getLastVisiblePosition() == mLogAdapter.getCount()
                 || lV.getLastVisiblePosition() <= 1) {
                 lV.setBackgroundResource(R.color.cardBackground);
             } else {
@@ -319,11 +357,18 @@ public class EnvelopeDetailsActivity extends LockedListActivity
     }
 
     @Override public void onItemClick(AdapterView a, View v, int pos, long id) {
-        editLogEntry((int)id);
+        int iId = (int)id;
+        if (a == mLogView) {
+            editLogEntry(iId);
+        } else if (a == mNavView) {
+            mId = iId;
+            getLoaderManager().restartLoader(0, null, this);
+            getLoaderManager().restartLoader(1, null, this);
+        }
     }
 
     private void editLogEntry(int id) {
-        Cursor csr = mAdapter.getCursor();
+        Cursor csr = mLogAdapter.getCursor();
         int oldPos = csr.getPosition();
         csr.moveToFirst();
         int l = csr.getCount();

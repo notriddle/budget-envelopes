@@ -3,8 +3,8 @@
     package="com.notriddle.budget"
     android:hardwareAccelerated="true"
     android:installLocation="auto"
-    android:versionCode="30"
-    android:versionName="3.0" >
+    android:versionCode="31"
+    android:versionName="3.1" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -41,7 +41,8 @@
             android:label="@string/about_name" />
         <activity
             android:name="com.notriddle.budget.SettingsActivity"
-            android:label="@string/settings_name" />
+            android:label="@string/settings_name"
+            android:theme="@style/Theme.Details" />
 
         <receiver
             android:name="com.notriddle.budget.WidgetProvider"

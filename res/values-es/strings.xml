@@ -51,9 +51,9 @@
     <string name="showGraph_button">Mostrar gráfico</string>
     <string name="hideGraph_button">Ocultar gráfico</string>
     <string name="export_name">Exportando&#8230;</string>
-    <string name="export_menuItem">Exportar</string>
+    <string name="export_settings">Exportar</string>
     <string name="import_name">Importando&#8230;</string>
-    <string name="import_menuItem">Importar</string>
+    <string name="import_settings">Importar</string>
     <string name="delayed_checkBox">Diferido</string>
     <string name="about_menuItem">Acerca de</string>
     <string name="about_name">Acerca de Presupuesto con Sobres</string>
