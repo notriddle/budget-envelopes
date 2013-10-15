@@ -49,6 +49,7 @@ import android.widget.FilterQueryProvider;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class SpendFragment extends OkFragment
                            implements LoaderCallbacks<Cursor>,
@@ -112,8 +113,11 @@ public class SpendFragment extends OkFragment
                     "log",
                     new String[] { "description", "cents", "time", "_id" },
                     "envelope = ? AND cents "+s+" 0 AND UPPER(description) LIKE ?",
-                    new String[] {Integer.toString(mId),
-                                  constraint.toString().toUpperCase()+"%"},
+                    new String[] {
+                        Integer.toString(mId),
+                        constraint.toString()
+                                   .toUpperCase(Locale.getDefault())+"%"
+                    },
                     null, null, "time * -1"
                 );
                 retVal.setNotificationUri(getActivity().getContentResolver(),
