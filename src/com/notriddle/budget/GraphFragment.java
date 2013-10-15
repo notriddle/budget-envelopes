@@ -69,7 +69,7 @@ public class GraphFragment extends Fragment
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(),
             new EnvelopesOpenHelper(getActivity()),
-            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+time+" ORDER BY e._id, l.time asc"
+            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name, l.cents FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+time+" ORDER BY e._id, l.time asc"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -150,7 +150,14 @@ public class GraphFragment extends Fragment
                 brush.setColor(color);
                 currentEnvelope = envelope;
                 currentPath = new Path();
-                currentPath.moveTo(pointPosition, pointHeight);
+                int transactionCents = data.getInt(5);
+                Log.d("Budget", "GraphFragment.onLoadFinished(): first transaction? "+(transactionCents == cents));
+                if (transactionCents != cents) {
+                    currentPath.moveTo(stroke+textSize, pointHeight);
+                    currentPath.lineTo(pointPosition, pointHeight);
+                } else {
+                    currentPath.moveTo(pointPosition, pointHeight);
+                }
             } else {
                 currentPath.lineTo(pointPosition, pointHeight);
             }
