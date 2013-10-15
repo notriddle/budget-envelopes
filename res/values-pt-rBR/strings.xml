@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ This file is a part of Budget with Envelopes.
+ Copyright 2013 Melinda Howell <melinda@smhowell.net>
+
+ Budget is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Budget is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Budget. If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<resources>
+    <string name="app_name">Orçamento</string>
+    <string name="envelopeDetails_name">Envelope</string>
+    <string name="envelopeDetails_balance">Saldo</string>
+    <string name="deleteTransaction_menuItem">Esqueça do transação</string>
+    <string name="newEnvelope_menuItem">Novo envelope</string>
+    <string name="deleteEnvelope_menuItem">Descartar envelope</string>
+    <string name="colorEnvelope_menuItem">Mudar de cor</string>
+    <string name="confirm_menuItem">Esta acção não pode-se desfazer</string>
+    <string name="envelopeName_hint">Nome</string>
+    <string name="paycheck_name">Ganhar</string>
+    <string name="paycheck_menuItem">Ganhar</string>
+    <string name="paycheck_spent">Distribuído</string>
+    <string name="paycheck_description">Salário</string>
+    <string name="paycheck_docs">Coloque seus ganhos &#8593; a vários usos &#8595;</string>
+    <string name="earn_name">Ganhar</string>
+    <string name="earn_menuItem">Ganhar</string>
+    <string name="spend_name">Gastar</string>
+    <string name="spend_menuItem">Gastar</string>
+    <string name="edit_name">Editar</string>
+    <string name="transfer_name">Transferir</string>
+    <string name="transfer_menuItem">Transferir</string>
+    <string name="transfer_label">a</string>
+    <string name="default_envelope_1">Contas</string>
+    <string name="default_envelope_2">Alimentos</string>
+    <string name="default_envelope_3">Vestuário</string>
+    <string name="cancel_menuItem">Cancelar</string>
+    <string name="ok_menuItem">Aceitar</string>
+    <string name="description_hint">Descripção</string>
+    <string name="amount_hint">00.00</string>
+    <string name="gotIt">&#215;</string>
+    <string name="showGraph_button">Mostrar gráfico</string>
+    <string name="hideGraph_button">Esconder gráfico</string>
+    <string name="export_name">Exportando&#8230;</string>
+    <string name="export_settings">Exportar</string>
+    <string name="export_settings_summary">Backup de dados financeiros</string>
+    <string name="import_name">Importando&#8230;</string>
+    <string name="import_settings">Importar</string>
+    <string name="import_settings_summary">Restauração de dados financeiros</string>
+    <string name="delayed_checkBox">Diferido</string>
+    <string name="about_menuItem">Sobre</string>
+    <string name="about_name">Sobre Orçamento com envelopes</string>
+    <string name="donate_button">Doe a Michael</string>
+    <string name="license">Orçamento versão %s\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n&#169; 2013 Melinda Howell &lt;melinda@smhowell.net&gt;\n\n
+
+Este programa é um software livre; você pode redistribui-lo e/ou modificá-lo sob os termos da Licença Pública Geral GNU, como publicada pela Free Software Foundation; pela versão 3 da Licença, ou (a seu critério) por qualquer versão posterior.\n\n
+
+Este programa é distribuído na esperança de que seja útil, mas SEM QUALQUER GARANTIA; sem mesmo garantias implícitas de COMERCIALIZAÇÃO ou de ADEQUAÇÃO A PROPÓSITO PARTICULAR. Veja a Licença Pública Geral GNU para mais detalhes.</string>
+    <plurals name="transactionsChecked_name">
+        <item quantity="one">%d transação selecionado</item>
+        <item quantity="other">%d transações selecionadas</item>
+    </plurals>
+    <plurals name="envelopesChecked_name">
+        <item quantity="one">%d envelope selecionado</item>
+        <item quantity="other">%d envelopes selecionados</item>
+    </plurals>
+    <string name="pin_name">Desbloquear</string>
+    <string name="pin_label">Insire o seu PIN</string>
+    <string name="pin_toast_wrong">Intente de novo.</string>
+    <string name="pin_settings">PIN</string>
+    <string name="pin_settings_summary">Deixe o campo vazio se não precisa isto</string>
+    <string name="settings_menuItem">Configurações</string>
+    <string name="settings_name">Configurações</string>
+    <string name="pin_notify">Desbloqueado. Toque para desbloquear.</string>
+    <string name="graph_time">Hora</string>
+</resources>
