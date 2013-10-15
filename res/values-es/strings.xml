@@ -52,8 +52,10 @@
     <string name="hideGraph_button">Ocultar gráfico</string>
     <string name="export_name">Exportando&#8230;</string>
     <string name="export_settings">Exportar</string>
+    <string name="export_settings_summary">Copie los datos financieros</string>
     <string name="import_name">Importando&#8230;</string>
     <string name="import_settings">Importar</string>
+    <string name="import_settings_summary">Restaurar los datos financieros</string>
     <string name="delayed_checkBox">Diferido</string>
     <string name="about_menuItem">Acerca de</string>
     <string name="about_name">Acerca de Presupuesto con Sobres</string>
