@@ -389,14 +389,22 @@ public class EnvelopeDetailsActivity extends LockedActivity
 
     private void changeColor() {
         if (mColor == 0) {
+            mColor = 0xFFFFC1C1;
+        } else if (mColor == 0xFFFFC1C1) {
+            mColor = 0xFFFF1F8F;
+        } else if (mColor == 0xFFFF1F8F) {
             mColor = 0xFFFF4444;
         } else if (mColor == 0xFFFF4444) {
-            mColor = 0xFF33B5E5;
-        } else if (mColor == 0xFF99CC00) {
-            mColor = 0xFF33B5E5;
-        } else if (mColor == 0xFF33B5E5) {
             mColor = 0xFFAA66CC;
         } else if (mColor == 0xFFAA66CC) {
+            mColor = 0xFF33B5E5;
+        } else if (mColor == 0xFF33B5E5) {
+            mColor = 0xFF33E5B5;
+        } else if (mColor == 0xFF33E5B5) {
+            mColor = 0xFF005FDE;
+        } else if (mColor == 0xFF005FDE) {
+            mColor = 0xFFCE6F00;
+        } else if (mColor == 0xFFCE6F00) {
             mColor = 0xFFFFBB33;
         } else {
             mColor = 0;
