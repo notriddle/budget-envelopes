@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+This file is a part of Budget with Envelopes.
+Copyright 2013 Michael Howell <michael@notriddle.com>
+Copyright 2013 Anatolij Zelenin <az@azapps.de>
+Copyright 2013 Pavel Mosentsev <p.slant@gmail.com>
+
+Budget is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Budget is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Budget. If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="app_name">Бюджет</string>
+    <string name="envelopeDetails_name">Конверт</string>
+    <string name="envelopeDetails_balance">Баланс</string>
+    <string name="deleteTransaction_menuItem">Удалить транзакции</string>
+    <string name="newEnvelope_menuItem">Новый конверт</string>
+    <string name="deleteEnvelope_menuItem">Удалить конверт</string>
+    <string name="colorEnvelope_menuItem">Изменить цвет</string>
+    <string name="confirm_menuItem">Это действие не может быть отменено!</string>
+    <string name="envelopeName_hint">Название конверта</string>
+    <string name="paycheck_name">Приход</string>
+    <string name="paycheck_menuItem">Приход</string>
+    <string name="paycheck_spent">Distributed</string>
+    <string name="paycheck_description">Paycheck</string>
+    <string name="paycheck_docs">Распределите свои доходы &#8593;по различным расходам &#8595;</string>
+    <string name="earn_name">Приход</string>
+    <string name="earn_menuItem">Приход</string>
+    <string name="spend_name">Расход</string>
+    <string name="spend_menuItem">Расход</string>
+    <string name="edit_name">Правка</string>
+    <string name="transfer_name">Перевод</string>
+    <string name="transfer_menuItem">Перевод</string>
+    <string name="transfer_label">в</string>
+    <string name="default_envelope_1">Квартплата</string>
+    <string name="default_envelope_2">Еда</string>
+    <string name="default_envelope_3">Одежда</string>
+    <string name="cancel_menuItem">Отмена</string>
+    <string name="ok_menuItem">OK</string>
+    <string name="description_hint">Описание</string>
+    <string name="amount_hint">00.00</string>
+    <string name="gotIt">&#215;</string>
+    <string name="showGraph_button">Показать график</string>
+    <string name="hideGraph_button">Скрыть график</string>
+    <string name="export_name">Экспортировать&#8230;</string>
+    <string name="export_settings">Экспорт</string>
+    <string name="export_settings_summary">Резервное копирование Ваших финансовых данных</string>
+    <string name="import_name">Импортировать&#8230;</string>
+    <string name="import_settings">Импорт</string>
+    <string name="import_settings_summary">Восстановление из резерва Ваших финансовых данных</string>
+    <string name="delayed_checkBox">Отложено</string>
+    <string name="about_menuItem">О программе</string>
+    <string name="about_name">О программе Бюджет с Конвертами</string>
+    <string name="donate_button">Пожертвуйте Michael Howell</string>
+    <string name="license">Программа бюджет версия %s\n&#169; 2013 Michael Howell&lt;michael@notriddle.com&gt;\n\n
+        Программа бюджет является свободным программным обеспечением.
+        Вы можете распространять и/или изменять ее в соответствии с условиями
+        общественной лицензии GNU , опубликованной Фондом свободного
+        программного обеспечения версии 3, либо (по вашему выбору )
+        любой более поздней версии.\n\n
+
+        Программа бюджет распространяется в надежде, что она будет полезной,
+        но БЕЗ ВСЯКИХ ГАРАНТИЙ, даже без подразумеваемых гарантий
+        Или ПРИМЕНИМОСТИ ДЛЯ КОНКРЕТНЫХ ЦЕЛЕЙ. Читайте
+        GNU General Public License для более подробной информации.</string>
+
+
+    <plurals name="transactionsChecked_name">        
+        <item quantity="one">%d транзакция выбрана</item>
+                
+        <item quantity="other">%d транзакций выбрано</item>
+            
+    </plurals>
+    <plurals name="envelopesChecked_name">        
+        <item quantity="one">%d конверт выбран</item>                        
+        <item quantity="other">%d конвертов выбрано</item>
+    </plurals>
+    <string name="pin_name">Разблокировать</string>
+    <string name="pin_label">Введите ПИН</string>
+    <string name="pin_toast_wrong">Попробуйте еще раз</string>
+    <string name="pin_settings">ПИН</string>
+    <string name="pin_settings_summary">Оставьте пустым, если не хотите использовать</string>
+    <string name="settings_menuItem">Настройки</string>
+    <string name="settings_name">Настройки</string>
+    <string name="pin_notify">Разблокированно. Нажмите для блокировки.</string>
+    <string name="graph_time">Время</string>
+
+</resources>
