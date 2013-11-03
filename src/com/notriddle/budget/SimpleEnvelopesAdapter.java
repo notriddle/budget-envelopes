@@ -27,6 +27,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class SimpleEnvelopesAdapter extends SimpleCursorAdapter {
+    private int sdkVersion = android.os.Build.VERSION.SDK_INT;
+
     boolean mExpanded;
     static final String[] FROM = new String[] {
         "name"
@@ -71,6 +73,10 @@ public class SimpleEnvelopesAdapter extends SimpleCursorAdapter {
         Cursor csr = getCursor();
         csr.moveToPosition(pos);
         int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
-        change.setBackgroundDrawable(EnvelopesAdapter.getColorStateDrawable(color));
+        if(sdkVersion < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            change.setBackgroundDrawable(EnvelopesAdapter.getColorStateDrawable(color));
+        } else {
+            change.setBackground(EnvelopesAdapter.getColorStateDrawable(color));
+        }
     }
 }
