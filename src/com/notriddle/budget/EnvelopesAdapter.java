@@ -32,6 +32,8 @@ import android.widget.TextView;
 public class EnvelopesAdapter extends CursorAdapter {
     LayoutInflater mInflater;
 
+    private int sdkVersion = android.os.Build.VERSION.SDK_INT;
+
     public EnvelopesAdapter(Context cntx, Cursor csr) {
         super(cntx, csr, 0);
         mInflater = LayoutInflater.from(cntx);
@@ -66,7 +68,12 @@ public class EnvelopesAdapter extends CursorAdapter {
         long cents = csr.getLong(csr.getColumnIndexOrThrow("cents"));
         contents.value.setText(EditMoney.toColoredMoney(cntx, cents));
         int color = csr.getInt(csr.getColumnIndexOrThrow("color"));
-        contents.name.setBackgroundDrawable(getColorStateDrawable(color));
+        if(sdkVersion < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            contents.name.setBackgroundDrawable(getColorStateDrawable(color));
+        } else {
+            contents.name.setBackground(getColorStateDrawable(color));
+        }
+
     }
 
     public static Drawable getColorStateDrawable(int color) {
