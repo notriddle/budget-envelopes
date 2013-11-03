@@ -43,7 +43,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
-import java.util.Date;
+
+import java.util.Calendar;
 
 public class EnvelopesActivity extends LockedActivity
                                implements LoaderCallbacks<Cursor>,
@@ -82,12 +83,11 @@ public class EnvelopesActivity extends LockedActivity
 
     @Override public void onResume() {
         super.onResume();
-        Date now = new Date();
-        Date today = new Date(now.getYear(), now.getMonth(), now.getDay());
-        long todayMs = today.getTime();
+        long todayMs =Calendar.getInstance().getTimeInMillis();
         long lastCheck = mPrefs.getLong("com.notriddle.budget.lastCheck", todayMs);
         long lastCheckPlus = lastCheck+(1000*60*60*24);
-        //Log.i("Budget", "now="+todayMs+", lastCheck="+lastCheck+", lastCheckPlus="+lastCheckPlus);
+        Log.i("Budget", "now="+todayMs+", lastCheck="+lastCheck+", lastCheckPlus="+lastCheckPlus);
+
         if (todayMs > lastCheckPlus || todayMs < lastCheck) {
             EnvelopesOpenHelper.playLog(this);
             mPrefs.edit().putLong("com.notriddle.budget.lastCheck", todayMs)
