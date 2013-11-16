@@ -10,12 +10,12 @@ Eso é o propósito de Orçamento; é fácil também. Coloque dineiro nos envelo
 Ao gerir o dinheiro é uma chatice, mas não tem que ser árduo ou difícil.
 
 
-Versão 3.0
+Versão 3.4
 ==========
 
-* Mudar de cor seus envelopes
+* Correções de bugs.
 
-* Gráfico da balança de pagamentos; funciona com mudar de cor. 
+* Adicionar mais cores.
 
-* Mantenha a privacidade de Orçamento com um PIN.
+* Tradução para o russo.
 

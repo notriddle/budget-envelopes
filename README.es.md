@@ -10,15 +10,14 @@ Eso es lo que Presupuesto hace, y es fácil. Usted divide su dinero en los sobre
 El manejo del dinero es un lastre, pero no tiene por qué ser doloroso o difícil.
 
 
-¿Qué hay de nuevo en la versión 3.0?
+¿Qué hay de nuevo en la versión 3.4?
 ====================================
 
-* Arme un código de colores con sus sobres.
+* Corrección de errores.
 
-* Grafique su saldo corriente. Trabaja en conjunto con el código de colores.
+* Añadir más colores.
 
-* Mantenga su presupuesto protegido de ojos curiosos con un PIN.
-
+* Traducción al ruso.
 
 
 Compilación
