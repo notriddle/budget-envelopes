@@ -133,12 +133,8 @@ public class SpendFragment extends OkFragment
         mDelayed = (CheckBox) retVal.findViewById(R.id.delayed);
         mDelayed.setOnCheckedChangeListener(this);
         mDelay = (DatePicker) retVal.findViewById(R.id.delay);
-        GregorianCalendar min = new GregorianCalendar();
-        min.add(min.SECOND, -1);
-        min.add(min.DAY_OF_MONTH, 1);
-        mDelay.setMinDate(min.getTimeInMillis());
         GregorianCalendar tomorrow = new GregorianCalendar();
-        tomorrow.add(min.DAY_OF_MONTH, 1);
+        tomorrow.add(GregorianCalendar.DAY_OF_MONTH, 1);
         mDelay.init(tomorrow.get(tomorrow.YEAR), tomorrow.get(tomorrow.MONTH), tomorrow.get(tomorrow.DAY_OF_MONTH), this);
 
         if (state == null) {
