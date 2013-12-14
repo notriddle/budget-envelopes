@@ -117,7 +117,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
         mAmountName = (TextView) head.findViewById(R.id.name);
         mProjected = (TextView) head.findViewById(R.id.projectedValue);
         lV.addHeaderView(head);
-        lV.setAdapter(mLogAdapter);
+        lV.setAdapter(new DeleteAdapter(this, mLogAdapter, R.color.windowBackground));
 
         lV.setOnScrollListener(new AbsListView.OnScrollListener() {
             public void onScroll(AbsListView lV, int first, int count, int total) {

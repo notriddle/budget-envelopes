@@ -67,7 +67,7 @@ public class EnvelopesActivity extends LockedActivity
         mGrid = (GridView) findViewById(R.id.grid);
         getLoaderManager().initLoader(0, null, this);
         mEnvelopes = new EnvelopesAdapter(this, null);
-        mGrid.setAdapter(mEnvelopes);
+        mGrid.setAdapter(new DeleteAdapter(this, mEnvelopes, 0));
         mGrid.setOnItemClickListener(this);
         mTotalContainer = findViewById(R.id.totalamount);
         mTotal = (TextView) mTotalContainer.findViewById(R.id.value);
