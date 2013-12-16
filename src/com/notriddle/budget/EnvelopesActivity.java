@@ -127,14 +127,10 @@ public class EnvelopesActivity extends LockedActivity
         deleteEnvelope((int)id);
     }
     @Override public void onDelete(long id) {
-        getLoaderManager().restartLoader(
-            0, null, this
-        );
+        loadEnvelopesData(mEnvelopes.getCursor());
     }
     @Override public void undoDelete(long id) {
-        getLoaderManager().restartLoader(
-            0, null, this
-        );
+        loadEnvelopesData(mEnvelopes.getCursor());
     }
 
     private void deleteEnvelope(int id) {
@@ -176,6 +172,9 @@ public class EnvelopesActivity extends LockedActivity
     }
 
     @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
+        loadEnvelopesData(data);
+    }
+    private void loadEnvelopesData(Cursor data) {
         data.moveToFirst();
         int l = data.getCount();
         long total = 0;

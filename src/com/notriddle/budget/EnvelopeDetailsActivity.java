@@ -65,9 +65,9 @@ public class EnvelopeDetailsActivity extends LockedActivity
     TextView mAmount;
     TextView mAmountName;
     TextView mProjected;
+    Cursor mEnvelopeData;
+    Cursor mLogData;
     int mColor;
-    boolean mLoadedEnvelope;
-    boolean mLoadedLog;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -83,8 +83,8 @@ public class EnvelopeDetailsActivity extends LockedActivity
             ActionBar.LayoutParams.WRAP_CONTENT
         ));
         mName.setSingleLine(true);
-        mLoadedEnvelope = false;
-        mLoadedLog = false;
+        mEnvelopeData = null;
+        mLogData = null;
 
         final ListView nV = mNavView = (ListView) findViewById(R.id.nav);
         if (nV != null) {
@@ -169,7 +169,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
 
     @Override public void onDestroy() {
         super.onDestroy();
-        if (mName.getText().length() == 0 && mLogAdapter.getCount() == 0 && mLoadedEnvelope && mLoadedLog) {
+        if (mName.getText().length() == 0 && mLogAdapter.getCount() == 0 && mEnvelopeData != null && mLogData != null) {
             deleteThis();
             mDatabase.close();
             mDatabase = null;
@@ -180,14 +180,10 @@ public class EnvelopeDetailsActivity extends LockedActivity
         deleteTransaction((int)id);
     }
     @Override public void onDelete(long id) {
-        getLoaderManager().restartLoader(
-            1, null, this
-        );
+        loadLogData(mLogData);
     }
     @Override public void undoDelete(long id) {
-        getLoaderManager().restartLoader(
-            0, null, this
-        );
+        loadEnvelopeData(mEnvelopeData);
     }
 
     private void deleteTransaction(int id) {
@@ -244,78 +240,29 @@ public class EnvelopeDetailsActivity extends LockedActivity
         return retVal;
     }
 
-    @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
-        if (ldr.getId() == 0) {
-            mLoadedEnvelope = true;
-            if (data.getCount() == 0) {
-                finish();
-            } else {
-                data.moveToFirst();
-                while (data.getInt(data.getColumnIndexOrThrow("_id")) != mId) {
-                    data.moveToNext();
-                }
-                String name = data.getString(data.getColumnIndexOrThrow("name"));
-                if (!mName.hasFocus()) {
-                    if (!mName.getText().toString().equals(name)) {
-                        mName.setText(name);
-                    }
-                    mName.setDefaultFocus(name.equals(""));
-                }
-                if (mDeleteAdapter.getDeletedId() == -1) {
-                    long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
-                    mAmount.setText(EditMoney.toColoredMoney(this, cents));
-                    long projected = data.getLong(
-                        data.getColumnIndexOrThrow("projectedCents")
-                    );
-                    if (projected == cents) {
-                        mProjected.setVisibility(View.GONE);
-                    } else {
-                        mProjected.setVisibility(View.VISIBLE);
-                        mProjected.setText(
-                            EditMoney.toColoredMoney(this, projected)
-                        );
-                    }
-                }
-                mColor = data.getInt(data.getColumnIndexOrThrow("color"));
-                getActionBar()
-                .setBackgroundDrawable(new ColorDrawable(mColor == 0 ? 0xFFEEEEEE : mColor));
-                if (mNavAdapter != null) {
-                    mNavAdapter.changeCursor(data);
-                    if (mNavView != null) {
-                        int l = mNavAdapter.getCount();
-                        for (int i = 0; i != l; ++i) {
-                            if (mNavAdapter.getItemId(i) == mId) {
-                                mNavView.setItemChecked(i, true);
-                            }
-                        }
-                    }
-                }
-                if (Build.VERSION.SDK_INT < 18) {
-                    invalidateOptionsMenu();
-                }
-            }
+    private void loadEnvelopeData(Cursor data) {
+        mEnvelopeData = data;
+        if (data.getCount() == 0) {
+            finish();
         } else {
-            mLoadedLog = true;
-            if (mDeleteAdapter.getDeletedId() != -1) {
-                int l = data.getCount();
-                long total = 0;
-                long projected = 0;
-                long now = System.currentTimeMillis();
-                data.moveToFirst();
-                for (int i = 0; i != l; ++i) {
-                    int id = data.getInt(data.getColumnIndexOrThrow("_id"));
-                    if (id != mDeleteAdapter.getDeletedId()) {
-                        long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
-                        long time = data.getLong(data.getColumnIndexOrThrow("time"));
-                        if (time <= now) {
-                            total += cents;
-                        }
-                        projected += cents;
-                    }
-                    data.moveToNext();
+            data.moveToFirst();
+            while (data.getInt(data.getColumnIndexOrThrow("_id")) != mId) {
+                data.moveToNext();
+            }
+            String name = data.getString(data.getColumnIndexOrThrow("name"));
+            if (!mName.hasFocus()) {
+                if (!mName.getText().toString().equals(name)) {
+                    mName.setText(name);
                 }
-                mAmount.setText(EditMoney.toColoredMoney(this, total));
-                if (projected == total) {
+                mName.setDefaultFocus(name.equals(""));
+            }
+            if (mDeleteAdapter.getDeletedId() == -1) {
+                long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
+                mAmount.setText(EditMoney.toColoredMoney(this, cents));
+                long projected = data.getLong(
+                    data.getColumnIndexOrThrow("projectedCents")
+                );
+                if (projected == cents) {
                     mProjected.setVisibility(View.GONE);
                 } else {
                     mProjected.setVisibility(View.VISIBLE);
@@ -324,14 +271,71 @@ public class EnvelopeDetailsActivity extends LockedActivity
                     );
                 }
             }
-            mLogAdapter.changeCursor(data);
-            final ListView lV = mLogView;
-            if (lV.getLastVisiblePosition() == mLogAdapter.getCount()
-                || lV.getLastVisiblePosition() <= 1) {
-                lV.setBackgroundResource(R.color.cardBackground);
-            } else {
-                lV.setBackgroundDrawable(null);
+            mColor = data.getInt(data.getColumnIndexOrThrow("color"));
+            getActionBar()
+            .setBackgroundDrawable(new ColorDrawable(mColor == 0 ? 0xFFEEEEEE : mColor));
+            if (mNavAdapter != null) {
+                mNavAdapter.changeCursor(data);
+                if (mNavView != null) {
+                    int l = mNavAdapter.getCount();
+                    for (int i = 0; i != l; ++i) {
+                        if (mNavAdapter.getItemId(i) == mId) {
+                            mNavView.setItemChecked(i, true);
+                        }
+                    }
+                }
             }
+            if (Build.VERSION.SDK_INT < 18) {
+                invalidateOptionsMenu();
+            }
+        }
+    }
+
+    private void loadLogData(Cursor data) {
+        mLogData = data;
+        if (mDeleteAdapter.getDeletedId() != -1) {
+            int l = data.getCount();
+            long total = 0;
+            long projected = 0;
+            long now = System.currentTimeMillis();
+            data.moveToFirst();
+            for (int i = 0; i != l; ++i) {
+                int id = data.getInt(data.getColumnIndexOrThrow("_id"));
+                if (id != mDeleteAdapter.getDeletedId()) {
+                    long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
+                    long time = data.getLong(data.getColumnIndexOrThrow("time"));
+                    if (time <= now) {
+                        total += cents;
+                    }
+                    projected += cents;
+                }
+                data.moveToNext();
+            }
+            mAmount.setText(EditMoney.toColoredMoney(this, total));
+            if (projected == total) {
+                mProjected.setVisibility(View.GONE);
+            } else {
+                mProjected.setVisibility(View.VISIBLE);
+                mProjected.setText(
+                    EditMoney.toColoredMoney(this, projected)
+                );
+            }
+        }
+        mLogAdapter.changeCursor(data);
+        final ListView lV = mLogView;
+        if (lV.getLastVisiblePosition() == mLogAdapter.getCount()
+            || lV.getLastVisiblePosition() <= 1) {
+            lV.setBackgroundResource(R.color.cardBackground);
+        } else {
+            lV.setBackgroundDrawable(null);
+        }
+    }
+
+    @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
+        if (ldr.getId() == 0) {
+            loadEnvelopeData(data);
+        } else {
+            loadLogData(data);
         }
     }
 
