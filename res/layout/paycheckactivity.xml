@@ -8,26 +8,31 @@
 <LinearLayout android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
-    <RelativeLayout android:id="@+id/docs"
-                    android:layout_width="fill_parent"
+    <com.notriddle.budget.DeleteView
+        android:id="@+id/docs"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/cardSpacing"
+    >
+    <RelativeLayout android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/stateful_card_background"
-                    android:layout_margin="@dimen/cardSpacing"
                     android:padding="@dimen/cardPadding">
-    <TextView android:text="@string/paycheck_docs"
-              android:textSize="18sp"
-              android:layout_alignParentLeft="true"
-              android:layout_centerVertical="true"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"/>
-    <TextView android:text="@string/gotIt"
-              android:textSize="14sp"
-              android:textAllCaps="true"
-              android:layout_alignParentRight="true"
-              android:layout_centerVertical="true"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"/>
-    </RelativeLayout>
+        <TextView android:text="@string/paycheck_docs"
+                  android:textSize="18sp"
+                  android:layout_alignParentLeft="true"
+                  android:layout_centerVertical="true"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+        <TextView android:text="@string/gotIt"
+                  android:textSize="14sp"
+                  android:textAllCaps="true"
+                  android:layout_alignParentRight="true"
+                  android:layout_centerVertical="true"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </com.notriddle.budget.DeleteView>
     <RelativeLayout android:id="@+id/spendingCard"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

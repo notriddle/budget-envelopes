@@ -28,6 +28,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
@@ -59,6 +60,17 @@ public class DeleteView extends FrameLayout implements Checkable {
 
     public DeleteView(Context cntx) {
         super(cntx);
+        init(cntx);
+    }
+    public DeleteView(Context cntx, AttributeSet attrs) {
+        super(cntx, attrs);
+        init(cntx);
+    }
+    public DeleteView(Context cntx, AttributeSet attrs, int defStyleAttr) {
+        super(cntx, attrs, defStyleAttr);
+        init(cntx);
+    }
+    private void init(Context cntx) {
         mInnerView = null;
         mSwipeStart = -1;
         mSwipeStartTime = -1;
@@ -74,6 +86,11 @@ public class DeleteView extends FrameLayout implements Checkable {
         mChecked = false;
         mListener = null;
         setClickable(true);
+    }
+
+    @Override public void onFinishInflate() {
+        super.onFinishInflate();
+        mInnerView = getChildAt(0);
     }
 
     @Override public boolean isChecked() {
@@ -220,6 +237,12 @@ public class DeleteView extends FrameLayout implements Checkable {
             mVelocityTracker = null;
         }
         setClickable(false);
+        final int oldPadding = getPaddingY();
+        final ObjectAnimator paddingAnim = ObjectAnimator.ofInt(
+            this, "paddingY", oldPadding, 0
+        );
+        paddingAnim.setDuration(250);
+        paddingAnim.start();
         mAnim = ObjectAnimator.ofInt(
             this, "innerViewHeight", mInnerView.getHeight(), 0
         );
@@ -231,6 +254,8 @@ public class DeleteView extends FrameLayout implements Checkable {
                     Log.d("Budget", "performDelete(): done");
                 } else {
                     Log.d("Budget", "performDelete(): canceled");
+                    paddingAnim.cancel();
+                    setPaddingY(oldPadding);
                 }
             }
         });
@@ -308,6 +333,13 @@ public class DeleteView extends FrameLayout implements Checkable {
     }
     public View getInnerView() {
         return mInnerView;
+    }
+
+    public int getPaddingY() {
+        return getPaddingTop();
+    }
+    public void setPaddingY(int pad) {
+        setPadding(getPaddingLeft(), pad, getPaddingRight(), pad);
     }
 
     public void setSwipeBackgroundResource(int background) {

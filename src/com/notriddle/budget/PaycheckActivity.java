@@ -50,6 +50,7 @@ public class PaycheckActivity extends LockedActivity
                                          PaycheckEnvelopesAdapter
                                          .DepositesChangeListener,
                                          TextWatcher,
+                                         DeleteView.OnDeleteListener,
                                          View.OnClickListener,
                                          MonitorScrollView.OnScrollListener {
     PaycheckEnvelopesAdapter mEnvelopes;
@@ -69,10 +70,11 @@ public class PaycheckActivity extends LockedActivity
         setContentView(R.layout.paycheckactivity);
         mPrefs = PreferenceManager
                  .getDefaultSharedPreferences(getBaseContext());
-        View docs = findViewById(R.id.docs);
+        DeleteView docs = (DeleteView) findViewById(R.id.docs);
         if (mPrefs.getBoolean("com.notriddle.budget.PaycheckActivity.docs.show",
                               true)) {
             docs.setOnClickListener(this);
+            docs.setOnDeleteListener(this);
         } else {
             docs.setVisibility(docs.GONE);
         }
@@ -107,6 +109,9 @@ public class PaycheckActivity extends LockedActivity
     }
 
     @Override public void onClick(View v) {
+        ((DeleteView)v).performDelete();
+    }
+    @Override public void onDelete(DeleteView v) {
         mPrefs.edit()
                .putBoolean("com.notriddle.budget.PaycheckActivity.docs.show",
                            false)
