@@ -190,12 +190,10 @@ public class DeleteAdapter extends BaseAdapter
             AdapterView.OnItemLongClickListener l = p.getOnItemLongClickListener();
             if (l != null) {
                 return l.onItemLongClick(p, v, pos, id);
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        ((DeleteView)v).performDelete();
+        return true;
     }
     @Override public void onDelete(DeleteView v) {
         long id = (Long) v.getTag(R.id.value);
