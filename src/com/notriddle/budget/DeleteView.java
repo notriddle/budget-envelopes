@@ -40,9 +40,10 @@ public class DeleteView extends FrameLayout implements Checkable {
     };
 
     private static final int STATE_READY = 0;
-    private static final int STATE_IN_SWIPE = 1;
-    private static final int STATE_ANIMATING = 2;
-    private static final int STATE_DELETING = 3;
+    private static final int STATE_PRESSED = 1;
+    private static final int STATE_IN_SWIPE = 2;
+    private static final int STATE_ANIMATING = 3;
+    private static final int STATE_DELETING = 4;
 
     View mInnerView;
     float mSwipeStart;
@@ -52,7 +53,10 @@ public class DeleteView extends FrameLayout implements Checkable {
     int mTouchSlop;
     int mFlingSlop;
     int mFlingCap;
+    int mPressTimeout;
+    Runnable mPressRunnable;
     int mLongPressTimeout;
+    Runnable mLongPressRunnable;
     VelocityTracker mVelocityTracker;
     ObjectAnimator mAnim;
     boolean mChecked;
@@ -79,7 +83,23 @@ public class DeleteView extends FrameLayout implements Checkable {
         mTouchSlop = config.getScaledTouchSlop();
         mFlingSlop = config.getScaledMinimumFlingVelocity();
         mFlingCap = config.getScaledMaximumFlingVelocity();
-        mLongPressTimeout = config.getLongPressTimeout();
+        mPressTimeout = config.getTapTimeout();
+        mPressRunnable = new Runnable() {
+            public void run() {
+                if (mSwipeState == STATE_PRESSED) {
+                    mInnerView.setPressed(true);
+                }
+            }
+        };
+        mLongPressTimeout = mPressTimeout + config.getLongPressTimeout();
+        mLongPressRunnable = new Runnable() {
+            public void run() {
+                if (mSwipeState == STATE_PRESSED) {
+                    performLongClick();
+                    mInnerView.setPressed(false);
+                }
+            }
+        };
         mSwipeState = STATE_READY;
         mVelocityTracker = null;
         mAnim = null;
@@ -112,9 +132,11 @@ public class DeleteView extends FrameLayout implements Checkable {
             case MotionEvent.ACTION_DOWN:
                 switch (mSwipeState) {
                     case STATE_READY:
+                        mSwipeState = STATE_PRESSED;
                         mSwipeStart = x;
                         mSwipeStartTime = event.getEventTime();
-                        mInnerView.setPressed(true);
+                        postDelayed(mPressRunnable, mPressTimeout);
+                        postDelayed(mLongPressRunnable, mLongPressTimeout);
                         break;
                     case STATE_ANIMATING:
                         cancelAnimation(x);
@@ -123,13 +145,14 @@ public class DeleteView extends FrameLayout implements Checkable {
                         // Do nothing.
                         break;
                     default:
-                        throw new Error("Invalid state with ACTION_DOWN.");
+                        throw new Error("Invalid state with ACTION_DOWN: "+mSwipeState);
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 switch (mSwipeState) {
-                    case STATE_READY:
+                    case STATE_PRESSED:
                         if (Math.abs(x - mSwipeStart) > mTouchSlop) {
+                            stopPressed();
                             startSwipe();
                         }
                         break;
@@ -144,18 +167,19 @@ public class DeleteView extends FrameLayout implements Checkable {
                         // Do nothing.
                         break;
                     default:
-                        throw new Error("Invalid state with ACTION_MOVE.");
+                        throw new Error("Invalid state with ACTION_MOVE: "+mSwipeState);
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 switch (mSwipeState) {
-                    case STATE_READY:
-                        mInnerView.setPressed(false);
+                    case STATE_PRESSED:
+                        stopPressed();
                         if (event.getEventTime() - mSwipeStartTime > mLongPressTimeout) {
-                            performLongClick();
+                            // Long click is already performed.
                         } else {
                             performClick();
                         }
+                        mSwipeState = STATE_READY;
                         break;
                     case STATE_IN_SWIPE:
                         startAnimation();
@@ -165,32 +189,40 @@ public class DeleteView extends FrameLayout implements Checkable {
                         // Do nothing.
                         break;
                     default:
-                        throw new Error("Invalid state with ACTION_UP.");
+                        throw new Error("Invalid state with ACTION_UP: "+mSwipeState);
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
                 switch (mSwipeState) {
-                    case STATE_READY:
-                        mInnerView.setPressed(false);
+                    case STATE_PRESSED:
+                        stopPressed();
+                        mSwipeState = STATE_READY;
                         break;
                     case STATE_IN_SWIPE:
                         startAnimation();
                         break;
+                    case STATE_READY:
                     case STATE_ANIMATING:
                     case STATE_DELETING:
                         // Do nothing.
                         break;
                     default:
-                        throw new Error("Invalid state with ACTION_CANCEL.");
+                        throw new Error("Invalid state with ACTION_CANCEL: "+mSwipeState);
                 }
                 break;
             default:
-                throw new Error("Invalid MotionEvent!");
+                throw new Error("Invalid MotionEvent: "+event.getActionMasked());
         }
 
         Log.d("Budget", "onTouchEvent(): "+mSwipeState);
 
         return true;
+    }
+
+    private void stopPressed() {
+        mInnerView.setPressed(false);
+        removeCallbacks(mPressRunnable);
+        removeCallbacks(mLongPressRunnable);
     }
 
     private void startSwipe() {
@@ -202,7 +234,6 @@ public class DeleteView extends FrameLayout implements Checkable {
         setBackgroundResource(mBackground);
         mVelocityTracker = VelocityTracker.obtain();
         setClickable(false);
-        mInnerView.setPressed(false);
     }
 
     private void cancelSwipe() {
