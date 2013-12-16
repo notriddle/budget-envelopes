@@ -329,7 +329,9 @@ public class DeleteView extends FrameLayout implements Checkable {
         if (mInnerView instanceof Checkable) {
             ((Checkable)mInnerView).setChecked(mChecked);
         }
-        cancelSwipe();
+        if (mSwipeState != STATE_READY) {
+            cancelSwipe();
+        }
     }
     public View getInnerView() {
         return mInnerView;
