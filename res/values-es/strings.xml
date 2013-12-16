@@ -21,11 +21,8 @@
     <string name="app_name">Presupuesto</string>
     <string name="envelopeDetails_name">Sobre</string>
     <string name="envelopeDetails_balance">Balance</string>
-    <string name="deleteTransaction_menuItem">Eliminar transacción</string>
     <string name="newEnvelope_menuItem">Nuevo sobre</string>
-    <string name="deleteEnvelope_menuItem">Desechar</string>
     <string name="colorEnvelope_menuItem">Cambiar color</string>
-    <string name="confirm_menuItem">Esta acción no se puede deshacer</string>
     <string name="envelopeName_hint">Nombre</string>
     <string name="paycheck_name">Ingreso</string>
     <string name="paycheck_menuItem">Añadir ingreso</string>

@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +36,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,12 +52,13 @@ import android.database.sqlite.SQLiteDatabase;
 public class EnvelopeDetailsActivity extends LockedActivity
                                      implements LoaderCallbacks<Cursor>,
                                                 TextWatcher,
-                                            AbsListView.MultiChoiceModeListener,
+                                                DeleteAdapter.Deleter,
                                                AdapterView.OnItemClickListener {
     EditTextDefaultFocus mName;
     int mId;
     SQLiteDatabase mDatabase;
     LogAdapter mLogAdapter;
+    DeleteAdapter mDeleteAdapter;
     ListView mLogView;
     SimpleEnvelopesAdapter mNavAdapter;
     ListView mNavView;
@@ -117,7 +118,10 @@ public class EnvelopeDetailsActivity extends LockedActivity
         mAmountName = (TextView) head.findViewById(R.id.name);
         mProjected = (TextView) head.findViewById(R.id.projectedValue);
         lV.addHeaderView(head);
-        lV.setAdapter(new DeleteAdapter(this, mLogAdapter, R.color.windowBackground));
+        mDeleteAdapter = new DeleteAdapter(
+            this, this, mLogAdapter, R.color.windowBackground
+        );
+        lV.setAdapter(mDeleteAdapter);
 
         lV.setOnScrollListener(new AbsListView.OnScrollListener() {
             public void onScroll(AbsListView lV, int first, int count, int total) {
@@ -135,8 +139,6 @@ public class EnvelopeDetailsActivity extends LockedActivity
         });
         lV.setBackgroundResource(R.color.cardBackground);
         lV.setOnItemClickListener(this);
-        lV.setChoiceMode(lV.CHOICE_MODE_MULTIPLE_MODAL);
-        lV.setMultiChoiceModeListener(this);
         getWindow().setBackgroundDrawable(null);
         lV.setSelector(android.R.color.transparent);
         lV.setDivider(getResources().getDrawable(R.color.cardDivider));
@@ -158,6 +160,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
 
     @Override public void onPause() {
         super.onPause();
+        mDeleteAdapter.performDelete();
         if (mDatabase != null) {
             mDatabase.close();
             mDatabase = null;
@@ -173,51 +176,18 @@ public class EnvelopeDetailsActivity extends LockedActivity
         }
     }
 
-    @Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        mode.getMenuInflater()
-             .inflate(R.menu.envelopedetailsactivity_checked, menu);
-        return true;
+    @Override public void performDelete(long id) {
+        deleteTransaction((int)id);
     }
-
-    @Override public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        countItems(mode);
-        return true;
-    }
-
-    @Override public void onItemCheckedStateChanged(ActionMode mode, int pos,
-                                                    long id, boolean chk) {
-        if (pos == 0 && chk) {
-            mLogView.setItemChecked(0, false);
-        }
-        countItems(mode);
-    }
-
-    @Override public void onDestroyActionMode(ActionMode mode) {
-        // Do nothing.
-    }
-
-    @Override public boolean onActionItemClicked(ActionMode mode,
-                                                 MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_menuItem:
-                long[] items = mLogView.getCheckedItemIds();
-                int l = items.length;
-                for (int i = 0; i != l; ++i) {
-                    deleteTransaction((int)items[i]);
-                }
-                mode.finish();
-                return true;
-        }
-        return false;
-    }
-
-    private void countItems(ActionMode mode) {
-        int count = Util.numberOf(mLogView.getCheckedItemPositions(),
-                                  true);
-        String titler = getResources().getQuantityString(
-            R.plurals.transactionsChecked_name, count
+    @Override public void onDelete(long id) {
+        getLoaderManager().restartLoader(
+            1, null, this
         );
-        mode.setTitle(String.format(titler, count));
+    }
+    @Override public void undoDelete(long id) {
+        getLoaderManager().restartLoader(
+            0, null, this
+        );
     }
 
     private void deleteTransaction(int id) {
@@ -291,18 +261,20 @@ public class EnvelopeDetailsActivity extends LockedActivity
                     }
                     mName.setDefaultFocus(name.equals(""));
                 }
-                long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
-                mAmount.setText(EditMoney.toColoredMoney(this, cents));
-                long projected = data.getLong(
-                    data.getColumnIndexOrThrow("projectedCents")
-                );
-                if (projected == cents) {
-                    mProjected.setVisibility(View.GONE);
-                } else {
-                    mProjected.setVisibility(View.VISIBLE);
-                    mProjected.setText(
-                        EditMoney.toColoredMoney(this, projected)
+                if (mDeleteAdapter.getDeletedId() == -1) {
+                    long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
+                    mAmount.setText(EditMoney.toColoredMoney(this, cents));
+                    long projected = data.getLong(
+                        data.getColumnIndexOrThrow("projectedCents")
                     );
+                    if (projected == cents) {
+                        mProjected.setVisibility(View.GONE);
+                    } else {
+                        mProjected.setVisibility(View.VISIBLE);
+                        mProjected.setText(
+                            EditMoney.toColoredMoney(this, projected)
+                        );
+                    }
                 }
                 mColor = data.getInt(data.getColumnIndexOrThrow("color"));
                 getActionBar()
@@ -324,6 +296,34 @@ public class EnvelopeDetailsActivity extends LockedActivity
             }
         } else {
             mLoadedLog = true;
+            if (mDeleteAdapter.getDeletedId() != -1) {
+                int l = data.getCount();
+                long total = 0;
+                long projected = 0;
+                long now = System.currentTimeMillis();
+                data.moveToFirst();
+                for (int i = 0; i != l; ++i) {
+                    int id = data.getInt(data.getColumnIndexOrThrow("_id"));
+                    if (id != mDeleteAdapter.getDeletedId()) {
+                        long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
+                        long time = data.getLong(data.getColumnIndexOrThrow("time"));
+                        if (time <= now) {
+                            total += cents;
+                        }
+                        projected += cents;
+                    }
+                    data.moveToNext();
+                }
+                mAmount.setText(EditMoney.toColoredMoney(this, total));
+                if (projected == total) {
+                    mProjected.setVisibility(View.GONE);
+                } else {
+                    mProjected.setVisibility(View.VISIBLE);
+                    mProjected.setText(
+                        EditMoney.toColoredMoney(this, projected)
+                    );
+                }
+            }
             mLogAdapter.changeCursor(data);
             final ListView lV = mLogView;
             if (lV.getLastVisiblePosition() == mLogAdapter.getCount()
@@ -357,13 +357,11 @@ public class EnvelopeDetailsActivity extends LockedActivity
     }
 
     @Override public void onItemClick(AdapterView a, View v, int pos, long id) {
-        int iId = (int)id;
+        final int iId = (int)id;
         if (a == mLogView) {
             editLogEntry(iId);
         } else if (a == mNavView) {
-            mId = iId;
-            getLoaderManager().restartLoader(0, null, this);
-            getLoaderManager().restartLoader(1, null, this);
+            switchEnvelope(iId);
         }
     }
 
@@ -385,6 +383,35 @@ public class EnvelopeDetailsActivity extends LockedActivity
             csr.moveToNext();
         }
         csr.moveToPosition(oldPos);
+    }
+
+    private void switchEnvelope(final int id) {
+        if (!mDeleteAdapter.performDelete()) {
+            mId = id;
+            getLoaderManager().restartLoader(
+                    0, null, EnvelopeDetailsActivity.this
+            );
+            getLoaderManager().restartLoader(
+                1, null, EnvelopeDetailsActivity.this
+            );
+        } else {
+            final DataSetObserver obs = new DataSetObserver() {
+                @Override public void onChanged() {
+                    // You can't unregister yourself in onChanged().
+                    final DataSetObserver that = this;
+                    mLogView.post(new Runnable() {
+                        public void run() {
+                            mDeleteAdapter.unregisterDataSetObserver(that);
+                            switchEnvelope(id);
+                        }
+                    });
+                }
+                @Override public void onInvalidated() {
+                    onChanged();
+                }
+            };
+            mDeleteAdapter.registerDataSetObserver(obs);
+        }
     }
 
     private void changeColor() {
@@ -434,10 +461,6 @@ public class EnvelopeDetailsActivity extends LockedActivity
             case R.id.spend_menuItem:
                 sF = SpendFragment.newInstance(mId, SpendFragment.SPEND);
                 sF.show(getFragmentManager(), "dialog");
-                return true;
-            case R.id.delete_menuItem:
-                deleteThis();
-                finish();
                 return true;
             case R.id.color_menuItem:
                 changeColor();

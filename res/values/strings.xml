@@ -19,15 +19,13 @@
 -->
 
 <resources>
-
     <string name="app_name">Budget</string>
+    <string name="deleted_name">Deleted</string>
+    <string name="undo_menuItem">Undo</string>
     <string name="envelopeDetails_name">Envelope</string>
     <string name="envelopeDetails_balance">Balance</string>
-    <string name="deleteTransaction_menuItem">Forget transaction</string>
     <string name="newEnvelope_menuItem">New envelope</string>
-    <string name="deleteEnvelope_menuItem">Throw away envelope</string>
     <string name="colorEnvelope_menuItem">Change color</string>
-    <string name="confirm_menuItem">This action cannot be undone</string>
     <string name="envelopeName_hint">Envelope name</string>
     <string name="paycheck_name">Earn</string>
     <string name="paycheck_menuItem">Earn</string>
@@ -74,14 +72,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.</string>
 
-    <plurals name="transactionsChecked_name">
-        <item quantity="one">%d transaction selected</item>
-        <item quantity="other">%d transactions selected</item>
-    </plurals>
-    <plurals name="envelopesChecked_name">
-        <item quantity="one">%d envelope selected</item>
-        <item quantity="other">%d envelopes selected</item>
-    </plurals>
     <string name="pin_name">Unlock</string>
     <string name="pin_label">Enter your PIN</string>
     <string name="pin_toast_wrong">Try again</string>

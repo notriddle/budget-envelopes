@@ -91,7 +91,7 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
         }
     }
 
-    @Override public Cursor loadInBackground() {
+    @Override public synchronized Cursor loadInBackground() {
         if (mResults != null) {
             mResults.unregisterContentObserver(mObserver);
         }
@@ -110,11 +110,11 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
         return mResults;
     }
 
-    @Override public void onStartLoading() {
+    @Override public synchronized void onStartLoading() {
         forceLoad();
     }
 
-    @Override public void abandon() {
+    @Override public synchronized void abandon() {
         super.abandon();
         mResults.unregisterContentObserver(mObserver);
         mResults = null;

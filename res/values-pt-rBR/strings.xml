@@ -21,11 +21,8 @@
     <string name="app_name">Orçamento</string>
     <string name="envelopeDetails_name">Envelope</string>
     <string name="envelopeDetails_balance">Saldo</string>
-    <string name="deleteTransaction_menuItem">Esqueça do transação</string>
     <string name="newEnvelope_menuItem">Novo envelope</string>
-    <string name="deleteEnvelope_menuItem">Descartar envelope</string>
     <string name="colorEnvelope_menuItem">Mudar de cor</string>
-    <string name="confirm_menuItem">Esta acção não pode-se desfazer</string>
     <string name="envelopeName_hint">Nome</string>
     <string name="paycheck_name">Ganhar</string>
     <string name="paycheck_menuItem">Ganhar</string>

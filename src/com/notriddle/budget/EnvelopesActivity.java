@@ -34,7 +34,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,10 +48,11 @@ public class EnvelopesActivity extends LockedActivity
                                implements LoaderCallbacks<Cursor>,
                                           GridView.OnItemClickListener,
                                           MonitorScrollView.OnScrollListener,
-                                          AbsListView.MultiChoiceModeListener,
-                                          View.OnClickListener {
+                                          View.OnClickListener,
+                                          DeleteAdapter.Deleter {
     GridView mGrid;
     EnvelopesAdapter mEnvelopes;
+    DeleteAdapter mDeleteAdapter;
     TextView mTotal;
     View mTotalContainer;
     View mTotalLabel;
@@ -67,15 +67,14 @@ public class EnvelopesActivity extends LockedActivity
         mGrid = (GridView) findViewById(R.id.grid);
         getLoaderManager().initLoader(0, null, this);
         mEnvelopes = new EnvelopesAdapter(this, null);
-        mGrid.setAdapter(new DeleteAdapter(this, mEnvelopes, 0));
+        mDeleteAdapter = new DeleteAdapter(this, this, mEnvelopes, 0);
+        mGrid.setAdapter(mDeleteAdapter);
         mGrid.setOnItemClickListener(this);
         mTotalContainer = findViewById(R.id.totalamount);
         mTotal = (TextView) mTotalContainer.findViewById(R.id.value);
         mTotalLabel = mTotalContainer.findViewById(R.id.name);
         mScroll = (MonitorScrollView) findViewById(R.id.scroll);
         mScroll.setOnScrollListener(this);
-        mGrid.setChoiceMode(mGrid.CHOICE_MODE_MULTIPLE_MODAL);
-        mGrid.setMultiChoiceModeListener(this);
         findViewById(R.id.graph).setOnClickListener(this);
         setGraphVisible(mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
     }
@@ -91,6 +90,11 @@ public class EnvelopesActivity extends LockedActivity
                 // do nothing.
             }
         }).execute();
+    }
+
+    @Override public void onPause() {
+        super.onPause();
+        mDeleteAdapter.performDelete();
     }
 
     @Override public void onClick(View v) {
@@ -119,48 +123,18 @@ public class EnvelopesActivity extends LockedActivity
                .apply();
     }
 
-    @Override public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        mode.getMenuInflater()
-             .inflate(R.menu.envelopesactivity_checked, menu);
-        return true;
+    @Override public void performDelete(long id) {
+        deleteEnvelope((int)id);
     }
-
-    @Override public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        countItems(mode);
-        return true;
-    }
-
-    @Override public void onItemCheckedStateChanged(ActionMode mode, int pos,
-                                                    long id, boolean chk) {
-        countItems(mode);
-    }
-
-    @Override public void onDestroyActionMode(ActionMode mode) {
-        // Do nothing.
-    }
-
-    @Override public boolean onActionItemClicked(ActionMode mode,
-                                                 MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_menuItem:
-                long[] items = mGrid.getCheckedItemIds();
-                int l = items.length;
-                for (int i = 0; i != l; ++i) {
-                    deleteEnvelope((int)items[i]);
-                }
-                mode.finish();
-                return true;
-        }
-        return false;
-    }
-
-    private void countItems(ActionMode mode) {
-        int count = Util.numberOf(mGrid.getCheckedItemPositions(),
-                                  true);
-        String titler = getResources().getQuantityString(
-            R.plurals.envelopesChecked_name, count
+    @Override public void onDelete(long id) {
+        getLoaderManager().restartLoader(
+            0, null, this
         );
-        mode.setTitle(String.format(titler, count));
+    }
+    @Override public void undoDelete(long id) {
+        getLoaderManager().restartLoader(
+            0, null, this
+        );
     }
 
     private void deleteEnvelope(int id) {
@@ -207,10 +181,13 @@ public class EnvelopesActivity extends LockedActivity
         long total = 0;
         boolean hasColor = false;
         for (int i = 0; i != l; ++i) {
-            total += data.getLong(data.getColumnIndexOrThrow("cents"));
-            int color = data.getInt(data.getColumnIndexOrThrow("color"));
-            if (color != 0) {
-                hasColor = true;
+            int id = data.getInt(data.getColumnIndexOrThrow("_id"));
+            if (id != mDeleteAdapter.getDeletedId()) {
+                total += data.getLong(data.getColumnIndexOrThrow("cents"));
+                int color = data.getInt(data.getColumnIndexOrThrow("color"));
+                if (color != 0) {
+                    hasColor = true;
+                }
             }
             data.moveToNext();
         }

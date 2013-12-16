@@ -21,11 +21,8 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
     <string name="app_name">Бюджет</string>
     <string name="envelopeDetails_name">Конверт</string>
     <string name="envelopeDetails_balance">Баланс</string>
-    <string name="deleteTransaction_menuItem">Удалить транзакции</string>
     <string name="newEnvelope_menuItem">Новый конверт</string>
-    <string name="deleteEnvelope_menuItem">Удалить конверт</string>
     <string name="colorEnvelope_menuItem">Изменить цвет</string>
-    <string name="confirm_menuItem">Это действие не может быть отменено!</string>
     <string name="envelopeName_hint">Название конверта</string>
     <string name="paycheck_name">Приход</string>
     <string name="paycheck_menuItem">Приход</string>
