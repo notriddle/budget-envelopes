@@ -57,6 +57,7 @@ public class DeleteView extends FrameLayout implements Checkable {
     Runnable mPressRunnable;
     int mLongPressTimeout;
     Runnable mLongPressRunnable;
+    Runnable mUnpressRunnable;
     VelocityTracker mVelocityTracker;
     ObjectAnimator mAnim;
     boolean mChecked;
@@ -100,6 +101,11 @@ public class DeleteView extends FrameLayout implements Checkable {
                 }
             }
         };
+        mUnpressRunnable = new Runnable() {
+            public void run() {
+                mInnerView.setPressed(false);
+            }
+        };
         mSwipeState = STATE_READY;
         mVelocityTracker = null;
         mAnim = null;
@@ -135,6 +141,7 @@ public class DeleteView extends FrameLayout implements Checkable {
                         mSwipeState = STATE_PRESSED;
                         mSwipeStart = x;
                         mSwipeStartTime = event.getEventTime();
+                        removeCallbacks(mUnpressRunnable);
                         postDelayed(mPressRunnable, mPressTimeout);
                         postDelayed(mLongPressRunnable, mLongPressTimeout);
                         break;
@@ -173,12 +180,13 @@ public class DeleteView extends FrameLayout implements Checkable {
             case MotionEvent.ACTION_UP:
                 switch (mSwipeState) {
                     case STATE_PRESSED:
-                        stopPressed();
                         if (event.getEventTime() - mSwipeStartTime > mLongPressTimeout) {
                             // Long click is already performed.
                         } else {
+                            mInnerView.setPressed(true);
                             performClick();
                         }
+                        stopPressed();
                         mSwipeState = STATE_READY;
                         break;
                     case STATE_IN_SWIPE:
@@ -210,6 +218,10 @@ public class DeleteView extends FrameLayout implements Checkable {
                         throw new Error("Invalid state with ACTION_CANCEL: "+mSwipeState);
                 }
                 break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_POINTER_UP:
+                // We don't do anything with multitouch.
+                break;
             default:
                 throw new Error("Invalid MotionEvent: "+event.getActionMasked());
         }
@@ -220,7 +232,7 @@ public class DeleteView extends FrameLayout implements Checkable {
     }
 
     private void stopPressed() {
-        mInnerView.setPressed(false);
+        postDelayed(mUnpressRunnable, 100);
         removeCallbacks(mPressRunnable);
         removeCallbacks(mLongPressRunnable);
     }
