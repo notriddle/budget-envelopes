@@ -58,6 +58,9 @@ public class EnvelopesActivity extends LockedActivity
     View mTotalLabel;
     MonitorScrollView mScroll;
     SharedPreferences mPrefs;
+    TextView mGraphLabel;
+    ViewGroup mGraph;
+    View mAllTransactionsLabel;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -75,8 +78,12 @@ public class EnvelopesActivity extends LockedActivity
         mTotalLabel = mTotalContainer.findViewById(R.id.name);
         mScroll = (MonitorScrollView) findViewById(R.id.scroll);
         mScroll.setOnScrollListener(this);
-        findViewById(R.id.graph).setOnClickListener(this);
+        mGraphLabel = (TextView) findViewById(R.id.graphLabel);
+        mGraph = (ViewGroup) findViewById(R.id.graph);
+        mGraph.setOnClickListener(this);
         setGraphVisible(mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
+        mAllTransactionsLabel = findViewById(R.id.allTransactions);
+        mAllTransactionsLabel.setOnClickListener(this);
     }
 
     @Override public void onResume() {
@@ -98,14 +105,18 @@ public class EnvelopesActivity extends LockedActivity
     }
 
     @Override public void onClick(View v) {
-        setGraphVisible(!mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
+        if (v == mGraph) {
+            setGraphVisible(!mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
+        } else if (v == mAllTransactionsLabel) {
+            Intent i = new Intent(this, AllTransactionsActivity.class);
+            startActivity(i);
+        }
     }
 
     private void setGraphVisible(boolean visible) {
-        TextView label = (TextView) findViewById(R.id.graphLabel);
         Fragment chart = getFragmentManager().findFragmentById(R.id.graph);
         FragmentTransaction trans = getFragmentManager().beginTransaction();
-        label.setText(visible ? R.string.hideGraph_button : R.string.showGraph_button);
+        mGraphLabel.setText(visible ? R.string.hideGraph_button : R.string.showGraph_button);
         if (visible) {
             if (chart == null) {
                 trans.add(R.id.graph, new GraphFragment());
@@ -192,7 +203,7 @@ public class EnvelopesActivity extends LockedActivity
         }
         mTotal.setText(EditMoney.toColoredMoney(this, total));
         mEnvelopes.changeCursor(data);
-        findViewById(R.id.graph).setVisibility(hasColor ? View.VISIBLE : View.GONE);
+        mGraph.setVisibility(hasColor ? View.VISIBLE : View.GONE);
     }
 
     @Override public void onLoaderReset(Loader<Cursor> ldr) {

@@ -50,6 +50,8 @@
     <string name="gotIt">&#215;</string>
     <string name="showGraph_button">Show graph</string>
     <string name="hideGraph_button">Hide graph</string>
+    <string name="allTransactions_button">All transactions</string>
+    <string name="allTransactions_name">All transactions</string>
     <string name="export_name">Exporting&#8230;</string>
     <string name="export_settings">Export</string>
     <string name="export_settings_summary">Back up financial data</string>
