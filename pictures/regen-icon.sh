@@ -21,12 +21,13 @@ inkscape -e ../res/drawable-hdpi/ic_launcher.png -w 72 -h 72 -z ic_launcher.svg
 inkscape -e ../res/drawable-xhdpi/ic_launcher.png -w 96 -h 96 -z ic_launcher.svg
 inkscape -e ../res/drawable-xxhdpi/ic_launcher.png -w 144 -h 144 -z ic_launcher.svg
 
-inkscape -e ../res/drawable-mdpi/ic_notification.png -w 24 -h 24 -z ic_notification.svg
-gm mogrify -transparent '#000' -monochrome ../res/drawable-mdpi/ic_notification.png
-inkscape -e ../res/drawable-hdpi/ic_notification.png -w 36 -h 36 -z ic_notification.svg
-gm mogrify -transparent '#000' -monochrome ../res/drawable-hdpi/ic_notification.png
-inkscape -e ../res/drawable-xhdpi/ic_notification.png -w 48 -h 48 -z ic_notification.svg
-gm mogrify -transparent '#000' -monochrome ../res/drawable-xhdpi/ic_notification.png
+inkscape -e ic_notification.png -w 24 -h 24 -z ic_notification.svg
+gm convert -recolor '0 0 0 1, 0 0 0 1, 0 0 0 1, 1 0 0 0' ic_notification.png ../res/drawable-mdpi/ic_notification.png
+inkscape -e ic_notification.png -w 36 -h 36 -z ic_notification.svg
+gm convert -recolor '0 0 0 1, 0 0 0 1, 0 0 0 1, 1 0 0 0' ic_notification.png ../res/drawable-hdpi/ic_notification.png
+inkscape -e ic_notification.png -w 48 -h 48 -z ic_notification.svg
+gm convert -recolor '0 0 0 1, 0 0 0 1, 0 0 0 1, 1 0 0 0' ic_notification.png ../res/drawable-xhdpi/ic_notification.png
+rm ic_notification.png
 
 for i in color_menuitem spend_menuitem earn_menuitem transfer_menuitem; do
 	inkscape -e ../res/drawable-mdpi/$i.png -w 32 -h 32 -z $i.svg
