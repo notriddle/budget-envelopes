@@ -5,11 +5,8 @@
     <TextView android:id="@+id/title"
               android:textColor="@color/dialogWindowTitle"
               android:textSize="22sp"
-              android:padding="@dimen/fullPadding"
+              android:padding="@dimen/titlePadding"
+              android:background="@drawable/dialog_background_title"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"/>
-    <ImageView android:layout_width="fill_parent"
-               android:layout_height="2dp"
-               android:contentDescription=""
-               android:background="@color/selectedBackground"/>
 </LinearLayout>
