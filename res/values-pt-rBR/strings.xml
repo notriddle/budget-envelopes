@@ -40,7 +40,6 @@
     <string name="default_envelope_1">Contas</string>
     <string name="default_envelope_2">Alimentos</string>
     <string name="default_envelope_3">Vestuário</string>
-    <string name="cancel_menuItem">Cancelar</string>
     <string name="ok_menuItem">Aceitar</string>
     <string name="description_hint">Descripção</string>
     <string name="amount_hint">00.00</string>
@@ -62,14 +61,6 @@
 Este programa é um software livre; você pode redistribui-lo e/ou modificá-lo sob os termos da Licença Pública Geral GNU, como publicada pela Free Software Foundation; pela versão 3 da Licença, ou (a seu critério) por qualquer versão posterior.\n\n
 
 Este programa é distribuído na esperança de que seja útil, mas SEM QUALQUER GARANTIA; sem mesmo garantias implícitas de COMERCIALIZAÇÃO ou de ADEQUAÇÃO A PROPÓSITO PARTICULAR. Veja a Licença Pública Geral GNU para mais detalhes.</string>
-    <plurals name="transactionsChecked_name">
-        <item quantity="one">%d transação selecionado</item>
-        <item quantity="other">%d transações selecionadas</item>
-    </plurals>
-    <plurals name="envelopesChecked_name">
-        <item quantity="one">%d envelope selecionado</item>
-        <item quantity="other">%d envelopes selecionados</item>
-    </plurals>
     <string name="pin_name">Desbloquear</string>
     <string name="pin_label">Insire o seu PIN</string>
     <string name="pin_toast_wrong">Intente de novo.</string>

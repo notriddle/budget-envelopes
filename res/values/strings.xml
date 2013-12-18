@@ -43,7 +43,6 @@
     <string name="default_envelope_1">Bills</string>
     <string name="default_envelope_2">Food</string>
     <string name="default_envelope_3">Clothes</string>
-    <string name="cancel_menuItem">Cancel</string>
     <string name="ok_menuItem">OK</string>
     <string name="description_hint">Description</string>
     <string name="amount_hint">00.00</string>

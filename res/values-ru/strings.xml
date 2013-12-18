@@ -40,7 +40,6 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
     <string name="default_envelope_1">Квартплата</string>
     <string name="default_envelope_2">Еда</string>
     <string name="default_envelope_3">Одежда</string>
-    <string name="cancel_menuItem">Отмена</string>
     <string name="ok_menuItem">OK</string>
     <string name="description_hint">Описание</string>
     <string name="amount_hint">00.00</string>
@@ -70,16 +69,6 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
         GNU General Public License для более подробной информации.</string>
 
 
-    <plurals name="transactionsChecked_name">        
-        <item quantity="one">%d транзакция выбрана</item>
-                
-        <item quantity="other">%d транзакций выбрано</item>
-            
-    </plurals>
-    <plurals name="envelopesChecked_name">        
-        <item quantity="one">%d конверт выбран</item>                        
-        <item quantity="other">%d конвертов выбрано</item>
-    </plurals>
     <string name="pin_name">Разблокировать</string>
     <string name="pin_label">Введите ПИН</string>
     <string name="pin_toast_wrong">Попробуйте еще раз</string>

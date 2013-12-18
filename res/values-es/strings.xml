@@ -40,7 +40,6 @@
     <string name="default_envelope_1">Facturas</string>
     <string name="default_envelope_2">Alimentos</string>
     <string name="default_envelope_3">Vestimenta</string>
-    <string name="cancel_menuItem">Cancelar</string>
     <string name="ok_menuItem">Aceptar</string>
     <string name="description_hint">Descripción</string>
     <string name="amount_hint">00.00</string>
@@ -68,14 +67,6 @@ Este programa se distribuye con la esperanza de que sea útil pero SIN
 NINGUNA GARANTÍA; incluso sin la garantía implícita de MERCANTIBILIDAD o
 CALIFICADA PARA UN PROPÓSITO EN PARTICULAR. Vea la Licencia General
 Pública de GNU para más detalles.</string>
-    <plurals name="transactionsChecked_name">
-        <item quantity="one">%d transacción seleccionada</item>
-        <item quantity="other">%d transacciones seleccionadas</item>
-    </plurals>
-    <plurals name="envelopesChecked_name">
-        <item quantity="one">%d sobre seleccionado</item>
-        <item quantity="other">%d sobres seleccionados</item>
-    </plurals>
     <string name="pin_name">Desbloquear</string>
     <string name="pin_label">Ingrese su PIN</string>
     <string name="pin_toast_wrong">Intente nuevamente.</string>
