@@ -159,7 +159,7 @@ public class DeleteView extends FrameLayout implements Checkable {
                 switch (mSwipeState) {
                     case STATE_PRESSED:
                         if (Math.abs(x - mSwipeStart) > mTouchSlop) {
-                            stopPressed();
+                            cancelPressed();
                             startSwipe();
                         }
                         break;
@@ -186,7 +186,7 @@ public class DeleteView extends FrameLayout implements Checkable {
                             mInnerView.setPressed(true);
                             performClick();
                         }
-                        stopPressed();
+                        cancelPressed();
                         mSwipeState = STATE_READY;
                         break;
                     case STATE_IN_SWIPE:
@@ -203,7 +203,7 @@ public class DeleteView extends FrameLayout implements Checkable {
             case MotionEvent.ACTION_CANCEL:
                 switch (mSwipeState) {
                     case STATE_PRESSED:
-                        stopPressed();
+                        cancelPressed();
                         mSwipeState = STATE_READY;
                         break;
                     case STATE_IN_SWIPE:
@@ -231,7 +231,7 @@ public class DeleteView extends FrameLayout implements Checkable {
         return true;
     }
 
-    private void stopPressed() {
+    private void cancelPressed() {
         postDelayed(mUnpressRunnable, 100);
         removeCallbacks(mPressRunnable);
         removeCallbacks(mLongPressRunnable);
@@ -372,7 +372,10 @@ public class DeleteView extends FrameLayout implements Checkable {
         if (mInnerView instanceof Checkable) {
             ((Checkable)mInnerView).setChecked(mChecked);
         }
-        if (mSwipeState != STATE_READY) {
+        if (mSwipeState == STATE_PRESSED) {
+            cancelPressed();
+            mSwipeState = STATE_READY;
+        } else if (mSwipeState != STATE_READY) {
             cancelSwipe();
         }
     }
