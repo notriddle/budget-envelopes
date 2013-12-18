@@ -21,7 +21,7 @@ package com.notriddle.budget;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class LockedActivity extends Activity {
+public abstract class LockedActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
