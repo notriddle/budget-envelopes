@@ -28,7 +28,7 @@
                   android:layout_height="wrap_content"/>
     </LinearLayout>
     <View android:layout_width="fill_parent"
-          android:layout_height="fill_parent"
+          android:layout_height="0dp"
           android:layout_weight="1"/>
     <TextView android:id="@+id/allTransactions"
               android:background="@drawable/stateful_card_background"
