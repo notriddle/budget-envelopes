@@ -19,6 +19,8 @@
 
 <resources>
     <string name="app_name">Orçamento</string>
+    <string name="deleted_name">Deletado</string>
+    <string name="undo_menuItem">Desfazer</string>
     <string name="envelopeDetails_name">Envelope</string>
     <string name="envelopeDetails_balance">Saldo</string>
     <string name="newEnvelope_menuItem">Novo envelope</string>
@@ -44,8 +46,11 @@
     <string name="description_hint">Descripção</string>
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
+    <string name="loading">Carregando</string>
     <string name="showGraph_button">Mostrar gráfico</string>
     <string name="hideGraph_button">Esconder gráfico</string>
+    <string name="allTransactions_button">Todas as transacções</string>
+    <string name="allTransactions_name">Todas as transacções</string>
     <string name="export_name">Exportando&#8230;</string>
     <string name="export_settings">Exportar</string>
     <string name="export_settings_summary">Backup de dados financeiros</string>

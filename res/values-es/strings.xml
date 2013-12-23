@@ -2,6 +2,7 @@
 <!--
  This file is a part of Budget with Envelopes.
  Copyright 2013 Emilio López <emilio@elopez.com.ar>
+ Copyright 2013 Melinda Howell <melinda@smhowell.net>
 
  Budget is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,6 +20,8 @@
 
 <resources>
     <string name="app_name">Presupuesto</string>
+    <string name="deleted_name">Eliminado</string>
+    <string name="undo_menuItem">Deshacer</string>
     <string name="envelopeDetails_name">Sobre</string>
     <string name="envelopeDetails_balance">Balance</string>
     <string name="newEnvelope_menuItem">Nuevo sobre</string>
@@ -44,8 +47,11 @@
     <string name="description_hint">Descripción</string>
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
+    <string name="loading">Cargando</string>
     <string name="showGraph_button">Mostrar gráfico</string>
     <string name="hideGraph_button">Ocultar gráfico</string>
+    <string name="allTransactions_button">Todas las transacciones</string>
+    <string name="allTransactions_name">Todas las transacciones</string>
     <string name="export_name">Exportando&#8230;</string>
     <string name="export_settings">Exportar</string>
     <string name="export_settings_summary">Copie los datos financieros</string>
