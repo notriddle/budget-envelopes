@@ -143,6 +143,9 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             csr.moveToFirst();
             long currentProjectedCents = csr.getLong(csr.getColumnIndexOrThrow("projectedCents"));
             values.put("projectedCents", currentProjectedCents+cents);
+            if (delayUntil <= System.currentTimeMillis()) {
+                values.put("cents", currentProjectedCents+cents);
+            }
             db.update("envelopes", values, "_id = ?", envelopeStringArray);
             ContentValues lValues = new ContentValues();
             lValues.put("envelope", envelope);
