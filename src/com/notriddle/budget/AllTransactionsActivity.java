@@ -51,13 +51,7 @@ public class AllTransactionsActivity extends Activity
         SQLiteLoader retVal = new SQLiteLoader(
             this,
             new EnvelopesOpenHelper(this),
-            "log",
-            new String[] { "description", "cents", "time", "_id" },
-            null,
-            null,
-            null,
-            null,
-            "time * -1"
+            "SELECT e.name AS envelope, e.color AS color, l.description AS description, l.cents AS cents, l.time AS time, l._id AS _id FROM log AS l LEFT JOIN envelopes AS e ON (e._id = l.envelope) ORDER BY l.time * -1"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;

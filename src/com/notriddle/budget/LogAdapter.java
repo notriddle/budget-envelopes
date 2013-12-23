@@ -44,6 +44,7 @@ public class LogAdapter extends CursorAdapter {
             name = (TextView) v.findViewById(R.id.name);
             value = (TextView) v.findViewById(R.id.value);
             time = (TextView) v.findViewById(R.id.time);
+            envelope = (TextView) v.findViewById(R.id.envelope);
             money = new StringBuilder(6);
             parent = v;
         }
@@ -51,15 +52,9 @@ public class LogAdapter extends CursorAdapter {
         public TextView name;
         public TextView value;
         public TextView time;
+        public TextView envelope;
         public StringBuilder money;
     };
-
-    /*@Override public boolean areAllItemsEnabled() {
-        return false;
-    }
-    @Override public boolean isEnabled(int pos) {
-        return false;
-    }*/
 
     @Override public String convertToString(Cursor csr) {
         return csr.getString(
@@ -73,7 +68,12 @@ public class LogAdapter extends CursorAdapter {
     }
 
     @Override public View newView(Context cntx, Cursor csr, ViewGroup par) {
-        View retVal = mInflater.inflate(R.layout.logentry, par, false);
+        View retVal;
+        if (csr.getColumnIndex("envelope") != -1) {
+            retVal = mInflater.inflate(R.layout.logentry_envelope, par, false);
+        } else {
+            retVal = mInflater.inflate(R.layout.logentry, par, false);
+        }
         CardContents contents = new CardContents(retVal);
         retVal.setTag(contents);
         fillCardContents(cntx, contents, csr);
@@ -105,5 +105,23 @@ public class LogAdapter extends CursorAdapter {
         String formattedDate = mDate.format(timeD);
         contents.time.setText(formattedDate);
         contents.time.setTextColor(color);
+        if (csr.getColumnIndex("envelope") != -1) {
+            String previousEnvelope;
+            if (csr.getPosition() != 0) {
+                csr.moveToPrevious();
+                previousEnvelope = csr.getString(csr.getColumnIndexOrThrow("envelope"));
+                csr.moveToNext();
+            } else {
+                previousEnvelope = "";
+            }
+            String currentEnvelope = csr.getString(csr.getColumnIndexOrThrow("envelope"));
+            if (currentEnvelope.equals(previousEnvelope)) {
+                contents.envelope.setVisibility(View.GONE);
+            } else {
+                contents.envelope.setVisibility(View.VISIBLE);
+                contents.envelope.setText(currentEnvelope);
+                contents.envelope.setBackgroundColor(csr.getInt(csr.getColumnIndexOrThrow("color")));
+            }
+        }
     }
 }

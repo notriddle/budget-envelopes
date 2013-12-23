@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.notriddle.budget.CheckableLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+>
+    <TextView android:id="@+id/envelope"
+              android:textColor="#000"
+              android:textSize="18sp"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/cardPadding"
+              android:layout_marginLeft="@dimen/cardSpacing"
+              android:layout_marginRight="@dimen/cardSpacing"
+              android:layout_marginTop="@dimen/cardSpacing"/>
+    <include layout="@layout/logentry"/>
+</com.notriddle.budget.CheckableLinearLayout>
