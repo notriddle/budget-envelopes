@@ -29,10 +29,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class AllTransactionsActivity extends Activity
-                                     implements LoaderCallbacks<Cursor> {
+                                     implements LoaderCallbacks<Cursor>,
+                                                AdapterView.OnItemClickListener {
     LogAdapter mAdapter;
     ListView mListView;
 
@@ -42,6 +44,7 @@ public class AllTransactionsActivity extends Activity
         mListView = (ListView) findViewById(android.R.id.list);
         mAdapter = new LogAdapter(this, null);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
         getLoaderManager().initLoader(0, null, this);
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -51,7 +54,7 @@ public class AllTransactionsActivity extends Activity
         SQLiteLoader retVal = new SQLiteLoader(
             this,
             new EnvelopesOpenHelper(this),
-            "SELECT e.name AS envelope, e.color AS color, l.description AS description, l.cents AS cents, l.time AS time, l._id AS _id FROM log AS l LEFT JOIN envelopes AS e ON (e._id = l.envelope) ORDER BY l.time * -1"
+            "SELECT e.name AS envelope, e.color AS color, l.description AS description, l.cents AS cents, l.time AS time, l._id AS _id, e._id AS envelope_id FROM log AS l LEFT JOIN envelopes AS e ON (e._id = l.envelope) ORDER BY l.time * -1"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -74,6 +77,16 @@ public class AllTransactionsActivity extends Activity
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override public void onItemClick(AdapterView a, View v, int pos, long id) {
+        Cursor csr = mAdapter.getCursor();
+        csr.moveToPosition(pos);
+        int envelopeId = csr.getInt(csr.getColumnIndexOrThrow("envelope_id"));
+        Intent i = new Intent(this, EnvelopeDetailsActivity.class);
+        i.putExtra("com.notriddle.budget.envelope", envelopeId);
+        i.putExtra("com.notriddle.budget.transaction", (int)id);
+        startActivity(i);
     }
 
 };

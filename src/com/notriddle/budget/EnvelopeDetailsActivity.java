@@ -56,6 +56,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
                                                AdapterView.OnItemClickListener {
     EditTextDefaultFocus mName;
     int mId;
+    int mShowTransactionId;
     SQLiteDatabase mDatabase;
     LogAdapter mLogAdapter;
     DeleteAdapter mDeleteAdapter;
@@ -73,8 +74,11 @@ public class EnvelopeDetailsActivity extends LockedActivity
         super.onCreate(state);
         setContentView(R.layout.envelopedetailsactivity);
         mId = state != null && state.containsKey("com.notriddle.budget.envelope")
-              ? state.getInt("com.notriddle.budget.envelope")
-              : getIntent().getIntExtra("com.notriddle.budget.envelope", -1);
+            ? state.getInt("com.notriddle.budget.envelope")
+            : getIntent().getIntExtra("com.notriddle.budget.envelope", -1);
+        mShowTransactionId = state == null
+            ? getIntent().getIntExtra("com.notriddle.budget.transaction", -1)
+            : -1;
         mName = new EditTextDefaultFocus(this);
         mName.setHint(getText(R.string.envelopeName_hint));
         mName.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -281,6 +285,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
                     for (int i = 0; i != l; ++i) {
                         if (mNavAdapter.getItemId(i) == mId) {
                             mNavView.setItemChecked(i, true);
+                            break;
                         }
                     }
                 }
@@ -328,6 +333,16 @@ public class EnvelopeDetailsActivity extends LockedActivity
             lV.setBackgroundResource(R.color.cardBackground);
         } else {
             lV.setBackgroundDrawable(null);
+        }
+        if (mShowTransactionId != -1) {
+            int l = mDeleteAdapter.getCount();
+            for (int i = 0; i != l; ++i) {
+                if (mDeleteAdapter.getItemId(i) == mShowTransactionId) {
+                    mLogView.smoothScrollToPosition(i == l-1 ? i : i+1);
+                    break;
+                }
+            }
+            mShowTransactionId = -1;
         }
     }
 
