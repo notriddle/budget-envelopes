@@ -19,6 +19,8 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
     <string name="app_name">Бюджет</string>
+    <string name="deleted_name">Удалено</string>
+    <string name="undo_menuItem">Отмена</string>
     <string name="envelopeDetails_name">Конверт</string>
     <string name="envelopeDetails_balance">Баланс</string>
     <string name="newEnvelope_menuItem">Новый конверт</string>
@@ -44,8 +46,11 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
     <string name="description_hint">Описание</string>
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
+    <string name="loading">Загрузка</string>
     <string name="showGraph_button">Показать график</string>
     <string name="hideGraph_button">Скрыть график</string>
+    <string name="allTransactions_button">Все операции</string>
+    <string name="allTransactions_name">Все операции</string>
     <string name="export_name">Экспортировать&#8230;</string>
     <string name="export_settings">Экспорт</string>
     <string name="export_settings_summary">Резервное копирование Ваших финансовых данных</string>
