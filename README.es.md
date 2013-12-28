@@ -10,16 +10,6 @@ Eso es lo que Presupuesto hace, y es fácil. Usted divide su dinero en los sobre
 El manejo del dinero es un lastre, pero no tiene por qué ser doloroso o difícil.
 
 
-¿Qué hay de nuevo en la versión 3.4?
-====================================
-
-* Corrección de errores.
-
-* Añadir más colores.
-
-* Traducción al ruso.
-
-
 Compilación
 ===========
 

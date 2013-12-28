@@ -10,16 +10,6 @@ That's what Budget is for, and it's easy. You put money into the envelopes at pa
 Managing money is a drag, but it doesn't have to be painful or difficult.
 
 
-What's new in version 3.4
-=========================
-
-* Bug fix: the delays work right now, whatever the timezone.
-
-* Add more colors.
-
-* Russian translation.
-
-
 Compiling
 =========
 
