@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+French translation by liUms <at> gmx.us
+Licence GNU ? Like Budget
+-->
+
+<resources>
+    <string name="app_name">Budget</string>
+    <string name="deleted_name">Supprimé</string>
+    <string name="undo_menuItem">Annuler</string>
+    <string name="envelopeDetails_name">Enveloppe</string>
+    <string name="envelopeDetails_balance">Balance</string>
+    <string name="newEnvelope_menuItem">Nouvelle enveloppe</string>
+    <string name="colorEnvelope_menuItem">Changer la couleur</string>
+    <string name="envelopeName_hint">Nom de l'enveloppe</string>
+    <string name="paycheck_name">Gain</string>
+    <string name="paycheck_menuItem">Gain</string>
+    <string name="paycheck_spent">Distribué</string>
+    <string name="paycheck_description">Chèque</string>
+    <string name="paycheck_docs">Put your earnings &#8593; to various uses &#8595;</string>
+    <string name="earn_name">Gain</string>
+    <string name="earn_menuItem">Gain</string>
+    <string name="spend_name">Dépense</string>
+    <string name="spend_menuItem">Dépense</string>
+    <string name="edit_name">Éditer</string>
+    <string name="transfer_name">Transférer</string>
+    <string name="transfer_menuItem">Tranférer</string>
+    <string name="transfer_label">vers</string>
+    <string name="default_envelope_1">Factures</string>
+    <string name="default_envelope_2">Nourriture</string>
+    <string name="default_envelope_3">Vêtements</string>
+    <string name="ok_menuItem">OK</string>
+    <string name="description_hint">Description</string>
+    <string name="amount_hint">00.00</string>
+    <string name="gotIt">&#215;</string>
+    <string name="loading">Chargment</string>
+    <string name="showGraph_button">Montrer le  graphe</string>
+    <string name="hideGraph_button">Cacher le graphe</string>
+    <string name="allTransactions_button">Toutes les transactions</string>
+    <string name="allTransactions_name">Toutes les transactions</string>
+    <string name="export_name">Exportation&#8230;</string>
+    <string name="export_settings">Exporter</string>
+    <string name="export_settings_summary">Sauvegarder les données financières</string>
+    <string name="import_name">Importation&#8230;</string>
+    <string name="import_settings">Importer</string>
+    <string name="import_settings_summary">Restaurer les données financières</string>
+    <string name="delayed_checkBox">Reporté</string>
+    <string name="about_menuItem">À propos</string>
+    <string name="about_name">À propos de Budget with Envelopes</string>
+    <string name="donate_button">Donner à Michael</string>
+    <string name="license">Version %s de Budget\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n\n
+    
+Budget est un logiciel libre, vous pouvez le redistribuer et/ou le modifier
+selon les termes de la Licence Publique Générale GNU telle que publiée
+par la Free Software Foundation, version 3 ou ultérieure.\n\n
+
+Ce programme est distribué en espérant qu'il sera utile, 
+mais SANS GARANTIE AUCUNE; ni implicite ni explicite, 
+y compris les garanties de commercialisations ou 
+d'adaptation dans un but spécifique. Voir la Licence Publique 
+Générale GNU pour plus de détails.</string>
+
+    <string name="pin_name">Déverouiller</string>
+    <string name="pin_label">Entrez votre PIN</string>
+    <string name="pin_toast_wrong">Raté, un autre essaie ?</string>
+    <string name="pin_settings">PIN</string>
+    <string name="pin_settings_summary">Laissez vide si vous n'en avez pas besoin</string>
+    <string name="settings_menuItem">Paramètres</string>
+    <string name="settings_name">Paramètres</string>
+    <string name="pin_notify">Déverouillé. Tapez pour verouiller.</string>
+    <string name="graph_time">Temps</string>
+</resources>
