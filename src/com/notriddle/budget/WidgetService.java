@@ -57,6 +57,7 @@ public class WidgetService extends RemoteViewsService {
                         onChange(selfChange);
                     }
                     public void onChange(boolean selfChange) {
+                        Log.d("Budget", "WidgetService.obs.onChange()");
                         AppWidgetManager
                         .getInstance(WidgetService.this)
                          .notifyAppWidgetViewDataChanged(widgetId, R.id.grid);
