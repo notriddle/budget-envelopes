@@ -3,4 +3,5 @@
           android:id="@android:id/list"
           android:listSelector="#00000000"
           android:layout_width="fill_parent"
-          android:layout_height="fill_parent"/>
+          android:layout_height="fill_parent"
+          android:background="@color/cardBackground"/>

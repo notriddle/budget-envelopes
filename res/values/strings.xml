@@ -48,8 +48,7 @@
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
     <string name="loading">Loading</string>
-    <string name="showGraph_button">Show graph</string>
-    <string name="hideGraph_button">Hide graph</string>
+    <string name="graph_name">Graph</string>
     <string name="allTransactions_button">All transactions</string>
     <string name="allTransactions_name">All transactions</string>
     <string name="export_name">Exporting&#8230;</string>

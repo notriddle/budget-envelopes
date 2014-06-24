@@ -18,41 +18,44 @@
 
 package com.notriddle.budget;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-public class AboutActivity extends Activity
-                           implements View.OnClickListener {
-    @Override public void onCreate(Bundle state) {
-        super.onCreate(state);
-        setContentView(R.layout.aboutactivity);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+public class AboutFragment extends Fragment
+                           implements View.OnClickListener,
+                                      TitleFragment {
 
-        TextView txt = (TextView) findViewById(R.id.aboutText);
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup cont,
+                                       Bundle state) {
+        View retVal = inflater.inflate(R.layout.aboutactivity, cont, false);
+
+        TextView txt = (TextView) retVal.findViewById(R.id.aboutText);
         try {
-            txt.setText(String.format(txt.getText().toString(), getPackageManager().getPackageInfo(getPackageName(), 0).versionName));
+            txt.setText(String.format(txt.getText().toString(), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
         } catch (Throwable e) {
             throw new Error(e);
         }
-        txt = (TextView) findViewById(R.id.donateButton);
+        txt = (TextView) retVal.findViewById(R.id.donateButton);
         txt.setOnClickListener(this);
-        final TextView gplView = (TextView) findViewById(R.id.gplText);
+        final TextView gplView = (TextView) retVal.findViewById(R.id.gplText);
         (new AsyncTask<Object, Object, CharSequence>() {
             protected CharSequence doInBackground(Object... o) {
                 try {
                     InputStream gplStream
-                     = getResources().getAssets().open("gpl.html");
+                     = getActivity().getResources().getAssets().open("gpl.html");
                     ByteArrayOutputStream gplBytes = new ByteArrayOutputStream(
                         gplStream.available()
                     );
@@ -68,7 +71,10 @@ public class AboutActivity extends Activity
                 gplView.setText(result);
             }
         }).execute();
+
+        return retVal;
     }
+
     @Override public void onClick(View v) {
         startActivity(new Intent(
             Intent.ACTION_VIEW,
@@ -76,14 +82,7 @@ public class AboutActivity extends Activity
         ));
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent i = new Intent(this, EnvelopesActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    @Override public String getTitle() {
+        return getActivity().getString(R.string.about_name);
     }
 }

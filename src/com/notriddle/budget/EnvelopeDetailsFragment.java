@@ -19,7 +19,7 @@
 package com.notriddle.budget;
 
 import android.app.ActionBar;
-import android.app.ListActivity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -36,11 +36,13 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.MeasureSpec;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -49,11 +51,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.database.sqlite.SQLiteDatabase;
 
-public class EnvelopeDetailsActivity extends LockedActivity
+public class EnvelopeDetailsFragment extends Fragment
                                      implements LoaderCallbacks<Cursor>,
                                                 TextWatcher,
                                                 DeleteAdapter.Deleter,
-                                               AdapterView.OnItemClickListener {
+                                                AdapterView.OnItemClickListener,
+                                                TitleFragment {
     EditTextDefaultFocus mName;
     int mId;
     int mShowTransactionId;
@@ -70,17 +73,21 @@ public class EnvelopeDetailsActivity extends LockedActivity
     Cursor mLogData;
     int mColor;
 
-    @Override public void onCreate(Bundle state) {
-        super.onCreate(state);
-        setContentView(R.layout.envelopedetailsactivity);
+    public EnvelopeDetailsFragment() {
+        setHasOptionsMenu(true);
+    }
+
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup cont,
+                                       Bundle state) {
+        View retVal = inflater.inflate(R.layout.envelopedetailsactivity, cont, false);
         mId = state != null && state.containsKey("com.notriddle.budget.envelope")
             ? state.getInt("com.notriddle.budget.envelope")
-            : getIntent().getIntExtra("com.notriddle.budget.envelope", -1);
+            : getArguments().getInt("com.notriddle.budget.envelope", -1);
         mShowTransactionId = state == null
-            ? getIntent().getIntExtra("com.notriddle.budget.transaction", -1)
+            ? getArguments().getInt("com.notriddle.budget.transaction", -1)
             : -1;
-        mName = new EditTextDefaultFocus(this);
-        mName.setHint(getText(R.string.envelopeName_hint));
+        mName = new EditTextDefaultFocus(getActivity());
+        mName.setHint(getActivity().getText(R.string.envelopeName_hint));
         mName.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mName.setLayoutParams(new ActionBar.LayoutParams(
             ActionBar.LayoutParams.FILL_PARENT,
@@ -90,9 +97,9 @@ public class EnvelopeDetailsActivity extends LockedActivity
         mEnvelopeData = null;
         mLogData = null;
 
-        final ListView nV = mNavView = (ListView) findViewById(R.id.nav);
+        final ListView nV = mNavView = (ListView) retVal.findViewById(R.id.nav);
         if (nV != null) {
-            mNavAdapter = new SimpleEnvelopesAdapter(this, null, R.layout.card_just_text);
+            mNavAdapter = new SimpleEnvelopesAdapter(getActivity(), null, R.layout.card_just_text);
             mNavAdapter.setExpanded(true);
             nV.setAdapter(mNavAdapter);
             nV.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -102,28 +109,26 @@ public class EnvelopeDetailsActivity extends LockedActivity
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
 
-        ActionBar ab = getActionBar();
+        ActionBar ab = getActivity().getActionBar();
         ab.setDisplayShowTitleEnabled(false);
         ab.setDisplayShowCustomEnabled(true);
         ab.setCustomView(mName);
-        ab.setDisplayHomeAsUpEnabled(true);
         mName.addTextChangedListener(this);
-        mLogAdapter = new LogAdapter(this, null);
-        final ListView lV = mLogView = (ListView) findViewById(android.R.id.list);
+        mLogAdapter = new LogAdapter(getActivity(), null);
+        final ListView lV = mLogView = (ListView) retVal.findViewById(android.R.id.list);
         //lV.setOverScrollMode(lV.OVER_SCROLL_NEVER);
-        final View head = getLayoutInflater().inflate(
+        final View head = inflater.inflate(
             R.layout.totalamount,
             lV,
             false
         );
-        head.setBackgroundResource(R.color.windowBackground);
         final int basePadding = head.getPaddingTop();
         mAmount = (TextView) head.findViewById(R.id.value);
         mAmountName = (TextView) head.findViewById(R.id.name);
         mProjected = (TextView) head.findViewById(R.id.projectedValue);
         lV.addHeaderView(head);
         mDeleteAdapter = new DeleteAdapter(
-            this, this, mLogAdapter, R.color.windowBackground
+            getActivity(), this, mLogAdapter, 0
         );
         lV.setAdapter(mDeleteAdapter);
 
@@ -141,9 +146,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
                 // Do nothing.
             }
         });
-        lV.setBackgroundResource(R.color.cardBackground);
         lV.setOnItemClickListener(this);
-        getWindow().setBackgroundDrawable(null);
         lV.setSelector(android.R.color.transparent);
         lV.setDivider(getResources().getDrawable(R.color.cardDivider));
         lV.setDividerHeight((int)TypedValue.applyDimension(
@@ -155,6 +158,8 @@ public class EnvelopeDetailsActivity extends LockedActivity
         lV.setOverscrollHeader(getResources().getDrawable(
             R.color.windowBackground
         ));
+
+        return retVal;
     }
 
     @Override public void onSaveInstanceState(Bundle state) {
@@ -173,6 +178,11 @@ public class EnvelopeDetailsActivity extends LockedActivity
 
     @Override public void onDestroy() {
         super.onDestroy();
+        ActionBar ab = getActivity().getActionBar();
+        ab.setBackgroundDrawable(getActivity().getResources().getDrawable(R.color.actionBarBackground));
+        ab.setDisplayShowTitleEnabled(true);
+        ab.setDisplayShowCustomEnabled(false);
+        ab.setCustomView(null);
         if (mName.getText().length() == 0 && mLogAdapter.getCount() == 0 && mEnvelopeData != null && mLogData != null) {
             deleteThis();
             mDatabase.close();
@@ -198,7 +208,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
                               new String[] {Integer.toString(id)});
             EnvelopesOpenHelper.playLog(mDatabase);
             mDatabase.setTransactionSuccessful();
-            getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+            getActivity().getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
         } finally {
             mDatabase.endTransaction();
         }
@@ -206,7 +216,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
 
     private SQLiteDatabase needDatabase() {
         if (mDatabase == null) {
-            mDatabase = (new EnvelopesOpenHelper(this)).getWritableDatabase();
+            mDatabase = (new EnvelopesOpenHelper(getActivity())).getWritableDatabase();
         }
         return mDatabase;
     }
@@ -230,8 +240,8 @@ public class EnvelopeDetailsActivity extends LockedActivity
                            ? "name"
                            : "time * -1";
         SQLiteLoader retVal = new SQLiteLoader(
-            this,
-            new EnvelopesOpenHelper(this),
+            getActivity(),
+            new EnvelopesOpenHelper(getActivity()),
             table,
             columns,
             where,
@@ -247,7 +257,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
     private void loadEnvelopeData(Cursor data) {
         mEnvelopeData = data;
         if (data.getCount() == 0) {
-            finish();
+            throw new RuntimeException("Invalid envelope ID: "+Integer.toString(mId));
         } else {
             data.moveToFirst();
             while (data.getInt(data.getColumnIndexOrThrow("_id")) != mId) {
@@ -262,7 +272,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
             }
             if (mDeleteAdapter.getDeletedId() == -1) {
                 long cents = data.getLong(data.getColumnIndexOrThrow("cents"));
-                mAmount.setText(EditMoney.toColoredMoney(this, cents));
+                mAmount.setText(EditMoney.toColoredMoney(getActivity(), cents));
                 long projected = data.getLong(
                     data.getColumnIndexOrThrow("projectedCents")
                 );
@@ -271,12 +281,12 @@ public class EnvelopeDetailsActivity extends LockedActivity
                 } else {
                     mProjected.setVisibility(View.VISIBLE);
                     mProjected.setText(
-                        EditMoney.toColoredMoney(this, projected)
+                        EditMoney.toColoredMoney(getActivity(), projected)
                     );
                 }
             }
             mColor = data.getInt(data.getColumnIndexOrThrow("color"));
-            getActionBar()
+            getActivity().getActionBar()
             .setBackgroundDrawable(new ColorDrawable(mColor == 0 ? 0xFFEEEEEE : mColor));
             if (mNavAdapter != null) {
                 mNavAdapter.changeCursor(data);
@@ -291,7 +301,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
                 }
             }
             if (Build.VERSION.SDK_INT < 18) {
-                invalidateOptionsMenu();
+                getActivity().invalidateOptionsMenu();
             }
         }
     }
@@ -316,24 +326,18 @@ public class EnvelopeDetailsActivity extends LockedActivity
                 }
                 data.moveToNext();
             }
-            mAmount.setText(EditMoney.toColoredMoney(this, total));
+            mAmount.setText(EditMoney.toColoredMoney(getActivity(), total));
             if (projected == total) {
                 mProjected.setVisibility(View.GONE);
             } else {
                 mProjected.setVisibility(View.VISIBLE);
                 mProjected.setText(
-                    EditMoney.toColoredMoney(this, projected)
+                    EditMoney.toColoredMoney(getActivity(), projected)
                 );
             }
         }
         mLogAdapter.changeCursor(data);
         final ListView lV = mLogView;
-        if (lV.getLastVisiblePosition() == mLogAdapter.getCount()
-            || lV.getLastVisiblePosition() <= 1) {
-            lV.setBackgroundResource(R.color.cardBackground);
-        } else {
-            lV.setBackgroundDrawable(null);
-        }
         if (mShowTransactionId != -1) {
             int l = mDeleteAdapter.getCount();
             for (int i = 0; i != l; ++i) {
@@ -355,7 +359,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
     }
 
     @Override public void onLoaderReset(Loader<Cursor> ldr) {
-        finish();
+        //finish();
     }
 
     @Override public void afterTextChanged(Editable s) {
@@ -372,7 +376,7 @@ public class EnvelopeDetailsActivity extends LockedActivity
         ContentValues values = new ContentValues();
         values.put("name", s.toString());
         needDatabase().update("envelopes", values, "_id = ?", new String[] {Integer.toString(mId)});
-        getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+        getActivity().getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
     }
 
     @Override public void onItemClick(AdapterView a, View v, int pos, long id) {
@@ -408,10 +412,10 @@ public class EnvelopeDetailsActivity extends LockedActivity
         if (!mDeleteAdapter.performDelete()) {
             mId = id;
             getLoaderManager().restartLoader(
-                    0, null, EnvelopeDetailsActivity.this
+                    0, null, EnvelopeDetailsFragment.this
             );
             getLoaderManager().restartLoader(
-                1, null, EnvelopeDetailsActivity.this
+                1, null, EnvelopeDetailsFragment.this
             );
         } else {
             final DataSetObserver obs = new DataSetObserver() {
@@ -458,21 +462,15 @@ public class EnvelopeDetailsActivity extends LockedActivity
         ContentValues values = new ContentValues();
         values.put("color", mColor);
         needDatabase().update("envelopes", values, "_id = ?", new String[] {Integer.toString(mId)});
-        getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+        getActivity().getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.envelopedetailsactivity, menu);
-        return true;
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.envelopedetailsactivity, menu);
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent i = new Intent(this, EnvelopesActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                return true;
             case R.id.earn_menuItem:
                 SpendFragment sF = SpendFragment.newInstance(mId, SpendFragment.EARN);
                 sF.show(getFragmentManager(), "dialog");
@@ -493,6 +491,10 @@ public class EnvelopeDetailsActivity extends LockedActivity
                               new String[] {Integer.toString(mId)});
         needDatabase().delete("log", "envelope = ?",
                               new String[] {Integer.toString(mId)});
-        getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+        getActivity().getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+    }
+
+    @Override public String getTitle() {
+        return getActivity().getString(R.string.envelopeDetails_name);
     }
 }

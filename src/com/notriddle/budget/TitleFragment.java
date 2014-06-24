@@ -1,6 +1,6 @@
 /*
  * This file is a part of Budget with Envelopes.
- * Copyright 2013 Anatolij Zelenin <az@azapps.de>
+ * Copyright 2013 Michael Howell <michael@notriddle.com>
  *
  * Budget is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +18,7 @@
 
 package com.notriddle.budget;
 
-import android.app.ListActivity;
-import android.os.Bundle;
+public interface TitleFragment {
+    abstract public String getTitle();
+};
 
-public class LockedListActivity extends ListActivity {
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-        check();
-	}
-
-    @Override public void onResume() {
-        super.onResume();
-        check();
-    }
-
-    private void check() {
-        if (!PinActivity.ensureUnlocked(this)) {
-            finish();
-        }
-    }
-}

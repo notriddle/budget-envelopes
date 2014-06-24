@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/fullPadding"
-    android:background="@drawable/stateful_card_background"
+    android:background="@drawable/selectable"
 >
     <TextView android:id="@+id/name"
               android:textColor="#000"

@@ -19,7 +19,7 @@
 package com.notriddle.budget;
 
 import android.app.ActionBar;
-import android.app.Activity;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentValues;
@@ -35,24 +35,24 @@ import android.util.SparseArray;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class PaycheckActivity extends LockedActivity
+public class PaycheckFragment extends OkFragment
                               implements LoaderCallbacks<Cursor>,
                                          PaycheckEnvelopesAdapter
                                          .DepositesChangeListener,
                                          TextWatcher,
                                          DeleteView.OnDeleteListener,
                                          View.OnClickListener,
-                                         MonitorScrollView.OnScrollListener {
+                                         MonitorScrollView.OnScrollListener,
+                                         TitleFragment {
     PaycheckEnvelopesAdapter mEnvelopes;
     EditMoney mIncome;
     EditText mDescription;
@@ -65,12 +65,12 @@ public class PaycheckActivity extends LockedActivity
     long mIncomeValue;
     SharedPreferences mPrefs;
 
-    @Override public void onCreate(Bundle state) {
-        super.onCreate(state);
-        setContentView(R.layout.paycheckactivity);
+    @Override public View onCreateInternalView(LayoutInflater inflater, ViewGroup cont,
+                                       Bundle state) {
+        View retVal = inflater.inflate(R.layout.paycheckactivity, cont, false);
         mPrefs = PreferenceManager
-                 .getDefaultSharedPreferences(getBaseContext());
-        DeleteView docs = (DeleteView) findViewById(R.id.docs);
+                 .getDefaultSharedPreferences(getActivity().getBaseContext());
+        DeleteView docs = (DeleteView) retVal.findViewById(R.id.docs);
         if (mPrefs.getBoolean("com.notriddle.budget.PaycheckActivity.docs.show",
                               true)) {
             docs.setOnClickListener(this);
@@ -78,12 +78,12 @@ public class PaycheckActivity extends LockedActivity
         } else {
             docs.setVisibility(docs.GONE);
         }
-        mGrid = (GridView) findViewById(R.id.grid);
-        mProgress = (ProgressBar) findViewById(R.id.progress);
-        mSpent = (TextView) findViewById(R.id.spent);
+        mGrid = (GridView) retVal.findViewById(R.id.grid);
+        mProgress = (ProgressBar) retVal.findViewById(R.id.progress);
+        mSpent = (TextView) retVal.findViewById(R.id.spent);
         Bundle deposites = state != null ? state.getBundle("deposites") : null;
         mEnvelopes = new PaycheckEnvelopesAdapter(
-            this,
+            getActivity(),
             null,
             deposites != null
             ? Util.unpackSparseLongArray(deposites)
@@ -92,20 +92,28 @@ public class PaycheckActivity extends LockedActivity
         mEnvelopes.setDepositesChangeListener(this);
         mGrid.setAdapter(mEnvelopes);
         getLoaderManager().initLoader(0, null, this);
-        ActionBar ab = getActionBar();
+        ActionBar ab = getActivity().getActionBar();
         ab.setDisplayShowTitleEnabled(false);
         ab.setDisplayShowCustomEnabled(true);
         ab.setCustomView(R.layout.paycheckactivity_income);
-        ab.setDisplayHomeAsUpEnabled(true);
         mIncome = (EditMoney) ab.getCustomView().findViewById(R.id.amount);
         mIncome.addTextChangedListener(this);
         mIncomeValue = state != null ? state.getLong("income", 0) : 0;
         mIncome.setCents(mIncomeValue);
         mDescription = (EditText) ab.getCustomView().findViewById(R.id.description);
         recalcProgress();
-        mScroll = (MonitorScrollView) findViewById(R.id.scroll);
-        mSpendingCard = findViewById(R.id.spendingCard);
+        mScroll = (MonitorScrollView) retVal.findViewById(R.id.scroll);
+        mSpendingCard = retVal.findViewById(R.id.spendingCard);
         mScroll.setOnScrollListener(this);
+        return retVal;
+    }
+
+    @Override public void onDestroy() {
+        super.onDestroy();
+        ActionBar ab = getActivity().getActionBar();
+        ab.setDisplayShowTitleEnabled(true);
+        ab.setDisplayShowCustomEnabled(false);
+        ab.setCustomView(null);
     }
 
     @Override public void onClick(View v) {
@@ -123,7 +131,7 @@ public class PaycheckActivity extends LockedActivity
         mSpendingCard.setTranslationY((pos*2)/3);
     }
 
-    @Override protected void onSaveInstanceState(Bundle state) {
+    @Override public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         state.putBundle(
             "deposites",
@@ -134,7 +142,7 @@ public class PaycheckActivity extends LockedActivity
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         SQLiteLoader retVal = new SQLiteLoader(
-            this, new EnvelopesOpenHelper(this), "envelopes",
+            getActivity(), new EnvelopesOpenHelper(getActivity()), "envelopes",
             new String[] {
                 "name", "lastPaycheckCents", "_id", "color"
             },
@@ -196,25 +204,18 @@ public class PaycheckActivity extends LockedActivity
         }
         mProgress.setMax(100000);
         mSpent.setText(EditMoney.toMoney(mSpentValue));
-        invalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.ok, menu);
-        return true;
+    @Override public boolean isOk() {
+        return mIncomeValue != 0 && mIncomeValue == mSpentValue;
     }
 
-    @Override public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.ok_menuItem).setEnabled(mIncomeValue != 0 && mIncomeValue == mSpentValue);
-        return true;
-    }
-
-    private void depositePaycheck() {
+    @Override public void ok() {
         SparseArray deposites = mEnvelopes.getDeposites();
         String description = mDescription.getText().toString();
         int l = deposites.size();
-        SQLiteDatabase db = (new EnvelopesOpenHelper(this)).getWritableDatabase();
+        SQLiteDatabase db = (new EnvelopesOpenHelper(getActivity())).getWritableDatabase();
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
@@ -228,25 +229,15 @@ public class PaycheckActivity extends LockedActivity
                 });
             }
             db.setTransactionSuccessful();
-            getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+            getActivity().getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
         } finally {
             db.endTransaction();
             db.close();
         }
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent i = new Intent(this, EnvelopesActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                return true;
-            case R.id.ok_menuItem:
-                depositePaycheck();
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    @Override public String getTitle() {
+        return getActivity().getString(R.string.paycheck_name);
     }
+
 }

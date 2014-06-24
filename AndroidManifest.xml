@@ -26,27 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.notriddle.budget.EnvelopeDetailsActivity"
-            android:label="@string/envelopeDetails_name"
-            android:theme="@style/Theme.Details" />
-        <activity
-            android:name="com.notriddle.budget.PaycheckActivity"
-            android:label="@string/paycheck_name" />
-        <activity
-            android:name="com.notriddle.budget.FragmentActivity"
-            android:theme="@style/Theme.Details" />
-        <activity
-            android:name="com.notriddle.budget.AboutActivity"
-            android:label="@string/about_name" />
-        <activity
-            android:name="com.notriddle.budget.AllTransactionsActivity"
-            android:label="@string/allTransactions_name"
-            android:theme="@style/Theme" />
-        <activity
-            android:name="com.notriddle.budget.SettingsActivity"
-            android:label="@string/settings_name"
-            android:theme="@style/Theme.Details" />
         <receiver
             android:name="com.notriddle.budget.WidgetProvider"
             android:label="@string/app_name" >

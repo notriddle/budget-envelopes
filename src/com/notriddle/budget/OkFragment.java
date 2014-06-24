@@ -51,7 +51,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public abstract class OkFragment extends DialogFragment
-                                 implements TextView.OnEditorActionListener {
+                                 implements TextView.OnEditorActionListener,
+                                            TitleFragment {
 
     boolean mRanOk;
 
@@ -158,7 +159,7 @@ public abstract class OkFragment extends DialogFragment
     }
 
     protected void changeToActivity() {
-        Intent i = new Intent(getActivity(), FragmentActivity.class);
+        Intent i = new Intent(getActivity(), EnvelopesActivity.class);
         i.setData(Uri.parse("fragment://"+getClass().getName()));
         Bundle args = (Bundle) getArguments().clone();
         writeArgs(args);

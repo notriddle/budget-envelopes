@@ -11,32 +11,6 @@
               android:layout_height="fill_parent">
     <include layout="@layout/totalamount"/>
     <include layout="@layout/cards"/>
-    <LinearLayout android:id="@+id/graph"
-                  android:background="@drawable/stateful_card_background"
-                  android:padding="@dimen/cardPadding"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="@dimen/cardSpacing"
-                  android:orientation="vertical"
-                  android:visibility="gone">
-        <TextView android:id="@+id/graphLabel"
-                  android:text="@string/showGraph_button"
-                  android:textSize="18sp"
-                  android:gravity="left"
-                  android:singleLine="true"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <View android:layout_width="fill_parent"
-          android:layout_height="0dp"
-          android:layout_weight="1"/>
-    <TextView android:id="@+id/allTransactions"
-              android:background="@drawable/stateful_card_background"
-              android:padding="@dimen/fullPadding"
-              android:text="@string/allTransactions_button"
-              android:textSize="18sp"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"/>
 </LinearLayout>
 </com.notriddle.budget.MonitorScrollView>
 

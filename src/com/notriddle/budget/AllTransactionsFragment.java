@@ -18,7 +18,7 @@
 
 package com.notriddle.budget;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
@@ -32,28 +32,33 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class AllTransactionsActivity extends Activity
+public class AllTransactionsFragment extends Fragment
                                      implements LoaderCallbacks<Cursor>,
-                                                AdapterView.OnItemClickListener {
+                                                AdapterView.OnItemClickListener,
+                                                TitleFragment {
     LogAdapter mAdapter;
     ListView mListView;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.alltransactionsactivity);
-        mListView = (ListView) findViewById(android.R.id.list);
-        mAdapter = new LogAdapter(this, null);
+    }
+
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup cont,
+                                       Bundle state) {
+        View retVal = inflater.inflate(R.layout.alltransactionsactivity, cont, false);
+        mListView = (ListView) retVal.findViewById(android.R.id.list);
+        mAdapter = new LogAdapter(getActivity(), null);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         getLoaderManager().initLoader(0, null, this);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        return retVal;
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String time = Long.toString(System.currentTimeMillis()-5184000000l);
         SQLiteLoader retVal = new SQLiteLoader(
-            this,
-            new EnvelopesOpenHelper(this),
+            getActivity(),
+            new EnvelopesOpenHelper(getActivity()),
             "SELECT e.name AS envelope, e.color AS color, l.description AS description, l.cents AS cents, l.time AS time, l._id AS _id, e._id AS envelope_id FROM log AS l LEFT JOIN envelopes AS e ON (e._id = l.envelope) ORDER BY l.time * -1"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
@@ -68,26 +73,28 @@ public class AllTransactionsActivity extends Activity
         // Do nothing.
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent i = new Intent(this, EnvelopesActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override public void onItemClick(AdapterView a, View v, int pos, long id) {
         Cursor csr = mAdapter.getCursor();
         csr.moveToPosition(pos);
         int envelopeId = csr.getInt(csr.getColumnIndexOrThrow("envelope_id"));
-        Intent i = new Intent(this, EnvelopeDetailsActivity.class);
-        i.putExtra("com.notriddle.budget.envelope", envelopeId);
-        i.putExtra("com.notriddle.budget.transaction", (int)id);
-        startActivity(i);
+
+        Bundle args = new Bundle();
+        args.putInt("com.notriddle.budget.envelope", envelopeId);
+        args.putInt("com.notriddle.budget.transaction", (int)id);
+        Fragment frag = Fragment.instantiate(
+            getActivity(),
+            EnvelopeDetailsFragment.class.getName(),
+            args
+        );
+        getActivity().getFragmentManager()
+        .beginTransaction()
+         .replace(R.id.content_frame, frag)
+         .addToBackStack("EnvelopeDetailsFragment")
+         .commit();
     }
 
+    @Override public String getTitle() {
+        return getActivity().getString(R.string.allTransactions_name);
+    }
 };
 

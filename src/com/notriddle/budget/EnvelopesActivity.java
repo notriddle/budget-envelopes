@@ -21,69 +21,71 @@ package com.notriddle.budget;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentValues;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.Loader;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.TextView;
+import android.widget.ListView;
 
 public class EnvelopesActivity extends LockedActivity
-                               implements LoaderCallbacks<Cursor>,
-                                          GridView.OnItemClickListener,
-                                          MonitorScrollView.OnScrollListener,
-                                          View.OnClickListener,
-                                          DeleteAdapter.Deleter {
-    GridView mGrid;
-    EnvelopesAdapter mEnvelopes;
-    DeleteAdapter mDeleteAdapter;
-    TextView mTotal;
-    View mTotalContainer;
-    View mTotalLabel;
-    MonitorScrollView mScroll;
-    SharedPreferences mPrefs;
-    TextView mGraphLabel;
-    ViewGroup mGraph;
-    View mAllTransactionsLabel;
+                               implements OkFragment.OnDismissListener,
+                                          FragmentManager.OnBackStackChangedListener,
+                                          ListView.OnItemClickListener {
+
+    ListView mNavDrawer;
+    NavAdapter mNavAdapter;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.envelopesactivity);
-        mPrefs = PreferenceManager
-                 .getDefaultSharedPreferences(getBaseContext());
-        mGrid = (GridView) findViewById(R.id.grid);
-        getLoaderManager().initLoader(0, null, this);
-        mEnvelopes = new EnvelopesAdapter(this, null);
-        mDeleteAdapter = new DeleteAdapter(this, this, mEnvelopes, 0);
-        mGrid.setAdapter(mDeleteAdapter);
-        mGrid.setOnItemClickListener(this);
-        mTotalContainer = findViewById(R.id.totalamount);
-        mTotal = (TextView) mTotalContainer.findViewById(R.id.value);
-        mTotalLabel = mTotalContainer.findViewById(R.id.name);
-        mScroll = (MonitorScrollView) findViewById(R.id.scroll);
-        mScroll.setOnScrollListener(this);
-        mGraphLabel = (TextView) findViewById(R.id.graphLabel);
-        mGraph = (ViewGroup) findViewById(R.id.graph);
-        mGraph.setOnClickListener(this);
-        setGraphVisible(mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
-        mAllTransactionsLabel = findViewById(R.id.allTransactions);
-        mAllTransactionsLabel.setOnClickListener(this);
+        setContentView(R.layout.activity);
+        setupDrawer();
+
+        if (state == null) {
+            final Intent i = getIntent();
+            final Bundle args = i.getExtras();
+            final Uri data = i.getData();
+            final String fragmentName = data != null
+                ? data.getHost()
+                : EnvelopesFragment.class.getName();
+            final Fragment frag = Fragment.instantiate(this, fragmentName, args);
+            if (frag instanceof DialogFragment) {
+                DialogFragment dFrag = (DialogFragment)frag;
+                dFrag.setShowsDialog(false);
+            }
+            getFragmentManager()
+            .beginTransaction()
+             .replace(R.id.content_frame, frag)
+             .commit();
+        }
+
+        getFragmentManager().addOnBackStackChangedListener(this);
+
+        onReplacedFragment();
+    }
+
+    private void setupDrawer() {
+        mNavDrawer = (ListView) findViewById(R.id.left_drawer);
+        mNavAdapter = new NavAdapter(this);
+        mNavDrawer.setAdapter(mNavAdapter);
+        mNavDrawer.setOnItemClickListener(this);
+    }
+
+    @Override public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment frag = Fragment.instantiate(
+            this,
+            mNavAdapter.getItem(pos).getName()
+        );
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.beginTransaction()
+         .replace(R.id.content_frame, frag)
+         .commit();
+        onReplacedFragment();
     }
 
     @Override public void onResume() {
@@ -99,170 +101,48 @@ public class EnvelopesActivity extends LockedActivity
         }).execute();
     }
 
-    @Override public void onPause() {
-        super.onPause();
-        mDeleteAdapter.performDelete();
-    }
-
-    @Override public void onClick(View v) {
-        if (v == mGraph) {
-            setGraphVisible(!mPrefs.getBoolean("com.notriddle.budget.graphVisible", false));
-        } else if (v == mAllTransactionsLabel) {
-            Intent i = new Intent(this, AllTransactionsActivity.class);
-            startActivity(i);
-        }
-    }
-
-    private void setGraphVisible(boolean visible) {
-        Fragment chart = getFragmentManager().findFragmentById(R.id.graph);
-        FragmentTransaction trans = getFragmentManager().beginTransaction();
-        mGraphLabel.setText(visible ? R.string.hideGraph_button : R.string.showGraph_button);
-        if (visible) {
-            if (chart == null) {
-                trans.add(R.id.graph, new GraphFragment());
-            } else {
-                trans.show(chart);
+    private void onReplacedFragment() {
+        findViewById(android.R.id.content).postDelayed(new Runnable() {
+            public void run() {
+                onBackStackChanged();
             }
-        } else {
-            if (chart != null) {
-                trans.hide(chart);
-            }
-        }
-        trans.commit();
-        mPrefs.edit()
-               .putBoolean("com.notriddle.budget.graphVisible", visible)
-               .apply();
+        }, 5);
     }
 
-    @Override public void performDelete(long id) {
-        deleteEnvelope((int)id);
-    }
-    @Override public void onDelete(long id) {
-        loadEnvelopesData(mEnvelopes.getCursor());
-    }
-    @Override public void undoDelete(long id) {
-        loadEnvelopesData(mEnvelopes.getCursor());
-    }
-
-    private void deleteEnvelope(int id) {
-        SQLiteDatabase db = (new EnvelopesOpenHelper(this))
-                            .getWritableDatabase();
-        db.beginTransaction();
-        try {
-            db.execSQL("DELETE FROM envelopes WHERE _id = ?",
-                       new String[] {Integer.toString(id)});
-            db.execSQL("DELETE FROM log WHERE envelope = ?",
-                       new String[] {Integer.toString(id)});
-            db.setTransactionSuccessful();
-            getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
-        } finally {
-            db.endTransaction();
-            db.close();
-        }
-    }
-
-    @Override public void onScrollChanged(int pos, int oldPos) {
-        mTotal.setTranslationY((pos*2)/3);
-        mTotalLabel.setTranslationY((pos*2)/3);
-    }
-
-    @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        SQLiteLoader retVal = new SQLiteLoader(
-            this, new EnvelopesOpenHelper(this), "envelopes",
-            new String[] {
-                "name", "cents", "color", "_id"
-            },
-            null,
-            null,
-            null,
-            null,
-            "name"
-        );
-        retVal.setNotificationUri(EnvelopesOpenHelper.URI);
-        return retVal;
-    }
-
-    @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
-        loadEnvelopesData(data);
-    }
-    private void loadEnvelopesData(Cursor data) {
-        data.moveToFirst();
-        int l = data.getCount();
-        long total = 0;
-        boolean hasColor = false;
-        for (int i = 0; i != l; ++i) {
-            int id = data.getInt(data.getColumnIndexOrThrow("_id"));
-            if (id != mDeleteAdapter.getDeletedId()) {
-                total += data.getLong(data.getColumnIndexOrThrow("cents"));
-                int color = data.getInt(data.getColumnIndexOrThrow("color"));
-                if (color != 0) {
-                    hasColor = true;
+    @Override public void onBackStackChanged() {
+        Fragment frag = getFragmentManager().findFragmentById(R.id.content_frame);
+        if (frag instanceof TitleFragment) {
+            TitleFragment tFrag = (TitleFragment)frag;
+            setTitle(tFrag.getTitle());
+            getActionBar().setDisplayHomeAsUpEnabled(!(frag instanceof EnvelopesFragment));
+            for (int i = 0; i != mNavAdapter.getCount(); ++i) {
+                if (mNavAdapter.getItem(i) == frag.getClass()) {
+                    mNavDrawer.setItemChecked(i, true);
+                    break;
+                } else {
+                    mNavDrawer.setItemChecked(i, false);
                 }
             }
-            data.moveToNext();
         }
-        mTotal.setText(EditMoney.toColoredMoney(this, total));
-        mEnvelopes.changeCursor(data);
-        mGraph.setVisibility(hasColor ? View.VISIBLE : View.GONE);
     }
 
-    @Override public void onLoaderReset(Loader<Cursor> ldr) {
-        mEnvelopes.changeCursor(null);
-    }
-
-    @Override public void onItemClick(AdapterView a, View v, int pos, long id) {
-        openEnvelope((int)id);
-    }
-
-    private void openEnvelope(int id) {
-        Intent i = new Intent(this, EnvelopeDetailsActivity.class);
-        i.putExtra("com.notriddle.budget.envelope", id);
-        startActivity(i);
-    }
-
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.envelopesactivity, menu);
-        return true;
+    @Override public void onDismiss() {
+        onBackPressed();
     }
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.newEnvelope_menuItem:
-                SQLiteDatabase db = (new EnvelopesOpenHelper(this))
-                                    .getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put("name", "");
-                values.put("color", 0);
-                long id = db.insert("envelopes", null, values);
-                db.close();
-                getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
-                openEnvelope((int)id);
+            case android.R.id.home:
+                FragmentManager fragmentManager = getFragmentManager();
+                Fragment frag = Fragment.instantiate(
+                    this,
+                    EnvelopesFragment.class.getName()
+                );
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fragmentManager.beginTransaction()
+                 .replace(R.id.content_frame, frag)
+                 .commit();
                 return true;
-            case R.id.transfer_menuItem:
-                DialogFragment f = TransferFragment.newInstance();
-                f.show(getFragmentManager(), "dialog");
-                return true;
-            /*case R.id.export_menuItem:
-                f = ExportFragment.newInstance();
-                f.show(getFragmentManager(), "dialog");
-                return true;
-            case R.id.import_menuItem:
-                f = ImportFragment.newInstance();
-                f.show(getFragmentManager(), "dialog");
-                return true;*/
-            case R.id.paycheck_menuItem:
-                Intent i = new Intent(this, PaycheckActivity.class);
-                startActivity(i);
-                return true;
-            case R.id.about_menuItem:
-                i = new Intent(this, AboutActivity.class);
-                startActivity(i);
-                return true;
-            case R.id.settings_menuItem:
-                i = new Intent(this, SettingsActivity.class);
-                startActivity(i);
-                return true;
-            	
         }
         return super.onOptionsItemSelected(item);
     }

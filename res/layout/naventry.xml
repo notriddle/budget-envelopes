@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:background="@drawable/stateful_card_background"
+                 android:id="@android:id/text1"
+                 android:padding="@dimen/fullPadding"
+                 android:textSize="18sp"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"/>
+

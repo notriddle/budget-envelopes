@@ -47,8 +47,7 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
     <string name="loading">Загрузка</string>
-    <string name="showGraph_button">Показать график</string>
-    <string name="hideGraph_button">Скрыть график</string>
+    <string name="graph_name">график</string>
     <string name="allTransactions_button">Все операции</string>
     <string name="allTransactions_name">Все операции</string>
     <string name="export_name">Экспортировать&#8230;</string>

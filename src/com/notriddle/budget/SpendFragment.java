@@ -109,6 +109,7 @@ public class SpendFragment extends OkFragment
         mLogAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
                 String s = mNegative ? "<" : ">";
+                constraint = (constraint == null) ? "" : constraint;
                 Cursor retVal = mHelper.getReadableDatabase().query(
                     "log",
                     new String[] { "description", "cents", "time", "_id" },
@@ -222,7 +223,7 @@ public class SpendFragment extends OkFragment
     }
 
     @Override public void onLoaderReset(Loader<Cursor> ldr) {
-        dismiss();
+        //dismiss();
     }
 
     @Override public String getTitle() {

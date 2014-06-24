@@ -46,8 +46,8 @@ public class WidgetProvider extends AppWidgetProvider {
             srv.setData(Uri.parse(srv.toUri(Intent.URI_INTENT_SCHEME)));
             views.setRemoteAdapter(widgetIds[i], R.id.grid, srv);
             views.setEmptyView(R.id.grid, R.id.empty);
-            Intent act = new Intent(cntx, EnvelopeDetailsActivity.class);
-            act.setData(Uri.parse(srv.toUri(Intent.URI_INTENT_SCHEME)));
+            Intent act = new Intent(cntx, EnvelopesActivity.class);
+            act.setData(Uri.parse("fragment://"+EnvelopeDetailsFragment.class.getName()+"/"+widgetIds[i]));
             act.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetIds[i]);
             PendingIntent actPending = PendingIntent.getActivity(
                 cntx, 0, act, PendingIntent.FLAG_UPDATE_CURRENT
