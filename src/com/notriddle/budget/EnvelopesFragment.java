@@ -171,23 +171,10 @@ public class EnvelopesFragment extends Fragment
         openEnvelope((int)id);
     }
 
-    private void switchFragment(Class<?> cls, String name, Bundle args) {
-        Fragment frag = Fragment.instantiate(
-            getActivity(),
-            cls.getName(),
-            args
-        );
-        getActivity().getFragmentManager()
-        .beginTransaction()
-         .replace(R.id.content_frame, frag)
-         .addToBackStack(name)
-         .commit();
-    }
-
     private void openEnvelope(int id) {
         Bundle args = new Bundle();
         args.putInt("com.notriddle.budget.envelope", id);
-        switchFragment(EnvelopeDetailsFragment.class, "EnvelopeDetailsFragment", args);
+        ((EnvelopesActivity)getActivity()).switchFragment(EnvelopeDetailsFragment.class, "EnvelopeDetailsFragment", args);
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -212,27 +199,12 @@ public class EnvelopesFragment extends Fragment
                 f.show(getFragmentManager(), "dialog");
                 return true;
             case R.id.paycheck_menuItem:
-                switchFragment(
+                ((EnvelopesActivity)getActivity()).switchFragment(
                     PaycheckFragment.class,
                     "PaycheckFragment",
                     null
                 );
                 return true;
-            case R.id.about_menuItem:
-                switchFragment(
-                    AboutFragment.class,
-                    "AboutFragment",
-                    null
-                );
-                return true;
-            case R.id.settings_menuItem:
-                switchFragment(
-                    SettingsFragment.class,
-                    "SettingsFragment",
-                    null
-                );
-                return true;
-            	
         }
         return super.onOptionsItemSelected(item);
     }

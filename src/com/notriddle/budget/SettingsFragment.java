@@ -29,7 +29,8 @@ import android.view.MenuItem;
 
 public class SettingsFragment extends PreferenceFragment
                                      implements Preference
-                                                .OnPreferenceClickListener {
+                                                .OnPreferenceClickListener,
+                                                TitleFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,10 @@ public class SettingsFragment extends PreferenceFragment
         DialogFragment f = (p == findPreference("com.notriddle.budget.import")) ? ImportFragment.newInstance() : ExportFragment.newInstance();
         f.show(getFragmentManager(), "dialog");
         return true;
+    }
+
+    @Override public String getTitle() {
+        return getActivity().getString(R.string.settings_name);
     }
 }
 

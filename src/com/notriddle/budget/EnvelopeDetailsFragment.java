@@ -56,7 +56,9 @@ public class EnvelopeDetailsFragment extends Fragment
                                                 TextWatcher,
                                                 DeleteAdapter.Deleter,
                                                 AdapterView.OnItemClickListener,
-                                                TitleFragment {
+                                                TitleFragment,
+                                                ColorFragment,
+                                                CustomActionBarFragment {
     EditTextDefaultFocus mName;
     int mId;
     int mShowTransactionId;
@@ -77,6 +79,21 @@ public class EnvelopeDetailsFragment extends Fragment
         setHasOptionsMenu(true);
     }
 
+    @Override public View onCreateActionBarView(LayoutInflater inflater) {
+        mName = new EditTextDefaultFocus(getActivity());
+        mName.setHint(getActivity().getText(R.string.envelopeName_hint));
+        mName.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mName.setLayoutParams(new ActionBar.LayoutParams(
+            ActionBar.LayoutParams.MATCH_PARENT,
+            ActionBar.LayoutParams.WRAP_CONTENT
+        ));
+        mName.setSingleLine(true);
+
+        mName.addTextChangedListener(this);
+
+        return mName;
+    }
+
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup cont,
                                        Bundle state) {
         View retVal = inflater.inflate(R.layout.envelopedetailsactivity, cont, false);
@@ -86,14 +103,6 @@ public class EnvelopeDetailsFragment extends Fragment
         mShowTransactionId = state == null
             ? getArguments().getInt("com.notriddle.budget.transaction", -1)
             : -1;
-        mName = new EditTextDefaultFocus(getActivity());
-        mName.setHint(getActivity().getText(R.string.envelopeName_hint));
-        mName.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        mName.setLayoutParams(new ActionBar.LayoutParams(
-            ActionBar.LayoutParams.FILL_PARENT,
-            ActionBar.LayoutParams.WRAP_CONTENT
-        ));
-        mName.setSingleLine(true);
         mEnvelopeData = null;
         mLogData = null;
 
@@ -108,12 +117,6 @@ public class EnvelopeDetailsFragment extends Fragment
 
         getLoaderManager().initLoader(0, null, this);
         getLoaderManager().initLoader(1, null, this);
-
-        ActionBar ab = getActivity().getActionBar();
-        ab.setDisplayShowTitleEnabled(false);
-        ab.setDisplayShowCustomEnabled(true);
-        ab.setCustomView(mName);
-        mName.addTextChangedListener(this);
         mLogAdapter = new LogAdapter(getActivity(), null);
         final ListView lV = mLogView = (ListView) retVal.findViewById(android.R.id.list);
         //lV.setOverScrollMode(lV.OVER_SCROLL_NEVER);
@@ -179,7 +182,6 @@ public class EnvelopeDetailsFragment extends Fragment
     @Override public void onDestroy() {
         super.onDestroy();
         ActionBar ab = getActivity().getActionBar();
-        ab.setBackgroundDrawable(getActivity().getResources().getDrawable(R.color.actionBarBackground));
         ab.setDisplayShowTitleEnabled(true);
         ab.setDisplayShowCustomEnabled(false);
         ab.setCustomView(null);
@@ -286,8 +288,10 @@ public class EnvelopeDetailsFragment extends Fragment
                 }
             }
             mColor = data.getInt(data.getColumnIndexOrThrow("color"));
-            getActivity().getActionBar()
-            .setBackgroundDrawable(new ColorDrawable(mColor == 0 ? 0xFFEEEEEE : mColor));
+            notifyColor();
+
+            if (getActivity() instanceof OnColorChangeListener) {
+            }
             if (mNavAdapter != null) {
                 mNavAdapter.changeCursor(data);
                 if (mNavView != null) {
@@ -459,6 +463,7 @@ public class EnvelopeDetailsFragment extends Fragment
         } else {
             mColor = 0;
         }
+        notifyColor();
         ContentValues values = new ContentValues();
         values.put("color", mColor);
         needDatabase().update("envelopes", values, "_id = ?", new String[] {Integer.toString(mId)});
@@ -492,6 +497,17 @@ public class EnvelopeDetailsFragment extends Fragment
         needDatabase().delete("log", "envelope = ?",
                               new String[] {Integer.toString(mId)});
         getActivity().getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
+    }
+
+    private void notifyColor() {
+        if (getActivity() instanceof OnColorChangeListener) {
+            OnColorChangeListener l = (OnColorChangeListener) getActivity();
+            l.onColorChange(mColor);
+        }
+    }
+
+    @Override public int getColor() {
+        return mColor;
     }
 
     @Override public String getTitle() {

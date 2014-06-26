@@ -32,21 +32,21 @@ import android.widget.TextView;
 
 public class PaycheckEnvelopesAdapter extends CursorAdapter {
     public static interface DepositesChangeListener {
-        public void onDepositesChange(SparseArray deposites);
+        public void onDepositesChange(SparseArray<Long> deposites);
     };
 
     LayoutInflater mInflater;
-    SparseArray mDeposites;
+    SparseArray<Long> mDeposites;
     DepositesChangeListener mListener;
 
     public PaycheckEnvelopesAdapter(Context cntx, Cursor csr,
-                                    SparseArray deposites) {
+                                    SparseArray<Long> deposites) {
         super(cntx, csr, 0);
         mInflater = LayoutInflater.from(cntx);
         mDeposites = deposites;
     }
 
-    public void setDeposits(SparseArray deposites) {
+    public void setDeposits(SparseArray<Long> deposites) {
         mDeposites = deposites;
         notifyDataSetChanged();
     }
@@ -58,7 +58,7 @@ public class PaycheckEnvelopesAdapter extends CursorAdapter {
         return false;
     }
 
-    public SparseArray getDeposites() {
+    public SparseArray<Long> getDeposites() {
         return mDeposites;
     }
 
@@ -117,7 +117,7 @@ public class PaycheckEnvelopesAdapter extends CursorAdapter {
     private void fillCardContents(CardContents contents, Cursor csr) {
         contents.name.setText(csr.getString(csr.getColumnIndexOrThrow("name")));
         int id = csr.getInt(csr.getColumnIndexOrThrow("_id"));
-        long cents = (Long) mDeposites.get(
+        long cents = mDeposites.get(
             id,
             csr.getLong(csr.getColumnIndexOrThrow("lastPaycheckCents"))
         );

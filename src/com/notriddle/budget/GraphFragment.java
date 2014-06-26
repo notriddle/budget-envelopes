@@ -43,7 +43,8 @@ import java.text.DateFormat;
 import java.util.Date;
 
 public class GraphFragment extends Fragment
-                           implements LoaderCallbacks<Cursor> {
+                           implements LoaderCallbacks<Cursor>,
+                                      TitleFragment {
     public static GraphFragment newInstance() {
         return new GraphFragment();
     }
@@ -56,10 +57,15 @@ public class GraphFragment extends Fragment
     @Override public View onCreateView(LayoutInflater inflater,
                                        ViewGroup cont, Bundle state) {
         ImageView retVal = new ImageView(getActivity());
-        LayoutParams params = new ViewGroup.LayoutParams(
-            LayoutParams.FILL_PARENT,
+        retVal.setBackgroundResource(R.color.cardBackground);
+        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
+            LayoutParams.MATCH_PARENT,
             LayoutParams.WRAP_CONTENT
         );
+        int margin = getActivity().getResources().getDimensionPixelSize(R.dimen.cardSpacing);
+        int padding = getActivity().getResources().getDimensionPixelSize(R.dimen.cardPadding);
+        params.setMargins(margin, margin, margin, margin);
+        retVal.setPadding(padding, padding, padding, padding);
         retVal.setLayoutParams(params);
         return retVal;
     }
@@ -190,6 +196,10 @@ public class GraphFragment extends Fragment
 
     @Override public void onLoaderReset(Loader<Cursor> ldr) {
         // Do nothing.
+    }
+
+    @Override public String getTitle() {
+        return getActivity().getString(R.string.graph_name);
     }
 };
 

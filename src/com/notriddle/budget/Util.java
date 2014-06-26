@@ -47,15 +47,15 @@ public class Util {
         }
         return a;
     }
-    public static Bundle packSparseLongArray(SparseArray a) {
+    public static Bundle packSparseLongArray(SparseArray<Long> a) {
         Bundle b = new Bundle();
         for (int i = 0; i != a.size(); ++i) {
-            b.putLong(Integer.toString(a.keyAt(i)), (Long) a.valueAt(i));
+            b.putLong(Integer.toString(a.keyAt(i)), a.valueAt(i));
         }
         return b;
     }
-    public static SparseArray unpackSparseLongArray(Bundle b) {
-        SparseArray a = new SparseArray();
+    public static SparseArray<Long> unpackSparseLongArray(Bundle b) {
+        SparseArray<Long> a = new SparseArray<Long>();
         Set<String> k = b.keySet();
         Iterator<String> i = k.iterator();
         while (i.hasNext()) {

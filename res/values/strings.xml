@@ -49,8 +49,11 @@
     <string name="gotIt">&#215;</string>
     <string name="loading">Loading</string>
     <string name="graph_name">Graph</string>
-    <string name="allTransactions_button">All transactions</string>
+    <string name="graph_menuItem">Graph</string>
+    <string name="allTransactions_menuItem">All transactions</string>
     <string name="allTransactions_name">All transactions</string>
+    <string name="drawerOpen_button">Open navigation</string>
+    <string name="drawerClose_button">Close navigation</string>
     <string name="export_name">Exporting&#8230;</string>
     <string name="export_settings">Export</string>
     <string name="export_settings_summary">Back up financial data</string>

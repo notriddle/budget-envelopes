@@ -48,7 +48,8 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
     <string name="gotIt">&#215;</string>
     <string name="loading">Загрузка</string>
     <string name="graph_name">график</string>
-    <string name="allTransactions_button">Все операции</string>
+    <string name="graph_menuItem">график</string>
+    <string name="allTransactions_menuItem">Все операции</string>
     <string name="allTransactions_name">Все операции</string>
     <string name="export_name">Экспортировать&#8230;</string>
     <string name="export_settings">Экспорт</string>

@@ -81,16 +81,11 @@ public class AllTransactionsFragment extends Fragment
         Bundle args = new Bundle();
         args.putInt("com.notriddle.budget.envelope", envelopeId);
         args.putInt("com.notriddle.budget.transaction", (int)id);
-        Fragment frag = Fragment.instantiate(
-            getActivity(),
-            EnvelopeDetailsFragment.class.getName(),
+        ((EnvelopesActivity)getActivity()).switchFragment(
+            EnvelopeDetailsFragment.class,
+            "EnvelopeDetailsFragment",
             args
         );
-        getActivity().getFragmentManager()
-        .beginTransaction()
-         .replace(R.id.content_frame, frag)
-         .addToBackStack("EnvelopeDetailsFragment")
-         .commit();
     }
 
     @Override public String getTitle() {

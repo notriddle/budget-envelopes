@@ -12,8 +12,4 @@
           android:icon="@drawable/new_menuitem"
 	      android:title="@string/newEnvelope_menuItem"
 	      android:showAsAction="ifRoom"/>
-    <item android:id="@+id/settings_menuItem"
-          android:title="@string/settings_menuItem"/>
-    <item android:id="@+id/about_menuItem"
-          android:title="@string/about_menuItem"/>
 </menu>

@@ -52,7 +52,8 @@ public class PaycheckFragment extends OkFragment
                                          DeleteView.OnDeleteListener,
                                          View.OnClickListener,
                                          MonitorScrollView.OnScrollListener,
-                                         TitleFragment {
+                                         TitleFragment,
+                                         CustomActionBarFragment {
     PaycheckEnvelopesAdapter mEnvelopes;
     EditMoney mIncome;
     EditText mDescription;
@@ -65,6 +66,18 @@ public class PaycheckFragment extends OkFragment
     long mIncomeValue;
     SharedPreferences mPrefs;
 
+    @Override public View onCreateActionBarView(LayoutInflater inflater) {
+        ActionBar ab = getActivity().getActionBar();
+        ab.setDisplayShowTitleEnabled(false);
+        ab.setDisplayShowCustomEnabled(true);
+        ab.setCustomView(R.layout.paycheckactivity_income);
+        mIncome = (EditMoney) ab.getCustomView().findViewById(R.id.amount);
+        mIncome.setCents(mIncomeValue);
+        mIncome.addTextChangedListener(this);
+        mDescription = (EditText) ab.getCustomView().findViewById(R.id.description);
+        return ab.getCustomView();
+    }
+
     @Override public View onCreateInternalView(LayoutInflater inflater, ViewGroup cont,
                                        Bundle state) {
         View retVal = inflater.inflate(R.layout.paycheckactivity, cont, false);
@@ -76,44 +89,27 @@ public class PaycheckFragment extends OkFragment
             docs.setOnClickListener(this);
             docs.setOnDeleteListener(this);
         } else {
-            docs.setVisibility(docs.GONE);
+            docs.setVisibility(View.GONE);
         }
         mGrid = (GridView) retVal.findViewById(R.id.grid);
         mProgress = (ProgressBar) retVal.findViewById(R.id.progress);
         mSpent = (TextView) retVal.findViewById(R.id.spent);
         Bundle deposites = state != null ? state.getBundle("deposites") : null;
+        mIncomeValue = state != null ? state.getLong("income", 0) : 0;
         mEnvelopes = new PaycheckEnvelopesAdapter(
             getActivity(),
             null,
             deposites != null
             ? Util.unpackSparseLongArray(deposites)
-            : new SparseArray()
+            : new SparseArray<Long>()
         );
         mEnvelopes.setDepositesChangeListener(this);
         mGrid.setAdapter(mEnvelopes);
         getLoaderManager().initLoader(0, null, this);
-        ActionBar ab = getActivity().getActionBar();
-        ab.setDisplayShowTitleEnabled(false);
-        ab.setDisplayShowCustomEnabled(true);
-        ab.setCustomView(R.layout.paycheckactivity_income);
-        mIncome = (EditMoney) ab.getCustomView().findViewById(R.id.amount);
-        mIncome.addTextChangedListener(this);
-        mIncomeValue = state != null ? state.getLong("income", 0) : 0;
-        mIncome.setCents(mIncomeValue);
-        mDescription = (EditText) ab.getCustomView().findViewById(R.id.description);
-        recalcProgress();
         mScroll = (MonitorScrollView) retVal.findViewById(R.id.scroll);
         mSpendingCard = retVal.findViewById(R.id.spendingCard);
         mScroll.setOnScrollListener(this);
         return retVal;
-    }
-
-    @Override public void onDestroy() {
-        super.onDestroy();
-        ActionBar ab = getActivity().getActionBar();
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setDisplayShowCustomEnabled(false);
-        ab.setCustomView(null);
     }
 
     @Override public void onClick(View v) {
@@ -124,7 +120,7 @@ public class PaycheckFragment extends OkFragment
                .putBoolean("com.notriddle.budget.PaycheckActivity.docs.show",
                            false)
                .commit();
-        v.setVisibility(v.GONE);
+        v.setVisibility(View.GONE);
     }
 
     @Override public void onScrollChanged(int pos, int oldPos) {
@@ -156,13 +152,13 @@ public class PaycheckFragment extends OkFragment
         return retVal;
     }
 
-    @Override public void onDepositesChange(SparseArray deposites) {
+    @Override public void onDepositesChange(SparseArray<Long> deposites) {
         recalcProgress();
     }
 
     @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
         mEnvelopes.changeCursor(data);
-        mIncome.postDelayed(new Runnable() {
+        mProgress.postDelayed(new Runnable() {
             public void run() {
                 recalcProgress();
             }
@@ -189,11 +185,11 @@ public class PaycheckFragment extends OkFragment
 
     private void recalcProgress() {
         mIncomeValue = mIncome.getCents();
-        SparseArray deposites = mEnvelopes.getDeposites();
+        SparseArray<Long> deposites = mEnvelopes.getDeposites();
         int l = deposites.size();
         mSpentValue = 0;
         for (int i = 0; i != l; ++i) {
-            mSpentValue += (Long) deposites.valueAt(i);
+            mSpentValue += deposites.valueAt(i);
         }
         if (mIncomeValue != 0 && mSpentValue != 0) {
             double progress = ((double)mSpentValue)/mIncomeValue;
@@ -212,7 +208,7 @@ public class PaycheckFragment extends OkFragment
     }
 
     @Override public void ok() {
-        SparseArray deposites = mEnvelopes.getDeposites();
+        SparseArray<Long> deposites = mEnvelopes.getDeposites();
         String description = mDescription.getText().toString();
         int l = deposites.size();
         SQLiteDatabase db = (new EnvelopesOpenHelper(getActivity())).getWritableDatabase();
@@ -221,7 +217,7 @@ public class PaycheckFragment extends OkFragment
             ContentValues values = new ContentValues();
             for (int i = 0; i != l; ++i) {
                 int id = deposites.keyAt(i);
-                long centsDeposited = (Long) deposites.valueAt(i);
+                long centsDeposited = deposites.valueAt(i);
                 EnvelopesOpenHelper.deposite(db, id, centsDeposited, description);
                 values.put("lastPaycheckCents", centsDeposited);
                 db.update("envelopes", values, "_id = ?", new String[] {

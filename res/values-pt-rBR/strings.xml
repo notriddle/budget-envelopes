@@ -48,7 +48,8 @@
     <string name="gotIt">&#215;</string>
     <string name="loading">Carregando</string>
     <string name="graph_name">Gráfico</string>
-    <string name="allTransactions_button">Todas as transacções</string>
+    <string name="graph_menuItem">Gráfico</string>
+    <string name="allTransactions_menuItem">Todas as transacções</string>
     <string name="allTransactions_name">Todas as transacções</string>
     <string name="export_name">Exportando&#8230;</string>
     <string name="export_settings">Exportar</string>
