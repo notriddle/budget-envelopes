@@ -11,6 +11,13 @@
               android:layout_height="fill_parent">
     <include layout="@layout/totalamount"/>
     <include layout="@layout/cards"/>
+    <FrameLayout android:id="@+id/graph"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_margin="@dimen/cardSpacing"
+                 android:padding="@dimen/cardPadding"
+                 android:background="@color/cardBackground">
+    </FrameLayout>
 </LinearLayout>
 </com.notriddle.budget.MonitorScrollView>
 

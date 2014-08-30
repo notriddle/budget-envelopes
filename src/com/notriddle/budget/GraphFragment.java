@@ -57,16 +57,6 @@ public class GraphFragment extends Fragment
     @Override public View onCreateView(LayoutInflater inflater,
                                        ViewGroup cont, Bundle state) {
         ImageView retVal = new ImageView(getActivity());
-        retVal.setBackgroundResource(R.color.cardBackground);
-        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
-            LayoutParams.MATCH_PARENT,
-            LayoutParams.WRAP_CONTENT
-        );
-        int margin = getActivity().getResources().getDimensionPixelSize(R.dimen.cardSpacing);
-        int padding = getActivity().getResources().getDimensionPixelSize(R.dimen.cardPadding);
-        params.setMargins(margin, margin, margin, margin);
-        retVal.setPadding(padding, padding, padding, padding);
-        retVal.setLayoutParams(params);
         return retVal;
     }
 

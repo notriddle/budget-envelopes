@@ -37,23 +37,21 @@ public class NavAdapter extends BaseAdapter {
     }
 
     @Override public int getCount() {
-        return 5;
+        return 4;
     }
 
     @Override public Class<?> getItem(int pos) {
         return pos == 0 ? EnvelopesFragment.class :
                pos == 1 ? AllTransactionsFragment.class :
-               pos == 2 ? GraphFragment.class :
-               pos == 3 ? SettingsFragment.class :
-               pos == 4 ? AboutFragment.class : null;
+               pos == 2 ? SettingsFragment.class :
+               pos == 3 ? AboutFragment.class : null;
     }
 
     public String getItemTitle(int pos) {
         return pos == 0 ? mCntx.getResources().getString(R.string.app_name) :
                pos == 1 ? mCntx.getResources().getString(R.string.allTransactions_menuItem) :
-               pos == 2 ? mCntx.getResources().getString(R.string.graph_menuItem) :
-               pos == 3 ? mCntx.getResources().getString(R.string.settings_menuItem) :
-               pos == 4 ? mCntx.getResources().getString(R.string.about_menuItem) : null;
+               pos == 2 ? mCntx.getResources().getString(R.string.settings_menuItem) :
+               pos == 3 ? mCntx.getResources().getString(R.string.about_menuItem) : null;
     }
 
     @Override public long getItemId(int pos) {
@@ -65,7 +63,7 @@ public class NavAdapter extends BaseAdapter {
     }
 
     @Override public int getItemViewType(int pos) {
-        return pos > 2 ? 1 : 0;
+        return pos > 1 ? 1 : 0;
     }
 
     @Override public int getViewTypeCount() {
@@ -75,7 +73,7 @@ public class NavAdapter extends BaseAdapter {
     @Override public View getView(int pos, View conv, ViewGroup cont) {
         View retVal;
         if (conv == null) {
-            retVal = mInflater.inflate(pos > 2 ? R.layout.naventry_small : R.layout.naventry, cont, false);
+            retVal = mInflater.inflate(pos > 1 ? R.layout.naventry_small : R.layout.naventry, cont, false);
         } else {
             retVal = conv;
         }

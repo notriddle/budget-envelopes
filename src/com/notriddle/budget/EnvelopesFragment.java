@@ -83,6 +83,17 @@ public class EnvelopesFragment extends Fragment
         return retVal;
     }
 
+    @Override public void onCreate(Bundle state) {
+        super.onCreate(state);
+        Fragment frag = Fragment.instantiate(
+            getActivity(),
+            GraphFragment.class.getName()
+        );
+        getChildFragmentManager().beginTransaction()
+         .replace(R.id.graph, frag)
+         .commit();
+    }
+
     @Override public String getTitle() {
         return getActivity().getString(R.string.app_name);
     }
