@@ -141,6 +141,9 @@ public abstract class OkFragment extends DialogFragment
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                return true;
             case R.id.ok_menuItem:
                 ok();
                 dismiss();
@@ -159,25 +162,10 @@ public abstract class OkFragment extends DialogFragment
     }
 
     protected void changeToActivity() {
-        Intent i = new Intent(getActivity(), EnvelopesActivity.class);
-        i.setData(Uri.parse("fragment://"+getClass().getName()));
+        EnvelopesActivity a = (EnvelopesActivity) getActivity();
         Bundle args = (Bundle) getArguments().clone();
         writeArgs(args);
-        i.putExtras(args);
-        if (Build.VERSION.SDK_INT >= 16) {
-            View src = getDialog().getWindow().getDecorView();
-            Bitmap copyBitmap = Bitmap.createBitmap(
-                src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888
-            );
-            Canvas copyCanvas = new Canvas(copyBitmap);
-            src.draw(copyCanvas);
-            Bundle opts = ActivityOptions.makeThumbnailScaleUpAnimation(
-                src, copyBitmap, 0, 0
-            ).toBundle();
-            startActivity(i, opts);
-        } else {
-            startActivity(i);
-        }
+        a.switchFragment(getClass(), getClass().getName(), args);
         dismiss();
     }
 
