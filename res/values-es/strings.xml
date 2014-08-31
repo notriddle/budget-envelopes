@@ -43,11 +43,13 @@
     <string name="default_envelope_1">Facturas</string>
     <string name="default_envelope_2">Alimentos</string>
     <string name="default_envelope_3">Vestimenta</string>
+    <string name="default_budget">Presupuesto</string>
     <string name="ok_menuItem">Aceptar</string>
     <string name="description_hint">Descripción</string>
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
     <string name="loading">Cargando</string>
+    <string name="envelopes_menuItem">Sobres</string>
     <string name="graph_name">Gráfico</string>
     <string name="graph_menuItem">Gráfico</string>
     <string name="allTransactions_menuItem">Todas las transacciones</string>

@@ -51,7 +51,7 @@ public class TransferFragment extends OkFragment
     EditMoney mAmount;
     Spinner mFrom;
     Spinner mTo;
-    SparseArray mCurrentCents;
+    SparseArray<Long> mCurrentCents;
 
     public static TransferFragment newInstance() {
         return new TransferFragment();
@@ -110,11 +110,19 @@ public class TransferFragment extends OkFragment
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        int currentBudget = ((EnvelopesActivity)getActivity()).getCurrentBudget();
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(), new EnvelopesOpenHelper(getActivity()), "envelopes",
             new String[] {
                 "name", "cents", "_id", "color"
-            }
+            },
+            "budget = ?",
+            new String[] {
+                Integer.toString(currentBudget)
+            },
+            null,
+            null,
+            "name"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -122,7 +130,7 @@ public class TransferFragment extends OkFragment
 
     @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
         int l = data.getCount();
-        mCurrentCents = new SparseArray(l);
+        mCurrentCents = new SparseArray<Long>(l);
         data.moveToFirst();
         for (int i = 0; i != l; ++i) {
             mCurrentCents.put(data.getInt(data.getColumnIndexOrThrow("_id")),

@@ -53,6 +53,7 @@ public class ImportFragment extends FileCreatorFragment {
     }
 
     protected void performOnDB(Uri src) throws Throwable {
+        int currentBudget = ((EnvelopesActivity)getActivity()).getCurrentBudget();
         String srcPath = src.getPath();
         SQLiteDatabase importDb = SQLiteDatabase.openDatabase(
             srcPath, null, SQLiteDatabase.OPEN_READONLY
@@ -68,8 +69,8 @@ public class ImportFragment extends FileCreatorFragment {
                                 .getWritableDatabase();
             db.beginTransaction();
             try {
-                db.execSQL("DELETE FROM envelopes");
-                db.execSQL("DELETE FROM log");
+                db.execSQL("DELETE FROM log WHERE envelope IN ( SELECT _id FROM envelopes WHERE budget = "+currentBudget+" )");
+                db.execSQL("DELETE FROM envelopes WHERE budget = "+currentBudget);
 
                 Cursor accounts = importDb.rawQuery("SELECT _id, _name FROM Accounts", null);
                 int l = accounts.getCount();
@@ -77,6 +78,7 @@ public class ImportFragment extends FileCreatorFragment {
                 for (int i = 0; i != l; ++i) {
                     envelopeValues.put("_id", accounts.getInt(0));
                     envelopeValues.put("name", accounts.getString(1));
+                    envelopeValues.put("budget", currentBudget);
                     db.insert("envelopes", null, envelopeValues);
                     accounts.moveToNext();
                 }
@@ -131,6 +133,7 @@ public class ImportFragment extends FileCreatorFragment {
     }
 
     protected void performOnCSV(Uri dest) throws Throwable {
+        int currentBudget = ((EnvelopesActivity)getActivity()).getCurrentBudget();
         HashMap<String, Integer> map = new HashMap<String, Integer>();
         ContentValues envelopeValues = new ContentValues();
         ContentValues logValues = new ContentValues();
@@ -140,8 +143,8 @@ public class ImportFragment extends FileCreatorFragment {
                             .getWritableDatabase();
         db.beginTransaction();
         try {
-            db.execSQL("DELETE FROM envelopes");
-            db.execSQL("DELETE FROM log");
+            db.execSQL("DELETE FROM log WHERE envelope IN ( SELECT _id FROM envelopes WHERE budget = "+currentBudget+" )");
+            db.execSQL("DELETE FROM envelopes WHERE budget = "+currentBudget);
             String[] list = c.readNext();
             while (list != null) {
                 long time = Long.parseLong(list[0]);
@@ -153,6 +156,7 @@ public class ImportFragment extends FileCreatorFragment {
                     envelopeId = map.get(envelopeName);
                 } else {
                     envelopeValues.put("name", envelopeName);
+                    envelopeValues.put("budget", currentBudget);
                     envelopeId = (int) db.insert("envelopes", null,
                                                  envelopeValues);
                     map.put(envelopeName, envelopeId);

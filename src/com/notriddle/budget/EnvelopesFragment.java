@@ -136,13 +136,16 @@ public class EnvelopesFragment extends Fragment
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        int currentBudget = ((EnvelopesActivity)getActivity()).getCurrentBudget();
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(), new EnvelopesOpenHelper(getActivity()), "envelopes",
             new String[] {
                 "name", "cents", "color", "_id"
             },
-            null,
-            null,
+            "budget = ?",
+            new String[] {
+                Integer.toString(currentBudget)
+            },
             null,
             null,
             "name"

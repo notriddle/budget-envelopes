@@ -42,11 +42,13 @@ along with Budget. If not, see <http://www.gnu.org/licenses/>.
     <string name="default_envelope_1">Квартплата</string>
     <string name="default_envelope_2">Еда</string>
     <string name="default_envelope_3">Одежда</string>
+    <string name="default_budget">Бюджет</string>
     <string name="ok_menuItem">OK</string>
     <string name="description_hint">Описание</string>
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
     <string name="loading">Загрузка</string>
+    <string name="envelopes_menuItem">Конвертами</string>
     <string name="graph_name">график</string>
     <string name="graph_menuItem">график</string>
     <string name="allTransactions_menuItem">Все операции</string>

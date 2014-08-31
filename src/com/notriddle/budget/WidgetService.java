@@ -47,7 +47,7 @@ public class WidgetService extends RemoteViewsService {
                 Log.d("Budget", "WidgetService.onCreate()");
                 db = (new EnvelopesOpenHelper(WidgetService.this))
                       .getReadableDatabase();
-                csr = db.rawQuery("SELECT name, cents, _id, color FROM envelopes ORDER BY name", null);
+                csr = db.rawQuery("SELECT name, cents, _id, color FROM envelopes WHERE budget = 1 ORDER BY name", null);
                 csr.setNotificationUri(
                     getContentResolver(),
                     EnvelopesOpenHelper.URI

@@ -27,7 +27,7 @@ import android.util.SparseArray;
 
 public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     static final String DB_NAME = "envelopes.db";
-    static final int DB_VERSION = 6;
+    static final int DB_VERSION = 7;
     public static final Uri URI = Uri.parse("sqlite://com.notriddle.budget/envelopes");
 
     Context mCntx;
@@ -36,27 +36,34 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         mCntx = cntx;
     }
     @Override public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER, 'projectedCents' INTEGER, 'lastPaycheckCents' INTEGER, 'color' INTEGER );");
+        db.execSQL("CREATE TABLE 'envelopes' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT, 'cents' INTEGER, 'projectedCents' INTEGER, 'lastPaycheckCents' INTEGER, 'color' INTEGER, 'budget' INTEGER );");
         ContentValues values = new ContentValues();
         values.put("name", mCntx.getString(R.string.default_envelope_1));
         values.put("cents", 0);
         values.put("projectedCents", 0);
         values.put("lastPaycheckCents", 0);
         values.put("color", 0);
+        values.put("budget", 1);
         db.insert("envelopes", null, values);
         values.put("name", mCntx.getString(R.string.default_envelope_2));
         values.put("cents", 0);
         values.put("projectedCents", 0);
         values.put("lastPaycheckCents", 0);
         values.put("color", 0);
+        values.put("budget", 1);
         db.insert("envelopes", null, values);
         values.put("name", mCntx.getString(R.string.default_envelope_3));
         values.put("cents", 0);
         values.put("projectedCents", 0);
         values.put("lastPaycheckCents", 0);
         values.put("color", 0);
+        values.put("budget", 1);
         db.insert("envelopes", null, values);
         db.execSQL("CREATE TABLE 'log' ( '_id' INTEGER PRIMARY KEY, 'envelope' INTEGER, 'time' TIMESTAMP, 'description' TEXT, 'cents' INTEGER )");
+        db.execSQL("CREATE TABLE 'budgets' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT )");
+        values.clear();
+        values.put("name", mCntx.getString(R.string.default_budget));
+        db.insert("budgets", null, values);
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
@@ -73,6 +80,14 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             db.execSQL("UPDATE envelopes SET color = 0");
         } else if (oldVer == 5) {
             db.execSQL("UPDATE envelopes SET color = 0 WHERE color = ?", new String[] {Integer.toString(0xFFEEEEEE)});
+        }
+        if (oldVer < 7) {
+            db.execSQL("ALTER TABLE 'envelopes' ADD COLUMN 'budget' INTEGER");
+            db.execSQL("UPDATE envelopes SET budget = 1");
+            db.execSQL("CREATE TABLE 'budgets' ( '_id' INTEGER PRIMARY KEY, 'name' TEXT )");
+            ContentValues values = new ContentValues();
+            values.put("name", mCntx.getString(R.string.default_budget));
+            db.insert("budgets", null, values);
         }
     }
 

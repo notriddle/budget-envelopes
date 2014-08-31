@@ -42,11 +42,13 @@
     <string name="default_envelope_1">Contas</string>
     <string name="default_envelope_2">Alimentos</string>
     <string name="default_envelope_3">Vestuário</string>
+    <string name="default_budget">Orçamento</string>
     <string name="ok_menuItem">Aceitar</string>
     <string name="description_hint">Descripção</string>
     <string name="amount_hint">00.00</string>
     <string name="gotIt">&#215;</string>
     <string name="loading">Carregando</string>
+    <string name="envelopes_menuItem">Envelopes</string>
     <string name="graph_name">Gráfico</string>
     <string name="graph_menuItem">Gráfico</string>
     <string name="allTransactions_menuItem">Todas as transacções</string>

@@ -56,10 +56,11 @@ public class AllTransactionsFragment extends Fragment
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String time = Long.toString(System.currentTimeMillis()-5184000000l);
+        int currentBudget = ((EnvelopesActivity) getActivity()).getCurrentBudget();
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(),
             new EnvelopesOpenHelper(getActivity()),
-            "SELECT e.name AS envelope, e.color AS color, l.description AS description, l.cents AS cents, l.time AS time, l._id AS _id, e._id AS envelope_id FROM log AS l LEFT JOIN envelopes AS e ON (e._id = l.envelope) ORDER BY l.time * -1"
+            "SELECT e.name AS envelope, e.color AS color, l.description AS description, l.cents AS cents, l.time AS time, l._id AS _id, e._id AS envelope_id FROM log AS l INNER JOIN envelopes AS e ON (e._id = l.envelope AND e.budget = " + currentBudget + ") ORDER BY l.time * -1"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
@@ -73,7 +74,7 @@ public class AllTransactionsFragment extends Fragment
         // Do nothing.
     }
 
-    @Override public void onItemClick(AdapterView a, View v, int pos, long id) {
+    @Override public void onItemClick(AdapterView<?> a, View v, int pos, long id) {
         Cursor csr = mAdapter.getCursor();
         csr.moveToPosition(pos);
         int envelopeId = csr.getInt(csr.getColumnIndexOrThrow("envelope_id"));

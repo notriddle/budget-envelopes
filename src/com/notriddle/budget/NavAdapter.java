@@ -48,7 +48,7 @@ public class NavAdapter extends BaseAdapter {
     }
 
     public String getItemTitle(int pos) {
-        return pos == 0 ? mCntx.getResources().getString(R.string.app_name) :
+        return pos == 0 ? mCntx.getResources().getString(R.string.envelopes_menuItem) :
                pos == 1 ? mCntx.getResources().getString(R.string.allTransactions_menuItem) :
                pos == 2 ? mCntx.getResources().getString(R.string.settings_menuItem) :
                pos == 3 ? mCntx.getResources().getString(R.string.about_menuItem) : null;

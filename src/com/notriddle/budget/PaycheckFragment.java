@@ -137,13 +137,16 @@ public class PaycheckFragment extends OkFragment
     }
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        int currentBudget = ((EnvelopesActivity)getActivity()).getCurrentBudget();
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(), new EnvelopesOpenHelper(getActivity()), "envelopes",
             new String[] {
                 "name", "lastPaycheckCents", "_id", "color"
             },
-            null,
-            null,
+            "budget = ?",
+            new String[] {
+                Integer.toString(currentBudget)
+            },
             null,
             null,
             "name"

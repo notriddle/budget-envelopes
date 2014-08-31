@@ -54,9 +54,11 @@ public class EnvelopesActivity extends LockedActivity
     ColorDrawable mActionBarColor;
     View mCustomActionBarView;
     int mColor;
+    int mCurrentBudget;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        mCurrentBudget = 1;
         setContentView(R.layout.activity);
         setupActionBarBackground();
         setupDrawer();
@@ -78,6 +80,15 @@ public class EnvelopesActivity extends LockedActivity
                 getFragmentManager().findFragmentById(R.id.content_frame)
             );
         }
+    }
+
+    public int getCurrentBudget() {
+        return mCurrentBudget;
+    }
+
+    public void setCurrentBudget(int id) {
+        mCurrentBudget = id;
+        topFragment(EnvelopesFragment.class, FragmentTransaction.TRANSIT_FRAGMENT_FADE, null);
     }
 
     private void setupActionBarBackground() {

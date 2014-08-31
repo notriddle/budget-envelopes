@@ -39,11 +39,12 @@ public class ExportFragment extends FileCreatorFragment {
     }
 
     @Override protected void perform(Uri dest) throws Throwable {
+        int currentBudget = ((EnvelopesActivity)getActivity()).getCurrentBudget();
         FileWriter f = new FileWriter(dest.getPath());
         CSVWriter c = new CSVWriter(f);
         SQLiteDatabase db = (new EnvelopesOpenHelper(getActivity()))
                             .getReadableDatabase();
-        Cursor csr = db.rawQuery("SELECT l.time, e.name, l.cents, l.description FROM log AS l LEFT JOIN envelopes AS e ON (l.envelope = e._id)", null);
+        Cursor csr = db.rawQuery("SELECT l.time, e.name, l.cents, l.description FROM log AS l INNER JOIN envelopes AS e ON (l.envelope = e._id AND e.budget = " + currentBudget + ")", null);
         int l = csr.getCount();
         csr.moveToFirst();
         for (int i = 0; i != l; ++i) {

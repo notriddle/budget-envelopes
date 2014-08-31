@@ -78,10 +78,11 @@ public class GraphFragment extends Fragment
 
     @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String time = Long.toString(System.currentTimeMillis()-5184000000l);
+        int currentBudget = ((EnvelopesActivity)getActivity()).getCurrentBudget();
         SQLiteLoader retVal = new SQLiteLoader(
             getActivity(),
             new EnvelopesOpenHelper(getActivity()),
-            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name, l.cents FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+time+" ORDER BY e._id, l.time asc"
+            "SELECT (SELECT sum(l2.cents) FROM log as l2 WHERE l2.envelope = l.envelope AND l2.time <= l.time), e._id, e.color, l.time, e.name, l.cents FROM log as l LEFT JOIN envelopes AS e ON (e._id = l.envelope) WHERE e.color <> 0 AND l.time > "+time+" AND e.budget = "+currentBudget+" ORDER BY e._id, l.time asc"
         );
         retVal.setNotificationUri(EnvelopesOpenHelper.URI);
         return retVal;
