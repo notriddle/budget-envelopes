@@ -30,8 +30,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +59,20 @@ public class GraphFragment extends Fragment
     @Override public View onCreateView(LayoutInflater inflater,
                                        ViewGroup cont, Bundle state) {
         ImageView retVal = new ImageView(getActivity());
+
+        int cardSpacing = getActivity().getResources()
+                          .getDimensionPixelSize(R.dimen.cardSpacing);
+        int cardPadding = getActivity().getResources()
+                          .getDimensionPixelSize(R.dimen.cardPadding);
+        int width = getActivity().getWindow().getWindowManager().getDefaultDisplay().getWidth()-2*(cardSpacing)-2*(cardPadding);
+        Log.d("Budget", "GraphFragment.onCreateVeiw(): width="+width);
+        int height = getActivity().getResources()
+                     .getDimensionPixelSize(R.dimen.graphHeight);
+        Log.d("Budget", "GraphFragment.onCreateView(): height="+height);
+
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, height);
+        retVal.setLayoutParams(params);
+
         return retVal;
     }
 
@@ -71,7 +87,35 @@ public class GraphFragment extends Fragment
         return retVal;
     }
 
-    @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
+    @Override public void onLoadFinished(Loader<Cursor> ldr, final Cursor data) {
+
+        final int cardSpacing = getActivity().getResources()
+                                .getDimensionPixelSize(R.dimen.cardSpacing);
+        final int cardPadding = getActivity().getResources()
+                                .getDimensionPixelSize(R.dimen.cardPadding);
+        final int textSize = cardPadding*2;
+        final int width = getActivity().getWindow().getWindowManager().getDefaultDisplay().getWidth()-2*(cardSpacing)-2*(cardPadding);
+        Log.d("Budget", "GraphFragment.onLoadFinished(): width="+width);
+        final int height = getActivity().getResources()
+                           .getDimensionPixelSize(R.dimen.graphHeight);
+        Log.d("Budget", "GraphFragment.onLoadFinished(): height="+height);
+
+        (new AsyncTask<Object, Object, Bitmap>() {
+            protected Bitmap doInBackground(Object... o) {
+                return generateBitmap(data, cardSpacing, cardPadding, textSize, width, height);
+            }
+            protected void onPostExecute(Bitmap chart) {
+                ImageView view = (ImageView)getView();
+                if (view != null) {
+                  view.setImageBitmap(chart);
+                }
+            }
+        }).execute();;
+
+    }
+
+    private Bitmap generateBitmap(Cursor data, int cardSpacing, int cardPadding, int textSize, int width, int height) {
+
         int l = data.getCount();
         data.moveToFirst();
         long maxCents = 0;
@@ -88,17 +132,6 @@ public class GraphFragment extends Fragment
             data.moveToNext();
         }
 
-        ImageView view = (ImageView)getView();
-        int cardSpacing = getActivity().getResources()
-                          .getDimensionPixelSize(R.dimen.cardSpacing);
-        int cardPadding = getActivity().getResources()
-                          .getDimensionPixelSize(R.dimen.cardPadding);
-        int textSize = cardPadding*2;
-        int width = getActivity().getWindow().getWindowManager().getDefaultDisplay().getWidth()-2*(cardSpacing)-2*(cardPadding);
-        Log.d("Budget", "GraphFragment.onLoadFinished(): width="+width);
-        int height = getActivity().getResources()
-                     .getDimensionPixelSize(R.dimen.graphHeight);
-        Log.d("Budget", "GraphFragment.onLoadFinished(): height="+height);
         Bitmap chart = Bitmap.createBitmap(
             width,
             height,
@@ -181,7 +214,8 @@ public class GraphFragment extends Fragment
             pen.setTextAlign(Paint.Align.RIGHT);
             chartCanvas.drawTextOnPath(timeFormat.format(maxTimeD), bottom, 0, 0, pen);
         }
-        view.setImageBitmap(chart);
+
+        return chart;
     }
 
     @Override public void onLoaderReset(Loader<Cursor> ldr) {
