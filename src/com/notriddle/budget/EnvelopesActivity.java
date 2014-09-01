@@ -24,8 +24,12 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -40,12 +44,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.ListView;
 
 public class EnvelopesActivity extends LockedActivity
                                implements OkFragment.OnDismissListener,
                                           ListView.OnItemClickListener,
-                                          ColorFragment.OnColorChangeListener {
+                                          ColorFragment.OnColorChangeListener,
+                                          LoaderCallbacks<Cursor> {
 
     ListView mNavDrawer;
     NavAdapter mNavAdapter;
@@ -54,6 +60,9 @@ public class EnvelopesActivity extends LockedActivity
     ColorDrawable mActionBarColor;
     View mCustomActionBarView;
     int mColor;
+
+    Spinner mBudgetPicker;
+    BudgetsAdapter mBudgetsAdapter;
     int mCurrentBudget;
 
     @Override public void onCreate(Bundle state) {
@@ -62,6 +71,8 @@ public class EnvelopesActivity extends LockedActivity
         setContentView(R.layout.activity);
         setupActionBarBackground();
         setupDrawer();
+
+        getLoaderManager().initLoader(0, null, this);
 
         if (state == null) {
             final Intent i = getIntent();
@@ -88,6 +99,7 @@ public class EnvelopesActivity extends LockedActivity
 
     public void setCurrentBudget(int id) {
         mCurrentBudget = id;
+        mBudgetPicker.setSelection(mCurrentBudget);
         topFragment(EnvelopesFragment.class, FragmentTransaction.TRANSIT_FRAGMENT_FADE, null);
     }
 
@@ -107,11 +119,19 @@ public class EnvelopesActivity extends LockedActivity
     }
 
     private void setupDrawer() {
+
         mNavDrawer = (ListView) findViewById(R.id.left_drawer);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mBudgetPicker = new Spinner(this);
+        mBudgetsAdapter = new BudgetsAdapter(this, null, R.layout.dropdown_naventry);
+        mBudgetPicker.setAdapter(mBudgetsAdapter);
+        mBudgetPicker.setSelection(mCurrentBudget);
+        mNavDrawer.addHeaderView(mBudgetPicker, null, false);
+
         mNavAdapter = new NavAdapter(this);
         mNavDrawer.setAdapter(mNavAdapter);
         mNavDrawer.setOnItemClickListener(this);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavToggle = new ActionBarDrawerToggle(
             this,
             mDrawerLayout,
@@ -166,6 +186,31 @@ public class EnvelopesActivity extends LockedActivity
     @Override public void onConfigurationChanged(Configuration config) {
         super.onConfigurationChanged(config);
         mNavToggle.onConfigurationChanged(config);
+    }
+
+    @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        SQLiteLoader retVal = new SQLiteLoader(
+            this, new EnvelopesOpenHelper(this), "budgets",
+            new String[] {
+                "name", "_id"
+            },
+            null,
+            null,
+            null,
+            null,
+            "_id"
+        );
+        retVal.setNotificationUri(EnvelopesOpenHelper.URI);
+        return retVal;
+    }
+
+    @Override public void onLoadFinished(Loader<Cursor> ldr, Cursor data) {
+        mBudgetsAdapter.swapCursor(data);
+        mBudgetPicker.setSelection(mCurrentBudget);
+    }
+
+    @Override public void onLoaderReset(Loader<Cursor> ldr) {
+        // Do nothing
     }
 
     @Override public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
