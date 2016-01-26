@@ -34,28 +34,28 @@
     />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="wrap_content"
+                  android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
-                  android:layout_weight="2"
-                  android:layout_gravity="center_vertical"
                   android:orientation="horizontal">
 	    <CheckBox android:id="@+id/repeat"
 	              android:text="@string/repeat_checkBox"
-	              android:layout_width="fill_parent"
-	              android:layout_height="wrap_content"/>
+	              android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:layout_gravity="center_vertical"
+	              />
 	    <Spinner android:id="@+id/frequency"
-	             android:layout_width="fill_parent"
+	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
-	             android:enabled="false"
-	             android:textColor="#000"
+	             android:layout_gravity="center_vertical"
+	             android:layout_weight="1"
 	             />
     </LinearLayout>
-
+    
     <CheckBox android:id="@+id/delayed"
               android:text="@string/delayed_checkBox"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"/>
-
+    
 </LinearLayout>
 
 <DatePicker android:id="@+id/delay"

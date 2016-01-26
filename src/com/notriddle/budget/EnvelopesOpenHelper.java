@@ -115,12 +115,20 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             cntx.getContentResolver().notifyChange(URI, null);
         } finally {
             db.endTransaction();
+        }
+        db.beginTransaction();
+        try {
+	        updateLog(db);
+            db.setTransactionSuccessful();
+            cntx.getContentResolver().notifyChange(URI, null);
+        } finally {
+            db.endTransaction();
             db.close();
         }
     }
-    public static void playLog(SQLiteDatabase db) {
+
+	public static void updateLog(SQLiteDatabase db){
         long currentTime = System.currentTimeMillis();
-        /* First insert repeated transaction up to now */
         Cursor csr
 	        = db.rawQuery("SELECT envelope, MAX(time) AS last, cents, description, repeat FROM log WHERE repeat IS NOT NULL AND time < ? GROUP BY envelope, cents, description, repeat", new String [] {Long.toString(currentTime)});
         if (csr.moveToFirst()) {
@@ -154,6 +162,10 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
 		        } 
 	        } while(csr.moveToNext());
         }
+	}
+
+    public static void playLog(SQLiteDatabase db) {
+        long currentTime = System.currentTimeMillis();
         db.execSQL("UPDATE envelopes SET cents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id AND log.time < ? GROUP BY log.envelope), projectedCents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id GROUP BY log.envelope)", new String [] {Long.toString(currentTime)});
     }
     public static void playLog(Context cntx) {
@@ -161,13 +173,21 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
                             .getWritableDatabase();
         db.beginTransaction();
         try {
+	        updateLog(db);
+            db.setTransactionSuccessful();
+            cntx.getContentResolver().notifyChange(URI, null);
+        } finally {
+            db.endTransaction();
+        }
+        db.beginTransaction();
+        try {
             playLog(db);
             db.setTransactionSuccessful();
             cntx.getContentResolver().notifyChange(URI, null);
         } finally {
             db.endTransaction();
-            db.close();
         }
+        db.close();
     }
     public static void depositeDelayed(SQLiteDatabase db, int envelope,
                                        long cents, String description,
@@ -206,8 +226,16 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             cntx.getContentResolver().notifyChange(URI, null);
         } finally {
             db.endTransaction();
-            db.close();
         }
+        db.beginTransaction();
+        try {
+	        updateLog(db);
+            db.setTransactionSuccessful();
+            cntx.getContentResolver().notifyChange(URI, null);
+        } finally {
+            db.endTransaction();
+        }
+        db.close();
     }
 };
 
