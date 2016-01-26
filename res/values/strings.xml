@@ -61,6 +61,15 @@
     <string name="import_settings">Import</string>
     <string name="import_settings_summary">Restore financial data</string>
     <string name="delayed_checkBox">Delayed</string>
+    <string name="repeat_checkBox">Repeat</string>
+    <string-array name="frequency_array">
+	    <item>Daily</item>
+	    <item>Weekly</item>
+	    <item>Fortnightly</item>
+	    <item>Monthly</item>
+	    <item>Quarterly</item>
+	    <item>Yearly</item>
+    </string-array>
     <string name="about_menuItem">About</string>
     <string name="about_name">About Budget with Envelopes</string>
     <string name="donate_button">Donate to Michael</string>

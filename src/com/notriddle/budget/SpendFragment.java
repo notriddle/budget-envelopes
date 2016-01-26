@@ -48,8 +48,11 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.lang.Exception;
 
 public class SpendFragment extends OkFragment
                            implements LoaderCallbacks<Cursor>,
@@ -68,6 +71,8 @@ public class SpendFragment extends OkFragment
     boolean mNegative;
     DatePicker mDelay;
     CheckBox mDelayed;
+    CheckBox mRepeat;
+    Spinner mFrequency;
 
     public static SpendFragment newInstance(int id, boolean negative) {
         SpendFragment retVal = new SpendFragment();
@@ -131,6 +136,14 @@ public class SpendFragment extends OkFragment
         mAmount.setOnEditorActionListener(this);
         mAmount.addTextChangedListener(this);
 
+        mRepeat = (CheckBox) retVal.findViewById(R.id.repeat);
+        mRepeat.setOnCheckedChangeListener(this);
+        mFrequency = (Spinner) retVal.findViewById(R.id.frequency);
+        ArrayAdapter<CharSequence> mFrequencyAdapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
+	                 R.array.frequency_array, R.layout.spinner_item);
+        mFrequencyAdapter.setDropDownViewResource(R.layout.spinner_item);
+        mFrequency.setAdapter(mFrequencyAdapter);
+
         mDelayed = (CheckBox) retVal.findViewById(R.id.delayed);
         mDelayed.setOnCheckedChangeListener(this);
         mDelay = (DatePicker) retVal.findViewById(R.id.delay);
@@ -143,6 +156,8 @@ public class SpendFragment extends OkFragment
             mDescription.setText(args.getString("com.notriddle.budget.description", ""));
             mAmount.setCents(args.getLong("com.notriddle.budget.cents", 0));
             mDelayed.setChecked(args.getBoolean("com.notriddle.budget.delayed", false));
+            mRepeat.setChecked(args.getBoolean("com.notriddle.budget.repeat", false));
+            mFrequency.setEnabled(args.getBoolean("com.notriddle.budget.repeat", false));
         }
         onCheckedChanged(mDelayed, mDelayed.isChecked());
 
@@ -155,16 +170,26 @@ public class SpendFragment extends OkFragment
         args.putLong("com.notriddle.budget.cents", mAmount.getCents());
         args.putBoolean("com.notriddle.budget.delayed",
                         mDelayed.isChecked());
+        args.putBoolean("com.notriddle.budget.repeat",
+                        mRepeat.isChecked());
     }
 
     @Override public void onCheckedChanged(CompoundButton b, boolean checked) {
-        if (getActivity().getResources()
-                          .getDimensionPixelOffset(R.dimen.tabletBool) == 0
-             && getShowsDialog() && checked) {
-            changeToActivity();
-        } else {
-            mDelay.setVisibility(checked ? View.VISIBLE : View.GONE);
-        }
+	    if (b.getId() == R.id.repeat){
+		    if (mRepeat.isChecked()){
+			    mFrequency.setEnabled(true);
+		    } else {
+			    mFrequency.setEnabled(false);
+		    }
+	    } else {
+		    if (getActivity().getResources()
+		        .getDimensionPixelOffset(R.dimen.tabletBool) == 0
+		        && getShowsDialog() && checked) {
+			    changeToActivity();
+		    } else {
+			    mDelay.setVisibility(checked ? View.VISIBLE : View.GONE);
+		    }
+	    }
     }
 
     @Override public void onDateChanged(DatePicker view, int year, int month,
@@ -231,6 +256,7 @@ public class SpendFragment extends OkFragment
     }
 
     @Override public void ok() {
+	    String frequency = mRepeat.isChecked() ? ((TextView)mFrequency.getSelectedView()).getText().toString() : null;
         if (mDelayed.isChecked()) {
             long time = new GregorianCalendar(
                 mDelay.getYear(),
@@ -241,12 +267,14 @@ public class SpendFragment extends OkFragment
                 getActivity(), mId,
                 (mNegative?-1:1)*mAmount.getCents(),
                 mDescription.getText().toString(),
+                frequency,
                 time
             );
         } else {
             EnvelopesOpenHelper.deposite(getActivity(), mId,
                                          (mNegative?-1:1)*mAmount.getCents(),
-                                         mDescription.getText().toString());
+                                         mDescription.getText().toString(),
+                                         frequency );
         }
     }
 };

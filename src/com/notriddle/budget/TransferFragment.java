@@ -156,8 +156,8 @@ public class TransferFragment extends OkFragment
                             .getWritableDatabase();
         db.beginTransaction();
         try {
-            EnvelopesOpenHelper.deposite(db, fromId, -1*transferCents, description);
-            EnvelopesOpenHelper.deposite(db, toId, transferCents, description);
+	        EnvelopesOpenHelper.deposite(db, fromId, -1*transferCents, description, null);
+            EnvelopesOpenHelper.deposite(db, toId, transferCents, description, null);
             db.setTransactionSuccessful();
             getActivity()
             .getContentResolver().notifyChange(EnvelopesOpenHelper.URI, null);
