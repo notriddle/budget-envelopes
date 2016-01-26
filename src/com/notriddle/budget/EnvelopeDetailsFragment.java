@@ -185,7 +185,7 @@ public class EnvelopeDetailsFragment extends Fragment
         ab.setDisplayShowTitleEnabled(true);
         ab.setDisplayShowCustomEnabled(false);
         ab.setCustomView(null);
-        if (mName.getText().length() == 0 && mLogAdapter.getCount() == 0 && mEnvelopeData != null && mLogData != null) {
+        if (mName != null && mName.getText().length() == 0 && mLogAdapter != null && mLogAdapter.getCount() == 0 && mEnvelopeData != null && mLogData != null) {
             deleteThis();
             mDatabase.close();
             mDatabase = null;
