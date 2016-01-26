@@ -73,6 +73,7 @@ public class SpendFragment extends OkFragment
     CheckBox mDelayed;
     CheckBox mRepeat;
     Spinner mFrequency;
+    ArrayAdapter<CharSequence> mFrequencyAdapter;
 
     public static SpendFragment newInstance(int id, boolean negative) {
         SpendFragment retVal = new SpendFragment();
@@ -139,7 +140,7 @@ public class SpendFragment extends OkFragment
         mRepeat = (CheckBox) retVal.findViewById(R.id.repeat);
         mRepeat.setOnCheckedChangeListener(this);
         mFrequency = (Spinner) retVal.findViewById(R.id.frequency);
-        ArrayAdapter<CharSequence> mFrequencyAdapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
+        mFrequencyAdapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
 	                 R.array.frequency_array, R.layout.spinner_item);
         mFrequencyAdapter.setDropDownViewResource(R.layout.spinner_item);
         mFrequency.setAdapter(mFrequencyAdapter);
@@ -157,9 +158,10 @@ public class SpendFragment extends OkFragment
             mAmount.setCents(args.getLong("com.notriddle.budget.cents", 0));
             mDelayed.setChecked(args.getBoolean("com.notriddle.budget.delayed", false));
             mRepeat.setChecked(args.getBoolean("com.notriddle.budget.repeat", false));
-            mFrequency.setEnabled(args.getBoolean("com.notriddle.budget.repeat", false));
+            mFrequency.setSelection(mFrequencyAdapter.getPosition(args.getString("com.notriddle.budget.frequency", "Daily")));
         }
         onCheckedChanged(mDelayed, mDelayed.isChecked());
+        onCheckedChanged(mRepeat, mRepeat.isChecked());
 
         return retVal;
     }
@@ -172,15 +174,13 @@ public class SpendFragment extends OkFragment
                         mDelayed.isChecked());
         args.putBoolean("com.notriddle.budget.repeat",
                         mRepeat.isChecked());
+        args.putString("com.notriddle.budget.frequency",
+                       ((TextView)mFrequency.getSelectedView()).getText().toString());
     }
 
     @Override public void onCheckedChanged(CompoundButton b, boolean checked) {
 	    if (b.getId() == R.id.repeat){
-		    if (mRepeat.isChecked()){
-			    mFrequency.setEnabled(true);
-		    } else {
-			    mFrequency.setEnabled(false);
-		    }
+		    mFrequency.setEnabled(checked);
 	    } else {
 		    if (getActivity().getResources()
 		        .getDimensionPixelOffset(R.dimen.tabletBool) == 0
