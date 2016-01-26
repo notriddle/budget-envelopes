@@ -210,6 +210,7 @@ public class PaycheckFragment extends OkFragment
     @Override public void ok() {
         SparseArray<Long> deposites = mEnvelopes.getDeposites();
         String description = mDescription.getText().toString();
+        String frequency = null;
         int l = deposites.size();
         SQLiteDatabase db = (new EnvelopesOpenHelper(getActivity())).getWritableDatabase();
         db.beginTransaction();
@@ -218,7 +219,7 @@ public class PaycheckFragment extends OkFragment
             for (int i = 0; i != l; ++i) {
                 int id = deposites.keyAt(i);
                 long centsDeposited = deposites.valueAt(i);
-                EnvelopesOpenHelper.deposite(db, id, centsDeposited, description);
+                EnvelopesOpenHelper.deposite(db, id, centsDeposited, description, frequency);
                 values.put("lastPaycheckCents", centsDeposited);
                 db.update("envelopes", values, "_id = ?", new String[] {
                     Integer.toString(id)

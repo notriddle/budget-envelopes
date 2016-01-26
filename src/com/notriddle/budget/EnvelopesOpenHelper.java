@@ -24,10 +24,11 @@ import android.database.Cursor;
 import android.database.sqlite.*;
 import android.net.Uri;
 import android.util.SparseArray;
+import java.util.GregorianCalendar;
 
 public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     static final String DB_NAME = "envelopes.db";
-    static final int DB_VERSION = 6;
+    static final int DB_VERSION = 7;
     public static final Uri URI = Uri.parse("sqlite://com.notriddle.budget/envelopes");
 
     Context mCntx;
@@ -56,7 +57,7 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         values.put("lastPaycheckCents", 0);
         values.put("color", 0);
         db.insert("envelopes", null, values);
-        db.execSQL("CREATE TABLE 'log' ( '_id' INTEGER PRIMARY KEY, 'envelope' INTEGER, 'time' TIMESTAMP, 'description' TEXT, 'cents' INTEGER )");
+        db.execSQL("CREATE TABLE 'log' ( '_id' INTEGER PRIMARY KEY, 'envelope' INTEGER, 'time' TIMESTAMP, 'description' TEXT, 'cents' INTEGER, 'repeat' STRING )");
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer) {
@@ -74,10 +75,13 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
         } else if (oldVer == 5) {
             db.execSQL("UPDATE envelopes SET color = 0 WHERE color = ?", new String[] {Integer.toString(0xFFEEEEEE)});
         }
+        if (oldVer < 7){
+            db.execSQL("ALTER TABLE 'log' ADD COLUMN 'repeat' STRING");
+        } 
     }
 
     public static void deposite(SQLiteDatabase db, int envelope, long cents,
-                                String description) {
+                                String description, String frequency) {
         if (cents != 0) {
             String envelopeString = Integer.toString(envelope);
             String[] envelopeStringArray = new String[] {envelopeString};
@@ -96,16 +100,17 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             values.put("time", System.currentTimeMillis());
             values.put("description", description);
             values.put("cents", cents);
+            values.put("repeat", frequency);
             db.insert("log", null, values);
         }
     }
     public static void deposite(Context cntx, int envelope, long cents,
-                                String description) {
+                                String description, String frequency) {
         SQLiteDatabase db = (new EnvelopesOpenHelper(cntx))
                             .getWritableDatabase();
         db.beginTransaction();
         try {
-            deposite(db, envelope, cents, description);
+	        deposite(db, envelope, cents, description, frequency);
             db.setTransactionSuccessful();
             cntx.getContentResolver().notifyChange(URI, null);
         } finally {
@@ -115,7 +120,41 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     }
     public static void playLog(SQLiteDatabase db) {
         long currentTime = System.currentTimeMillis();
-        db.execSQL("UPDATE envelopes SET cents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id AND log.time < ? GROUP BY log.envelope), projectedCents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id GROUP BY log.envelope)", new String[] {Long.toString(currentTime)});
+        /* First insert repeated transaction up to now */
+        Cursor csr
+	        = db.rawQuery("SELECT envelope, MAX(time) AS last, cents, description, repeat FROM log WHERE repeat IS NOT NULL AND time < ? GROUP BY envelope, cents, description, repeat", new String [] {Long.toString(currentTime)});
+        if (csr.moveToFirst()) {
+	        do {
+		        long last = csr.getLong(csr.getColumnIndexOrThrow("last"));
+		        int envelope = csr.getInt(csr.getColumnIndexOrThrow("envelope"));
+		        long cents = csr.getLong(csr.getColumnIndexOrThrow("cents"));
+		        String description = csr.getString(csr.getColumnIndexOrThrow("description"));
+		        String repeat = csr.getString(csr.getColumnIndexOrThrow("repeat"));
+		        if (repeat == null) continue;
+		        
+		        GregorianCalendar cal = new GregorianCalendar();
+		        cal.setTimeInMillis(last);
+		        while (cal.getTimeInMillis() < currentTime) {
+			        if ( repeat.toLowerCase().equals("monthly") ){
+				        cal.add((GregorianCalendar.MONTH), 1);
+			        } else if ( repeat.toLowerCase().equals("daily") ){
+				        cal.add((GregorianCalendar.DAY_OF_MONTH), 1);
+			        } else if ( repeat.toLowerCase().equals("weekly") ){
+				        cal.add((GregorianCalendar.WEEK_OF_YEAR), 1);
+			        } else if ( repeat.toLowerCase().equals("yearly") ){
+				        cal.add((GregorianCalendar.YEAR), 1);
+			        } else if ( repeat.toLowerCase().equals("fortnightly") ){
+				        cal.add((GregorianCalendar.WEEK_OF_YEAR), 2);
+			        } else if ( repeat.toLowerCase().equals("quarterly") ){
+				        cal.add((GregorianCalendar.MONTH), 3);
+			        }
+			        /* This will always deposit one payment in advance - by design */
+			        depositeDelayed(db, envelope, cents, description, repeat, cal.getTimeInMillis());
+			        db.execSQL("UPDATE log SET repeat = NULL WHERE time < ?", new String [] {Long.toString(currentTime)});	        
+		        } 
+	        } while(csr.moveToNext());
+        }
+        db.execSQL("UPDATE envelopes SET cents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id AND log.time < ? GROUP BY log.envelope), projectedCents = (SELECT SUM(log.cents) FROM log WHERE log.envelope = envelopes._id GROUP BY log.envelope)", new String [] {Long.toString(currentTime)});
     }
     public static void playLog(Context cntx) {
         SQLiteDatabase db = (new EnvelopesOpenHelper(cntx))
@@ -132,7 +171,7 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
     }
     public static void depositeDelayed(SQLiteDatabase db, int envelope,
                                        long cents, String description,
-                                       long delayUntil) {
+                                       String repeat, long delayUntil) {
         if (cents != 0) {
             String envelopeString = Integer.toString(envelope);
             String[] envelopeStringArray = new String[] {envelopeString};
@@ -152,16 +191,17 @@ public class EnvelopesOpenHelper extends SQLiteOpenHelper {
             lValues.put("time", delayUntil);
             lValues.put("description", description);
             lValues.put("cents", cents);
+            lValues.put("repeat", repeat);
             db.insert("log", null, lValues);
         }
     }
     public static void depositeDelayed(Context cntx, int envelope, long cents,
-                                       String description, long delayUntil) {
+                                       String description, String repeat, long delayUntil ) {
         SQLiteDatabase db = (new EnvelopesOpenHelper(cntx))
                             .getWritableDatabase();
         db.beginTransaction();
         try {
-            depositeDelayed(db, envelope, cents, description, delayUntil);
+	        depositeDelayed(db, envelope, cents, description, repeat, delayUntil);
             db.setTransactionSuccessful();
             cntx.getContentResolver().notifyChange(URI, null);
         } finally {

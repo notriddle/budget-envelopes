@@ -81,6 +81,8 @@ public class EditTransactionFragment extends OkFragment
         mDescription = (EditText) retVal.findViewById(R.id.description);
         retVal.findViewById(R.id.delayed).setVisibility(View.GONE);
         retVal.findViewById(R.id.delay).setVisibility(View.GONE);
+        retVal.findViewById(R.id.repeat).setVisibility(View.GONE);
+        retVal.findViewById(R.id.frequency).setVisibility(View.GONE);
         return retVal;
     }
 
