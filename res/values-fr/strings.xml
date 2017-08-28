@@ -64,7 +64,7 @@ Générale GNU pour plus de détails.</string>
     <string name="pin_label">Entrez votre PIN</string>
     <string name="pin_toast_wrong">Raté, un autre essaie ?</string>
     <string name="pin_settings">PIN</string>
-    <string name="pin_settings_summary">Laissez vide si vous n'en avez pas besoin</string>
+    <string name="pin_settings_summary">Laissez vide si vous n\'en avez pas besoin</string>
     <string name="settings_menuItem">Paramètres</string>
     <string name="settings_name">Paramètres</string>
     <string name="pin_notify">Déverouillé. Tapez pour verouiller.</string>
