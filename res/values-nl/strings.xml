@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ This file is a part of Budget with Envelopes.
+ Copyright 2013 Michael Howell <michael@notriddle.com>
+ Copyright 2013 Anatolij Zelenin <az@azapps.de>
+
+ Budget is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Budget is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Budget. If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<resources>
+    <string name="app_name">Budget</string>
+    <string name="deleted_name">Verwijderd</string>
+    <string name="undo_menuItem">Ongedaan maken</string>
+    <string name="envelopeDetails_name">Envelop</string>
+    <string name="envelopeDetails_balance">Saldo</string>
+    <string name="newEnvelope_menuItem">Nieuwe envelop</string>
+    <string name="colorEnvelope_menuItem">Kleur wijzigen</string>
+    <string name="envelopeName_hint">Envelopnaam</string>
+    <string name="paycheck_name">Verdiensten</string>
+    <string name="paycheck_menuItem">Verdiensten</string>
+    <string name="paycheck_spent">Uitgegeven</string>
+    <string name="paycheck_description">Salarisstrook</string>
+    <string name="paycheck_docs">Doe iets goeds &#8593; met je verdiensten &#8595;</string>
+    <string name="earn_name">Verdiensten</string>
+    <string name="earn_menuItem">Verdiensten</string>
+    <string name="spend_name">Uitgaven</string>
+    <string name="spend_menuItem">Uitgaven</string>
+    <string name="edit_name">Bewerken</string>
+    <string name="transfer_name">Verplaatsen</string>
+    <string name="transfer_menuItem">Verplaatsen</string>
+    <string name="transfer_label">naar</string>
+    <string name="default_envelope_1">Rekeningen</string>
+    <string name="default_envelope_2">Eten en drinken</string>
+    <string name="default_envelope_3">Kleding</string>
+    <string name="ok_menuItem">Oké</string>
+    <string name="description_hint">Omschrijving</string>
+    <string name="amount_hint">00,00</string>
+    <string name="gotIt">&#215;</string>
+    <string name="loading">Bezig met laden...</string>
+    <string name="graph_name">Grafiek</string>
+    <string name="graph_menuItem">Grafiek</string>
+    <string name="allTransactions_menuItem">Alle transacties</string>
+    <string name="allTransactions_name">Alle transacties</string>
+    <string name="drawerOpen_button">Navigatie openen</string>
+    <string name="drawerClose_button">Navigatie sluiten</string>
+    <string name="export_name">Bezig met exporteren...&#8230;</string>
+    <string name="export_settings">Exporteren</string>
+    <string name="export_settings_summary">Financiële gegevens back-uppen</string>
+    <string name="import_name">Bezig met impoteren...&#8230;</string>
+    <string name="import_settings">Importeren</string>
+    <string name="import_settings_summary">Financiële gegevens back-uppen</string>
+    <string name="delayed_checkBox">Uitstellen</string>
+    <string name="repeat_checkBox">Herhalen</string>
+    <string-array name="frequency_array">
+	    <item>Iedere dag</item>
+	    <item>Iedere week</item>
+	    <item>Iedere twee weken</item>
+	    <item>Iedere maand</item>
+	    <item>Ieder kwartaal</item>
+	    <item>Ieder jaar</item>
+    </string-array>
+    <string name="about_menuItem">Over</string>
+    <string name="about_name">Over Budget met vnveloppen</string>
+    <string name="donate_button">Doneren aan Michael</string>
+    <string name="license">Budget, versie %s\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n\n
+
+Budget is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.\n\n
+
+Budget is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.</string>
+
+    <string name="pin_name">Ontgrendelen</string>
+    <string name="pin_label">Voer je pincode in</string>
+    <string name="pin_toast_wrong">Opnieuw proberen</string>
+    <string name="pin_settings">Pincode</string>
+    <string name="pin_settings_summary">Laat leeg om dit niet te gebruiken</string>
+    <string name="settings_menuItem">Instellingen</string>
+    <string name="settings_name">Instellingen</string>
+    <string name="pin_notify">Ontgrendeld; raak aan om te vergrendelen.</string>
+    <string name="graph_time">Tijd</string>
+</resources>
