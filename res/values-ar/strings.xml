@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Author of this file : Sofian Benissa <sofian.benissa@mubs.edu.lb>
+ Date of making: 09/FEB/2019
+ This file is a part of Budget with Envelopes.
+ Copyright 2013 Michael Howell <michael@notriddle.com>
+ Copyright 2013 Anatolij Zelenin <az@azapps.de>
+ Budget is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ Budget is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License
+ along with Budget. If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<resources>
+    <string name="app_name">الميزانية</string>
+    <string name="deleted_name">تمت إزالته</string>
+    <string name="undo_menuItem">الغاء</string>
+    <string name="envelopeDetails_name">ظرف</string>
+    <string name="envelopeDetails_balance">رصيد</string>
+    <string name="newEnvelope_menuItem">ظرف جديد</string>
+    <string name="colorEnvelope_menuItem">غير اللون</string>
+    <string name="envelopeName_hint">إسم الظرف</string>
+    <string name="paycheck_name">إكسب</string>
+    <string name="paycheck_menuItem">إكسب</string>
+    <string name="paycheck_spent">موزع</string>
+    <string name="paycheck_description">صك القبض</string>
+    <string name="paycheck_docs">قم بوضع أرباحك &#8593; في إستعمالات متعددة &#8595;</string>
+    <string name="earn_name">إكسب</string>
+    <string name="earn_menuItem">إكسب</string>
+    <string name="spend_name">أصرف</string>
+    <string name="spend_menuItem">أصرف</string>
+    <string name="edit_name">عدل</string>
+    <string name="transfer_name">حول</string>
+    <string name="transfer_menuItem">حول</string>
+    <string name="transfer_label">الى</string>
+    <string name="default_envelope_1">المصاريف</string>
+    <string name="default_envelope_2">الأكل</string>
+    <string name="default_envelope_3">الملابس</string>
+    <string name="ok_menuItem">حسنا</string>
+    <string name="description_hint">الوصف</string>
+    <string name="amount_hint">00.00</string>
+    <string name="gotIt">&#215;</string>
+    <string name="loading">تحميل</string>
+    <string name="graph_name">رسم بياني</string>
+    <string name="graph_menuItem">رسم بياني</string>
+    <string name="allTransactions_menuItem">كل المعاملات</string>
+    <string name="allTransactions_name">كل المعاملات</string>
+    <string name="drawerOpen_button">فتح الملاحة</string>
+    <string name="drawerClose_button">إغلاق الملاحة</string>
+    <string name="export_name">إستخراج&#8230;</string>
+    <string name="export_settings">إستخرج</string>
+    <string name="export_settings_summary">نسخ إحتياطي للبيانات المالية</string>
+    <string name="import_name">إستيراد&#8230;</string>
+    <string name="import_settings">إستورد</string>
+    <string name="import_settings_summary">إستعادة البيانات المالية</string>
+    <string name="delayed_checkBox">مؤجل</string>
+    <string name="repeat_checkBox">كرر</string>
+    <string-array name="frequency_array">
+	    <item>يومي</item>
+	    <item>أسبوعي</item>
+	    <item>مرة كل اسبوعين</item>
+	    <item>شهري</item>
+	    <item>ربع سنوي</item>
+	    <item>سنوي</item>
+    </string-array>
+    <string name="about_menuItem">حول</string>
+    <string name="about_name">حول الميزانية بالظروف</string>
+    <string name="donate_button">تبرع الى مايكل(الكاتب الأصلي للبرنامج)</string>
+    <string name="license">Budget version %s\n&#169; 2013 Michael Howell &lt;michael@notriddle.com&gt;\n\n
+
+الميزانية هو برنامج حر: يمكنك إعادة توزيعه و / أو تعديله
+بموجب شروط رخصة جنو العمومية كما نشرتها
+مؤسسة البرمجيات الحرة ، إما الإصدار 3 من الترخيص ، أو
+(حسب اختيارك) أي إصدار لاحق.\n\n
+
+يتم توزيع الميزانية على أمل أن يكون مفيد ،
+ولكن دون أي ضمانات ؛ دون حتى الضمان الضمني
+قابلية التسويق أو الملاءمة لغرض معين. انظر
+رخصة جنو العمومية العامة لمزيد من التفاصيل.</string>
+
+    <string name="pin_name">فتح</string>
+    <string name="pin_label">إرخال الرمز</string>
+    <string name="pin_toast_wrong">إعادة المحاولة</string>
+    <string name="pin_settings">الرمز</string>
+    <string name="pin_settings_summary">دعه فارغ ان لم تحتاجه</string>
+    <string name="settings_menuItem">الإعدادات</string>
+    <string name="settings_name">الإعدادات</string>
+    <string name="pin_notify">تم الفتح. إضغط للقفل.</string>
+    <string name="graph_time">الوقت</string>
+</resources>
